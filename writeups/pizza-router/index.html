@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Router — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="An out-of-bounds heap write in a drone-routing binary overwrites a callback pointer to call win(). A picoCTF binary-exploitation writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-pwn">Binary Exploitation</span>
+    <span class="diff diff-hard">Hard</span>
+  </div>
+  <h1 class="wu-page-title">Pizza Router</h1>
+  <p class="wu-meta-line"><b>picoCTF 2026</b> · Binary Exploitation · Hard</p>
+
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Unbounded index → arbitrary heap write</dd></div>
+    <div><dt>Impact</dt><dd>Hijack a callback pointer to call win()</dd></div>
+    <div><dt>Tools</dt><dd>objdump, GDB, Python (pwntools-style)</dd></div>
+    <div><dt>Key move</dt><dd>Diff the binary — don't trust old offsets</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">academy{thirty_minutes_or_flag_free_883cd9f5}</span>
+    <span class="wu-flag-hint">(click to reveal)</span>
+  </div>
+
+  <div class="wu-body">
+    <h2>Summary</h2>
+    <p>A drone-delivery “router” plans routes on a grid. It has a <code>win()</code> that prints <code>flag.txt</code>; the goal is to get it called. The <code>reroute</code> command has <strong>no bounds check</strong> on its index, giving an arbitrary 32-bit write relative to a heap route list. Two carefully placed writes overwrite an order's <em>finish</em> callback with the address of <code>win()</code>, then <code>dispatch</code> triggers it.</p>
+    <div class="wu-insight"><p>The first attempt failed because the live binary wasn't the picoCTF build — its <code>.text</code> was shifted by +0x10. One <code>sha256sum</code> + <code>nm</code> caught it; every offset was re-derived against the real binary.</p></div>
+    <h2>The write primitive</h2>
+    <p><code>reroute &lt;id&gt; &lt;heap_idx&gt; &lt;new_cost&gt;</code> writes two dwords at <code>R + heap_idx*8</code> with no check on the signed index:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>[+0] = order.y * G0 + order.x     (G0 = grid width = 16; bounded by map)
+[+4] = new_cost                   (fully attacker-controlled 32-bit)</code></pre>
+    </div>
+    <p>So <code>new_cost</code> is an arbitrary 32-bit write at any offset from the route list <code>R</code>. Each order owns a heap context with two callbacks; the <strong>finish</strong> pointer lives at <code>CTXptr+0x430</code> (index 131 from <code>R</code>) and is called by <code>dispatch</code>.</p>
+    <h2>Two-stage overwrite</h2>
+    <p><code>win</code> and <code>fx_finish</code> share their high 32 bits; <code>win</code>'s low dword is <code>fx_finish</code>'s + 0x200. The low dword a reroute writes is <code>y*16+x</code> — tiny unless we first enlarge <code>x</code>. Hence two writes:</p>
+    <ul>
+      <li><strong>Stage 1</strong> — write <code>win_lo-16</code> into <code>ORD[0].x</code>; the paired low write also bumps the order's id to 17.</li>
+      <li><strong>Stage 2</strong> — for order 17, write <code>win_hi</code> into the finish slot (index 131); the low half now computes to exactly <code>win_lo</code>.</li>
+      <li><strong>Trigger</strong> — <code>dispatch 17</code> → finish callback is now <code>win()</code> → flag.</li>
+    </ul>
+    <details class="wu-details">
+      <summary>How the offsets were recovered (GDB, live)</summary>
+      <div class="wu-code">
+        <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>break at the dispatch call and the reroute write; print CTXptr, R, the callback
+slots and G0 live, so the exploit is leak-driven and works under ASLR:
+
+R = CTXptr+0x18   finish idx = 131   G[0] = 16   ORD = pie+0x5080
+win = pie+0x2480  fx_draw_basic = pie+0x2270</code></pre>
+      </div>
+    </details>
+    <h2>Result</h2>
+    <p>Verified locally first, then against the live instance:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>[+] win_lo=0x1d5a480 win_hi=0x64b6 idx_ord0=-38775639 finish_idx=131
+[!] FLAG: academy{thirty_minutes_or_flag_free_883cd9f5}</code></pre>
+    </div>
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Diff the binary before trusting any writeup's offsets</strong> — a +0x10 shift was the entire first failure.</li>
+      <li><strong>Let GDB hand you the layout</strong> instead of fully static-reversing every struct.</li>
+      <li><strong>Leak-driven, not hardcoded</strong> — computing pie/heap from runtime leaks makes the exploit ASLR-proof and instance-independent.</li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>

@@ -19,17 +19,30 @@ else
   ok "index.html present with doctype and title"
 fi
 
-# 2. Every local file index.html points to (css, js, images) is tracked.
+# 2. Every local file any HTML page points to (css, js, images, links) is tracked.
+#    Paths are resolved relative to the page they appear in, so subdirectory
+#    pages (writeups/) are checked too.
 missing=""
-while IFS= read -r ref; do
-  [ -n "$ref" ] || continue
-  git ls-files --error-unmatch -- "$ref" >/dev/null 2>&1 || missing="$missing$ref"$'\n'
-done < <(grep -oE '(href|src)="[^"#:]+"' index.html 2>/dev/null | sed -E 's/^(href|src)="//; s/"$//' | sort -u)
+while IFS= read -r page; do
+  dir=$(dirname "$page")
+  while IFS= read -r ref; do
+    [ -n "$ref" ] || continue
+    # drop trailing #fragment or ?query, and a trailing slash -> index.html
+    ref=${ref%%#*}; ref=${ref%%\?*}
+    [ -n "$ref" ] || continue
+    case "$ref" in */) ref="${ref}index.html";; esac
+    target=$(cd "$dir" && { cd "$(dirname "$ref")" 2>/dev/null && printf '%s/%s' "$(pwd)" "$(basename "$ref")"; })
+    rel=${target#"$PWD/"}
+    if [ -z "$rel" ] || ! git ls-files --error-unmatch -- "$rel" >/dev/null 2>&1; then
+      missing="$missing$page -> $ref"$'\n'
+    fi
+  done < <(grep -oE '(href|src)="[^":]+"' "$page" 2>/dev/null | sed -E 's/^(href|src)="//; s/"$//' | sort -u)
+done < <(git ls-files '*.html')
 if [ -n "$missing" ]; then
-  err "index.html references files that are not in the repo:"
+  err "HTML pages reference files that are not in the repo:"
   printf '%s' "$missing" | sed 's/^/        /'
 else
-  ok "all local files referenced by index.html exist"
+  ok "all local files referenced by HTML pages exist"
 fi
 
 # 3. No archives, executables, env files or key files in the repo (it is public).

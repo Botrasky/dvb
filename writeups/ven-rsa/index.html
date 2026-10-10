@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEN RSA Can Be Broken — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="Breaking RSA when the modulus N is even: one prime is 2, so N factors trivially and the flag decrypts. A picoCTF cryptography writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-crypto">Cryptography</span>
+    <span class="diff diff-medium">Medium</span>
+  </div>
+  <h1 class="wu-page-title">VEN RSA Can Be Broken???</h1>
+  <p class="wu-meta-line"><b>picoCTF</b> · 200 pts · author Michael Crotty · category Cryptography</p>
+
+  <!-- At a glance -->
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Broken key generation — even modulus (p = 2)</dd></div>
+    <div><dt>Impact</dt><dd>Full private-key recovery &amp; flag decryption</dd></div>
+    <div><dt>Tools</dt><dd>Python, netcat, pwntools-style socket</dd></div>
+    <div><dt>Given</dt><dd>Only N, e and the ciphertext C</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">picoCTF{tw0_1$_pr!m341c6ed35}</span>
+    <span class="wu-flag-hint">(click to reveal)</span>
+  </div>
+
+  <div class="wu-body">
+
+    <h2>Summary</h2>
+    <p>The service hands you an RSA public modulus <code>N</code>, the exponent <code>e</code>, and an encrypted
+    flag <code>C</code>, and challenges you to decrypt it. The catch: its key generator is broken. Every
+    <code>N</code> it produces is <strong>even</strong>. For a product of two primes that can only mean one
+    prime is <code>2</code> — which collapses the whole scheme. From there, factoring <code>N</code> is a single
+    division, the private key falls out, and the flag decrypts.</p>
+
+    <div class="wu-insight">
+      <p><strong>Key insight:</strong> RSA security rests on <code>N = p × q</code> being hard to factor.
+      If <code>N</code> is even, then <code>p = 2</code> and <code>q = N / 2</code> — no factoring needed at all.</p>
+    </div>
+
+    <h2>Recon</h2>
+    <p>The hints point straight at the modulus: <em>“How much do we trust randomness?”</em>,
+    <em>“Notice anything interesting about N?”</em>, and <em>“Try comparing N across multiple requests.”</em>
+    First I pulled the encryption source the challenge provides to see how keys are made.</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>wget https://challenge-files.picoctf.net/.../encrypt.py</code></pre>
+    </div>
+
+    <p>The generator calls a hidden <code>get_primes()</code> and multiplies the two results. Nothing in the
+    script guarantees the primes are large or odd — which is exactly the weakness.</p>
+
+    <details class="wu-details">
+      <summary>Show the vulnerable key generator (encrypt.py)</summary>
+      <div class="wu-code">
+        <div class="wu-code-head"><span>python · encrypt.py</span><button class="wu-copy">copy</button></div>
+<pre><code>from Crypto.Util.number import bytes_to_long, inverse
+from setup import get_primes   # &lt;-- hidden; no guarantee the primes are safe
+
+e = 65537
+
+def gen_key(k):
+    p, q = get_primes(k // 2)
+    N = p * q
+    d = inverse(e, (p - 1) * (q - 1))
+    return ((N, e), d)
+
+def encrypt(pubkey, m):
+    N, e = pubkey
+    return pow(bytes_to_long(m.encode()), e, N)</code></pre>
+      </div>
+    </details>
+
+    <h2>Finding the flaw</h2>
+    <p>Connecting to the service a few times and looking at <code>N</code> each time, the pattern is obvious —
+    every modulus ends in an even digit:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>nc verbal-sleep.picoctf.net 59661
+# N: 2393684804...383658   <-- ends in 8, so N is even</code></pre>
+    </div>
+
+    <p>I confirmed it by collecting several samples and checking <code>N % 2</code> — all even. (I also ran a
+    GCD across samples to check for a shared large prime; there wasn’t one. The only shared factor was
+    <code>2</code>, which is all we need.)</p>
+
+    <h2>The math</h2>
+    <p>Because <code>N</code> is even and the product of two primes, one prime must be <code>2</code>:</p>
+    <ul>
+      <li><code>p = 2</code>, &nbsp; <code>q = N / 2</code></li>
+      <li><code>φ(N) = (p − 1)(q − 1) = 1 × (q − 1) = q − 1</code></li>
+      <li><code>d = e⁻¹ mod φ(N)</code></li>
+      <li><code>m = C<sup>d</sup> mod N</code> → convert to bytes → flag</li>
+    </ul>
+
+    <h2>Exploit</h2>
+    <p>Putting it together: pull a fresh <code>(N, e, C)</code> from the service, factor, derive <code>d</code>,
+    decrypt, and decode.</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>python · solve.py</span><button class="wu-copy">copy</button></div>
+<pre><code>import socket, re
+
+def long_to_bytes(n):
+    return n.to_bytes((n.bit_length() + 7) // 8, 'big')
+
+# pull fresh N, e, C from the service
+s = socket.socket(); s.connect(("verbal-sleep.picoctf.net", 59661))
+data = s.recv(4096).decode()
+n = int(re.search(r"N: (\d+)", data).group(1))
+e = int(re.search(r"e: (\d+)", data).group(1))
+c = int(re.search(r"cyphertext: (\d+)", data).group(1))
+
+# N is even -> p = 2
+q   = n // 2
+phi = q - 1
+d   = pow(e, -1, phi)
+m   = pow(c, d, n)
+
+print("Flag:", long_to_bytes(m).decode())</code></pre>
+    </div>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>result</span><button class="wu-copy">copy</button></div>
+<pre><code>$ python3 solve.py
+Flag: picoCTF{tw0_1$_pr!m341c6ed35}</code></pre>
+    </div>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Prime selection is the whole game.</strong> Primes must be large and odd; the moment
+      <code>2</code> sneaks in, RSA offers no protection at all.</li>
+      <li><strong>Read the hints literally.</strong> “Notice anything interesting about N?” was pointing at
+      a single property — its parity.</li>
+      <li><strong>One bit can be fatal.</strong> Leaking just the parity of <code>N</code> was enough for a
+      complete break.</li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>

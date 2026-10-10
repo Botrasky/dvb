@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Password Database — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="A Heartbleed-style buffer over-read: the program trusts a user-supplied length when reading back its database buffer, leaking a hidden secret. A picoCTF reverse-engineering writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-re">Reverse Engineering</span>
+    <span class="diff diff-medium">Medium</span>
+  </div>
+  <h1 class="wu-page-title">Secure Password Database</h1>
+  <p class="wu-meta-line"><b>picoCTF 2026</b> · Reverse Engineering · Medium</p>
+
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Heartbleed-style buffer over-read</dd></div>
+    <div><dt>Impact</dt><dd>Leaks a hidden in-memory secret</dd></div>
+    <div><dt>Tools</dt><dd>objdump / Ghidra, Python, netcat</dd></div>
+    <div><dt>Binary</dt><dd>ELF64 PIE, x86-64, not stripped</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">academy{d0nt_trust_us3rs}</span>
+    <span class="wu-flag-hint">(click to reveal)</span>
+  </div>
+
+  <div class="wu-body">
+    <h2>Summary</h2>
+    <p>A C program lets you set a password and then prints it back from a 90-byte database buffer. A hidden 12-byte secret sits at offset 60 of that same buffer and is never meant to be shown. The readback loop trusts a <strong>user-supplied length</strong> for how many bytes to print — so lying about the length over-reads the buffer and leaks the secret. The secret feeds a hash check that unlocks the flag. The <code>.rodata</code> string <code>heartbleed.c</code> is the giveaway.</p>
+    <div class="wu-insight"><p>The program caps the readback at the real buffer size (90) but lets you choose the length — so you can ask it to print bytes <em>past</em> your password, straight out of memory that holds the secret.</p></div>
+    <h2>Reversing the binary</h2>
+    <p>It's PIE and <strong>not stripped</strong>, so symbols survive and <code>main</code> reads cleanly. The important flow:</p>
+    <ul>
+      <li><code>calloc(0x5a, 1)</code> → a 90-byte DB buffer.</li>
+      <li>A 12-byte secret is deobfuscated (<code>obf_bytes XOR 0xaa</code>) into the buffer at <strong>offset 60</strong>.</li>
+      <li>Your password is <code>strcpy</code>'d to offset 0 (≤49 bytes, can't reach the secret).</li>
+      <li>It asks <em>“How many bytes in length is your password?”</em> → <code>atoi</code> → <strong>attacker-controlled length</strong>.</li>
+      <li>It prints <code>db[i]</code> as decimals while <code>i &lt; len</code> <strong>and</strong> <code>i &lt;= 0x59</code>.</li>
+      <li>At the hash prompt, if your number equals <code>djb2(secret)</code>, it prints <code>flag.txt</code>.</li>
+    </ul>
+    <h2>Recovering the secret</h2>
+    <p>Because the binary isn't stripped, the obfuscated bytes and the djb2 hash are right there. I rebuilt the secret and its hash offline:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>python</span><button class="wu-copy">copy</button></div>
+<pre><code>obf = [0xc3,0xff,0xc8,0xc2,0x92,0x9b,0x8b,0xc0,0x80,0xc2,0xc4,0x8b]
+sec = bytes(b ^ 0xaa for b in obf)
+print(sec.decode())            # iUbh81!j*hn!
+
+h = 5381                       # djb2, 64-bit
+for c in sec:
+    h = (h*33 + c) &amp; (2**64 - 1)
+print(h)                       # 15237662580160011234</code></pre>
+    </div>
+    <h2>Getting the flag</h2>
+    <p>The live instance matched the binary I analysed, so the precomputed hash was enough — the password and length can be anything; only the hash is checked.</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>printf 'a\n5\n15237662580160011234\n' | nc xebec.cylabacademy.net 22132
+# ...
+# Enter your hash to access your account!
+# academy{d0nt_trust_us3rs}</code></pre>
+    </div>
+    <details class="wu-details">
+      <summary>Fallback: leak the secret live (if the build differs)</summary>
+      <div class="wu-code">
+        <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>Set length = 90 to dump the whole buffer, read the decimals at positions 60–71
+as ASCII, recompute djb2 over those bytes, and submit that number.</code></pre>
+      </div>
+    </details>
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Never trust a user-supplied length</strong> when reading a buffer — that's the whole Heartbleed class.</li>
+      <li><strong>Unstripped binaries give you everything</strong>: symbols, the obfuscation, and the hash, all offline.</li>
+      <li>The flag spells the lesson: <code>d0nt_trust_us3rs</code>.</li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>

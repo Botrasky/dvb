@@ -5,6 +5,7 @@ function toggleTheme() {
   document.body.classList.toggle('light-mode', !isDark);
   document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('themeLabel').textContent = isDark ? 'Light' : 'Dark';
-  updateCharts();
+  // Charts only exist on the homepage; writeup pages share this file without them.
+  if (typeof updateCharts === 'function') updateCharts();
 }
 
