@@ -1,6 +1,6 @@
 # Rules for AI agents
 
-You are contributing to a public, single-page portfolio site (`index.html`) owned by @Botrasky and hosted on Vercel. Read [CONTRIBUTING.md](CONTRIBUTING.md) first; everything there applies to you. These rules are in addition.
+You are contributing to a public, single-page portfolio site (`index.html` plus `css/`, `js/` and `assets/`) owned by @Botrasky and hosted on Vercel. Read [CONTRIBUTING.md](CONTRIBUTING.md) first; everything there applies to you. These rules are in addition.
 
 ## Allowed without asking
 

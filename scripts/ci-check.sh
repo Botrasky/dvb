@@ -19,7 +19,20 @@ else
   ok "index.html present with doctype and title"
 fi
 
-# 2. No archives, executables, env files or key files in the repo (it is public).
+# 2. Every local file index.html points to (css, js, images) is tracked.
+missing=""
+while IFS= read -r ref; do
+  [ -n "$ref" ] || continue
+  git ls-files --error-unmatch -- "$ref" >/dev/null 2>&1 || missing="$missing$ref"$'\n'
+done < <(grep -oE '(href|src)="[^"#:]+"' index.html 2>/dev/null | sed -E 's/^(href|src)="//; s/"$//' | sort -u)
+if [ -n "$missing" ]; then
+  err "index.html references files that are not in the repo:"
+  printf '%s' "$missing" | sed 's/^/        /'
+else
+  ok "all local files referenced by index.html exist"
+fi
+
+# 3. No archives, executables, env files or key files in the repo (it is public).
 blocked=$(git ls-files | grep -Ei '\.(zip|tar|tgz|gz|7z|rar|exe|dmg|pkg|pem|key|p12|pfx)$|(^|/)\.env(\..*)?$' || true)
 if [ -n "$blocked" ]; then
   err "blocked file types are tracked:"
@@ -28,7 +41,7 @@ else
   ok "no blocked file types"
 fi
 
-# 3. No tracked file over 5 MB.
+# 4. No tracked file over 5 MB.
 big=""
 while IFS= read -r f; do
   [ -f "$f" ] || continue
@@ -42,7 +55,7 @@ else
   ok "no file over 5 MB"
 fi
 
-# 4. No credentials. Only file names are printed, never the matching text.
+# 5. No credentials. Only file names are printed, never the matching text.
 secrets='gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{40,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|sk-ant-[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}'
 leaks=$(git grep -IlE -e "$secrets" -- . || true)
 if [ -n "$leaks" ]; then

@@ -2,6 +2,18 @@
 
 This applies to everyone who changes this repo: the owner (@Botrasky), Claude Code, and any other AI agent or person. AI agents must also follow [AGENTS.md](AGENTS.md).
 
+## Layout
+
+The site is plain static files with no build step.
+
+| Path | Contents |
+| --- | --- |
+| `index.html` | Page markup only. |
+| `css/` | Styles, one file per area. They are loaded in the order listed in `index.html`, and that order matters. |
+| `js/` | Scripts, one file per feature, also loaded in the order listed in `index.html`. |
+| `assets/certificates/` | Certificate images used by the slideshow. |
+| `scripts/ci-check.sh` | The checks CI runs. |
+
 ## Branches
 
 | Branch | Purpose | Who may push directly |
@@ -25,6 +37,7 @@ This applies to everyone who changes this repo: the owner (@Botrasky), Claude Co
 `scripts/ci-check.sh` fails the build when:
 
 - `index.html` is missing, empty, or has no doctype or title;
+- `index.html` points to a local stylesheet, script or image that is not in the repo;
 - an archive, executable, `.env` file or key file is tracked;
 - any tracked file is larger than 5 MB;
 - a file contains something that looks like a credential.

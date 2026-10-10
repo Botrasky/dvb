@@ -1,0 +1,20 @@
+/* RESPONSIVE */
+@media(max-width:900px){
+  .about-grid,.skills-grid,.contact-grid,.roadmap-grid{grid-template-columns:1fr;}
+  .edu-grid{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .nav-links.open{
+    display:flex;flex-direction:column;
+    position:fixed;top:64px;left:0;right:0;
+    background:var(--nav-bg);backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+    padding:1rem;z-index:99;
+  }
+  .nav-links.open a{padding:10px 16px;font-size:0.85rem;}
+  .hamburger{display:flex;}
+}
+@media(max-width:500px){
+  .hero-stats{gap:1rem;}
+  .stat-num{font-size:1.3rem;}
+  .roadmap-grid{grid-template-columns:1fr;}
+}

@@ -1,0 +1,75 @@
+:root {
+  --bg: #050810;
+  --bg2: #0a0f1a;
+  --bg3: #0d1520;
+  --surface: #0f1a2e;
+  --surface2: #162035;
+  --cyan: #00e5ff;
+  --cyan2: #00b4cc;
+  --cyan3: #80f8ff;
+  --green: #00ff88;
+  --magenta: #ff0080;
+  --yellow: #ffcc00;
+  --text: #e0f7fa;
+  --text2: #90cad4;
+  --text3: #4a7a85;
+  --border: rgba(0,229,255,0.18);
+  --border2: rgba(0,229,255,0.06);
+  --nav-bg: rgba(5,8,16,0.88);
+  --glow: 0 0 20px rgba(0,229,255,0.35), 0 0 40px rgba(0,229,255,0.15);
+  --glow-sm: 0 0 10px rgba(0,229,255,0.4);
+  --radius: 12px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.light-mode {
+  --bg: #f3f6fb;
+  --bg2: #eaf0f8;
+  --bg3: #dde8f2;
+  --surface: #ffffff;
+  --surface2: #f0f4fa;
+  --cyan: #0a66c2;
+  --cyan2: #0d5ca8;
+  --cyan3: #4a9fd4;
+  --green: #057642;
+  --magenta: #c0392b;
+  --yellow: #b7860b;
+  --text: #0a0f1a;
+  --text2: #1a3550;
+  --text3: #4a6880;
+  --border: rgba(10,102,194,0.2);
+  --border2: rgba(10,102,194,0.08);
+  --nav-bg: rgba(255,255,255,0.92);
+  --glow: 0 2px 16px rgba(10,102,194,0.15), 0 1px 4px rgba(10,102,194,0.08);
+  --glow-sm: 0 1px 8px rgba(10,102,194,0.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'IBM Plex Mono',monospace;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  transition:background var(--transition),color var(--transition);
+  overflow-x:hidden;
+}
+
+/* GRID BG */
+.grid-bg{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+  background-size:40px 40px;
+  transition:opacity var(--transition);
+}
+.light-mode .grid-bg{opacity:0.4}
+
+/* SCANLINES */
+.scanlines{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,0.015) 2px,rgba(0,229,255,0.015) 4px);
+}
+.light-mode .scanlines{opacity:0}
+
