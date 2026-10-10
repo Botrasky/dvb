@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  push:
+    branches: [main, test]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run repo checks
+        run: bash scripts/ci-check.sh
