@@ -38,6 +38,7 @@ The site is plain static files with no build step.
 
 - `index.html` is missing, empty, or has no doctype or title;
 - `index.html` points to a local stylesheet, script or image that is not in the repo;
+- a published page contains a CTF flag token (e.g. `academy{...}`, `cylab{...}`);
 - an archive, executable, `.env` file or key file is tracked;
 - any tracked file is larger than 5 MB;
 - a file contains something that looks like a credential.
@@ -45,6 +46,7 @@ The site is plain static files with no build step.
 ## Rules CI cannot check
 
 - **No personal data.** This repo is public. No phone numbers, home addresses, ID numbers or private documents. The only contact email is the one already on the site.
+- **No CTF flags.** Writeups share the method, never the flag value. Redact flags (show "captured", not the string). CI blocks `namespace{...}` flag tokens in any page.
 - **No secrets, ever**, including in commit messages, PR text and CI logs. If one is committed, revoke it first, then remove it.
 - **No history rewriting** on `main` or `test`: no force-push, no rebase of pushed commits.
 - **Small, focused changes.** One topic per pull request, with a message that says what changed and why.
