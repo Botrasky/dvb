@@ -23,16 +23,55 @@ const lightColors = {
 
 function getColors() { return isDark ? darkColors : lightColors; }
 
+// ===== Skill measurement =====================================================
+// Each skill starts from a prior baseline, then gains evidence from the CTF
+// labs actually solved (see /writeups/). A lab adds a difficulty-weighted bonus
+// to every skill it exercised: Easy +2, Medium +4, Hard +6. Python counts at
+// half weight (it supports most solves rather than being the point each time).
+// Scores are capped at 90 to stay honest. Change a lab here and the chart moves.
+const LAB_WEIGHT = { easy: 2, medium: 4, hard: 6 };
+const HALF_WEIGHT = new Set(['Python']);
+const SKILL_BASE = [
+  ['Pentesting', 88], ['Reverse Eng', 60], ['Cryptography', 58], ['Python', 85],
+  ['Web Exploit', 62], ['Network Sec', 82], ['Forensics', 78], ['SIEM', 75],
+  ['Cloud (AWS)', 70], ['Backend Dev', 80],
+];
+const SOLVED_LABS = [
+  { name: 'VEN RSA',             diff: 'medium', skills: ['Cryptography', 'Python'] },
+  { name: 'Pizza Router',        diff: 'hard',   skills: ['Pentesting', 'Reverse Eng', 'Python'] },
+  { name: 'Printer Shares 3',    diff: 'hard',   skills: ['Pentesting', 'Network Sec'] },
+  { name: 'Secure Password DB',  diff: 'medium', skills: ['Reverse Eng', 'Pentesting'] },
+  { name: 'Credential Stuffing', diff: 'medium', skills: ['Web Exploit', 'Pentesting', 'Python'] },
+  { name: 'Hidden Cipher 2',     diff: 'medium', skills: ['Reverse Eng', 'Python'] },
+  { name: 'Trust But Verify',    diff: 'easy',   skills: ['Python'] },
+];
+const SKILL_CAP = 90;
+function computeSkillScores() {
+  const score = Object.fromEntries(SKILL_BASE);
+  for (const lab of SOLVED_LABS) {
+    for (const s of lab.skills) {
+      let w = LAB_WEIGHT[lab.diff];
+      if (HALF_WEIGHT.has(s)) w /= 2;
+      score[s] = Math.min(SKILL_CAP, (score[s] ?? 55) + w);
+    }
+  }
+  return {
+    labels: SKILL_BASE.map(([name]) => name),
+    data: SKILL_BASE.map(([name]) => Math.round(score[name])),
+  };
+}
+const SKILLS = computeSkillScores();
+
 function initCharts() {
   const c = getColors();
   const radarCtx = document.getElementById('radarChart').getContext('2d');
   radarChart = new Chart(radarCtx, {
     type: 'radar',
     data: {
-      labels: ['Pentesting','Python','Forensics','SIEM','Network Sec','Cloud (AWS)','Malware','Backend Dev'],
+      labels: SKILLS.labels,
       datasets: [{
         label: 'Skill Level',
-        data: [88,85,78,75,82,70,68,80],
+        data: SKILLS.data,
         borderColor: c.cyan,
         backgroundColor: c.bg,
         pointBackgroundColor: c.cyan,
@@ -60,9 +99,9 @@ function initCharts() {
   donutChart = new Chart(donutCtx, {
     type: 'doughnut',
     data: {
-      labels: ['Offensive Sec','Blue Team/SOC','Dev & Automation','Forensics','Cloud & Infra'],
+      labels: ['Offensive Security','Reverse Engineering','Dev & Automation','Blue Team / SOC','Cloud & Infra'],
       datasets: [{
-        data: [30,25,20,15,10],
+        data: [35,20,20,15,10],
         backgroundColor: [c.cyan+'cc', c.green+'cc', c.yellow+'cc', c.magenta+'cc', '#a78bfa'+'cc'],
         borderColor: isDark ? '#0a0f1a' : '#f3f6fb',
         borderWidth: 3,

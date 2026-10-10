@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writeups — Dos Vathanak Botra</title>
+<meta name="description" content="CTF and security lab writeups by Dos Vathanak Botra — cryptography, binary exploitation, web, reverse engineering and more.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/nav.css">
+<link rel="stylesheet" href="../css/footer.css">
+<link rel="stylesheet" href="../css/animations.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#skills">Skills</a></li>
+    <li><a href="../index.html#experience">Experience</a></li>
+    <li><a href="../index.html#certificates">Certs</a></li>
+    <li><a href="index.html">Writeups</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <span class="wu-tag">// CTF &amp; Lab Writeups</span>
+  <h1 class="wu-page-title">Writeups</h1>
+  <p class="wu-page-sub">Hands-on CTF and security-lab solutions across cryptography, binary exploitation,
+  web, reverse engineering and general skills — each one a walk-through of the recon, the flaw, and the exploit.</p>
+
+  <div class="wu-controls">
+    <input type="text" id="wuSearch" class="wu-search" placeholder="Search writeups…" aria-label="Search writeups">
+    <button class="wu-filter active" data-filter="all">All</button>
+    <button class="wu-filter" data-filter="crypto">Crypto</button>
+    <button class="wu-filter" data-filter="pwn">Pwn</button>
+    <button class="wu-filter" data-filter="web">Web</button>
+    <button class="wu-filter" data-filter="re">Rev</button>
+    <button class="wu-filter" data-filter="general">General</button>
+    <button class="wu-filter" data-filter="misc">Misc</button>
+  </div>
+
+  <div class="wu-grid" id="wuGrid">
+
+    <!-- LIVE -->
+    <a class="wu-card reveal" href="ven-rsa/index.html" data-category="crypto">
+      <div class="wu-card-badges">
+        <span class="badge cat-crypto">Crypto</span>
+        <span class="diff diff-medium">Medium</span>
+      </div>
+      <div class="wu-card-title">VEN RSA Can Be Broken???</div>
+      <p class="wu-card-hook">An even RSA modulus means one prime is 2 — enough to factor N, rebuild the private key and decrypt the flag.</p>
+      <div class="wu-card-meta"><span>picoCTF · 200 pts</span><span class="arrow">read →</span></div>
+    </a>
+
+    <a class="wu-card reveal" href="pizza-router/index.html" data-category="pwn">
+      <div class="wu-card-badges">
+        <span class="badge cat-pwn">Pwn</span>
+        <span class="diff diff-hard">Hard</span>
+      </div>
+      <div class="wu-card-title">Pizza Router</div>
+      <p class="wu-card-hook">Overwrite a heap callback pointer in a drone-routing binary to redirect execution to win().</p>
+      <div class="wu-card-meta"><span>picoCTF · Pwn</span><span class="arrow">read →</span></div>
+    </a>
+
+    <a class="wu-card reveal" href="printer-shares-3/index.html" data-category="general">
+      <div class="wu-card-badges">
+        <span class="badge cat-general">General</span>
+        <span class="diff diff-hard">Hard</span>
+      </div>
+      <div class="wu-card-title">Printer Shares 3</div>
+      <p class="wu-card-hook">A writable SMB share feeds a privileged cron job — overwrite its script to read the protected flag.</p>
+      <div class="wu-card-meta"><span>picoCTF · SMB</span><span class="arrow">read →</span></div>
+    </a>
+
+    <a class="wu-card reveal" href="secure-pass-db/index.html" data-category="re">
+      <div class="wu-card-badges">
+        <span class="badge cat-re">Rev</span>
+        <span class="diff diff-medium">Medium</span>
+      </div>
+      <div class="wu-card-title">Secure Password Database</div>
+      <p class="wu-card-hook">A Heartbleed-style buffer over-read leaks a hidden secret the program never means to print.</p>
+      <div class="wu-card-meta"><span>picoCTF · RE</span><span class="arrow">read →</span></div>
+    </a>
+
+    <a class="wu-card reveal" href="creds-surf/index.html" data-category="web">
+      <div class="wu-card-badges">
+        <span class="badge cat-web">Web</span>
+        <span class="diff diff-medium">Medium</span>
+      </div>
+      <div class="wu-card-title">Credential Stuffing</div>
+      <p class="wu-card-hook">Replay a leaked username/password list against a login form until one pair unlocks the flag.</p>
+      <div class="wu-card-meta"><span>picoCTF · Web</span><span class="arrow">read →</span></div>
+    </a>
+
+    <a class="wu-card reveal" href="hidden-cipher-2/index.html" data-category="re">
+      <div class="wu-card-badges">
+        <span class="badge cat-re">Rev</span>
+        <span class="diff diff-medium">Medium</span>
+      </div>
+      <div class="wu-card-title">Hidden Cipher 2</div>
+      <p class="wu-card-hook">Disassemble the binary to reverse the transform it applies to the flag, then undo it.</p>
+      <div class="wu-card-meta"><span>picoCTF · RE</span><span class="arrow">read →</span></div>
+    </a>
+
+    <a class="wu-card reveal" href="trust-but-verify/index.html" data-category="misc">
+      <div class="wu-card-badges">
+        <span class="badge cat-misc">Misc</span>
+        <span class="diff diff-easy">Easy</span>
+      </div>
+      <div class="wu-card-title">Trust But Verify</div>
+      <p class="wu-card-hook">An interactive-fiction game — scripted an auto-player to walk the story to its hidden flag.</p>
+      <div class="wu-card-meta"><span>picoCTF · Misc</span><span class="arrow">read →</span></div>
+    </a>
+
+  </div>
+  <p class="wu-empty" id="wuEmpty" style="display:none;">No writeups match that filter.</p>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../index.html#hero">Home</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#skills">Skills</a>
+    <a href="index.html">Writeups</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../js/theme.js"></script>
+<script src="../js/nav.js"></script>
+<script src="../js/scroll.js"></script>
+<script src="writeups.js"></script>
+</body>
+</html>

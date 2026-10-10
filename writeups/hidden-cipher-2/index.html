@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hidden Cipher 2 — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="Disassemble a binary to reverse the transform it applies to the flag — each byte multiplied by the answer to a math prompt — then divide it back out. A picoCTF reverse-engineering writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-re">Reverse Engineering</span>
+    <span class="diff diff-medium">Medium</span>
+  </div>
+  <h1 class="wu-page-title">Hidden Cipher 2</h1>
+  <p class="wu-meta-line"><b>picoCTF 2026</b> · Reverse Engineering · Medium</p>
+
+  <dl class="wu-glance reveal">
+    <div><dt>Technique</dt><dd>Static RE of a reversible transform</dd></div>
+    <div><dt>The transform</dt><dd>encoded = flag_byte × answer</dd></div>
+    <div><dt>Tools</dt><dd>file, strings, objdump, Python</dd></div>
+    <div><dt>Binary</dt><dd>ELF64 PIE, not stripped</dd></div>
+  </dl>
+
+  <div class="wu-body">
+    <h2>Summary</h2>
+    <p>The binary asks a simple math question (<code>What is A op B?</code>). Answer correctly and it prints the flag — but <strong>encoded</strong>: each flag byte is multiplied by your answer. Because multiplication is reversible, dividing each encoded value by the answer recovers the original byte.</p>
+    <div class="wu-insight"><p>The “cipher” is just <code>encoded = flag_byte × answer</code>. Knowing the answer, <code>flag_byte = encoded ÷ answer</code> — a clean, exact inverse.</p></div>
+    <h2>Recon &amp; static analysis</h2>
+    <p>Standard triage, then read the disassembly — the binary isn't stripped, so function names survive:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>file hiddencipher2           # ELF 64-bit PIE, not stripped
+strings hiddencipher2 | head  # "Encoded flag values:", "%d %c %d?", ...
+objdump -d hiddencipher2 | grep -A200 '<main>'
+objdump -d hiddencipher2 | grep -A100 '<encode_flag>'</code></pre>
+    </div>
+    <p>In <code>encode_flag</code> the transform is plain: for each character it prints <code>flag_byte * answer</code>, comma-separated. So the decode is one division per value.</p>
+    <h2>Automated solve</h2>
+    <p>The solver parses the question, computes the answer, sends it, reads the encoded list, and divides it back:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>python</span><button class="wu-copy">copy</button></div>
+<pre><code>m = re.search(r'What is (\d+) ([+\-*]) (\d+)\?', prompt)
+a, op, b = int(m[1]), m[2], int(m[3])
+answer = a+b if op=='+' else abs(a-b) if op=='-' else a*b
+sock.sendall(f"{answer}\n".encode())
+
+encoded = [int(x) for x in re.search(r'Encoded flag values:\s*\n([\d,\s]+)', out)[1].split(',') if x.strip().isdigit()]
+flag = bytes(v // answer for v in encoded).decode()
+print(flag)</code></pre>
+    </div>
+    <details class="wu-details">
+      <summary>Remote runner</summary>
+      <div class="wu-code">
+        <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>python3 solve_remote.py shape-of-you.picoctf.net 49821</code></pre>
+      </div>
+    </details>
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Start with <code>file</code> + <code>strings</code>.</strong> The strings named the exact behaviour before any disassembly.</li>
+      <li><strong>Unstripped symbols</strong> made locating <code>encode_flag</code> trivial.</li>
+      <li><strong>A reversible transform is not encryption.</strong> Multiply-by-known inverts cleanly with division.</li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>
