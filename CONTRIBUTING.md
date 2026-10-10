@@ -12,6 +12,7 @@ The site is plain static files with no build step.
 | `css/` | Styles, one file per area. They are loaded in the order listed in `index.html`, and that order matters. |
 | `js/` | Scripts, one file per feature, also loaded in the order listed in `index.html`. |
 | `assets/certificates/` | Certificate images used by the slideshow. |
+| `writeups/` | CTF / lab writeups: `index.html` is the hub, each lab is `writeups/<slug>/index.html`. Shared `writeups.css` + `writeups.js`. |
 | `scripts/ci-check.sh` | The checks CI runs. |
 
 ## Branches
@@ -58,6 +59,27 @@ The site is plain static files with no build step.
 - Deploy from a clean checkout of `main`, never from a working folder with untracked files.
 - Until the Vercel GitHub integration is connected to this repo, deploys are manual (`vercel deploy --prod`). Once it is connected, merging to `main` deploys automatically and manual production deploys stop.
 - After a deploy, open the live URL and confirm the page loads.
+
+## Adding a writeup (how this scales)
+
+Each writeup is one self-contained static page; adding one is copy, edit, link.
+
+1. **Copy an existing page** as the template: `cp -r writeups/ven-rsa writeups/<slug>` (use a short kebab-case slug). Keep the `../../` asset paths — every lab page sits exactly one level under `writeups/`.
+2. **Write the content** in that page: badges (category + difficulty), the meta line, the "at a glance" panel, and the body (Summary → Recon → the flaw → Exploit → Takeaways). Reuse the existing classes (`wu-code`, `wu-details`, `wu-insight`). **Redact the flag** — use the `wu-flag-redacted` chip, never the value.
+3. **Add a hub card** in `writeups/index.html`: copy a `.wu-card` block, set its `href`, `data-category` (`crypto|pwn|web|re|general|misc`), badges and hook. The filter/search needs no other change.
+4. **Update the skills measurement** in `js/charts.js`: add the lab to `SOLVED_LABS` with its difficulty and the skills it exercised. The radar recomputes automatically; mirror any visible change in the homepage proficiency bars.
+5. **Check and ship**: `bash scripts/ci-check.sh`, then the normal pipeline (branch → PR into `test` → PR into `main`).
+
+Conventions to keep as this grows:
+- **Categories & colours** are fixed in `writeups.css` (`cat-crypto` magenta, `cat-pwn` cyan, `cat-web` green, `cat-re` yellow, `cat-general` purple, `cat-misc` light-cyan). Reuse them; don't invent per-lab colours.
+- **Difficulty** is `Easy | Medium | Hard`, matching the challenge source.
+- **No build step.** If the page count ever makes the repeated nav/footer markup painful, prefer a small generator script (see how the first batch was made) over adding a bundler — the "plain static files" rule is what the CI policy is built around.
+- Source labels read **CyLab**; leave literal command URLs (e.g. `picoctf.net`) untouched — they are the real hosts.
+
+## Known gaps to close as the project scales
+
+- **Protect `test`.** Only `main` requires a passing `checks` run, so a red commit can still land on `test`. Add the same branch protection to `test` (require `checks`) so staging stays green.
+- **One Vercel account.** The live domain is served from one Vercel account while the repo auto-builds `dvb` / `dvb-og72` on another; consolidate so previews and production live together and merging to `main` can deploy automatically.
 
 ## Rollback
 
