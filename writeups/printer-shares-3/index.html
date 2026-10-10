@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Printer Shares 3 — Writeup — Dos Vathanak Botra</title>
-<meta name="description" content="A world-writable SMB share feeds a privileged cron job — overwrite its script to read a protected flag. A picoCTF general-skills writeup.">
+<meta name="description" content="A world-writable SMB share feeds a privileged cron job — overwrite its script to read a protected flag. A CyLab general-skills writeup.">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/nav.css">
@@ -46,7 +46,7 @@
     <span class="diff diff-hard">Hard</span>
   </div>
   <h1 class="wu-page-title">Printer Shares 3</h1>
-  <p class="wu-meta-line"><b>picoCTF 2026</b> · General Skills · Hard</p>
+  <p class="wu-meta-line"><b>CyLab 2026</b> · General Skills · Hard</p>
 
   <dl class="wu-glance reveal">
     <div><dt>Vulnerability</dt><dd>Writable share + privileged cron</dd></div>
@@ -56,8 +56,8 @@
   </dl>
 
   <div class="wu-flag-wrap">
-    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">academy{5mb_pr1nter_5h4re5_r3v3r53_3222ebc1}</span>
-    <span class="wu-flag-hint">(click to reveal)</span>
+    FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
+    
   </div>
 
   <div class="wu-body">
@@ -92,7 +92,7 @@ for f in $(find / -iname 'flag*' 2>/dev/null); do echo "&gt;&gt; $f"; cat "$f" 2
     <div class="wu-code">
       <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
 <pre><code>>> /challenge/secure-shares/flag.txt
-academy{5mb_pr1nter_5h4re5_r3v3r53_3222ebc1}</code></pre>
+&lt;flag redacted&gt;</code></pre>
     </div>
     <h2>Takeaways</h2>
     <ul>

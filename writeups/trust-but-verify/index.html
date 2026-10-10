@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trust But Verify — Writeup — Dos Vathanak Botra</title>
-<meta name="description" content="An interactive-fiction game where the flag prints at the end — scripted an auto-player that reacts to each prompt. A picoCTF misc writeup.">
+<meta name="description" content="An interactive-fiction game where the flag prints at the end — scripted an auto-player that reacts to each prompt. A CyLab misc writeup.">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../css/base.css">
 <link rel="stylesheet" href="../../css/nav.css">
@@ -46,7 +46,7 @@
     <span class="diff diff-easy">Easy</span>
   </div>
   <h1 class="wu-page-title">Trust But Verify</h1>
-  <p class="wu-meta-line"><b>picoCTF 2026</b> · Misc / Interactive Fiction · Easy</p>
+  <p class="wu-meta-line"><b>CyLab 2026</b> · Misc / Interactive Fiction · Easy</p>
 
   <dl class="wu-glance reveal">
     <div><dt>Type</dt><dd>Read-through story game, not a hack</dd></div>
@@ -56,8 +56,8 @@
   </dl>
 
   <div class="wu-flag-wrap">
-    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">academy{7ru57_15_34rn3d_45944167}</span>
-    <span class="wu-flag-hint">(click to reveal)</span>
+    FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
+    
   </div>
 
   <div class="wu-body">
@@ -65,7 +65,7 @@
     <p>The hints make it clear this is a story game, not a puzzle: the game pauses often, and the flag prints near the end. Connect, press through the pauses, answer the choices, read the flag. The twist was automating a <strong>slow, mixed-prompt</strong> CLI reliably.</p>
     <div class="wu-insight"><p>Two prompt types: “Press Enter to continue” (blank line) and choice prompts <code>[a/b/c] &gt;</code> that reject a blank. Blasting Enter gets stuck forever on the first choice.</p></div>
     <h2>The auto-player</h2>
-    <p>A socket client reads the stream and reacts to whatever prompt is waiting: send a newline for a pause, or score the options and send a letter for a choice. It logs the transcript live and stops as soon as <code>academy{...}</code> appears.</p>
+    <p>A socket client reads the stream and reacts to whatever prompt is waiting: send a newline for a pause, or score the options and send a letter for a choice. It logs the transcript live and stops as soon as <code>&lt;flag redacted&gt;</code> appears.</p>
     <div class="wu-code">
       <div class="wu-code-head"><span>python</span><button class="wu-copy">copy</button></div>
 <pre><code>def pick_choice(text):
@@ -86,7 +86,7 @@
       <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
 <pre><code>Final choices: b, a, b
 ...
-academy{7ru57_15_34rn3d_45944167}</code></pre>
+&lt;flag redacted&gt;</code></pre>
     </div>
     <h2>Takeaways</h2>
     <ul>

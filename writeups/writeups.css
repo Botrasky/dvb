@@ -147,6 +147,9 @@
 .wu-flag.revealed{filter:none;user-select:text;border-style:solid;}
 .wu-flag-wrap{margin:1.25rem 0;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--text3);}
 .wu-flag-hint{font-size:0.68rem;color:var(--text3);margin-left:0.5rem;}
+/* flags are never published; show that it was captured, not the value */
+.wu-flag-redacted{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 12px;color:var(--green);}
 
 @media(max-width:640px){
   .wu-main{padding:100px 1.2rem 60px;}

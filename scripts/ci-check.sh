@@ -78,6 +78,16 @@ else
   ok "no credential patterns found"
 fi
 
+# 6. No CTF flags published. Writeups share the method, never the flag value.
+flagre='(academy|picoctf|cylab|flag|ctf)\{[^}]+\}'
+flags=$(git grep -InE -e "$flagre" -- '*.html' || true)
+if [ -n "$flags" ]; then
+  err "CTF flag tokens must not be committed (policy):"
+  echo "$flags" | sed 's/^/        /'
+else
+  ok "no CTF flag tokens in published pages"
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "Checks failed."
   exit 1
