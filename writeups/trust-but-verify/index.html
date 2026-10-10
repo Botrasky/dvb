@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trust But Verify — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="An interactive-fiction game where the flag prints at the end — scripted an auto-player that reacts to each prompt. A picoCTF misc writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-misc">Misc</span>
+    <span class="diff diff-easy">Easy</span>
+  </div>
+  <h1 class="wu-page-title">Trust But Verify</h1>
+  <p class="wu-meta-line"><b>picoCTF 2026</b> · Misc / Interactive Fiction · Easy</p>
+
+  <dl class="wu-glance reveal">
+    <div><dt>Type</dt><dd>Read-through story game, not a hack</dd></div>
+    <div><dt>Approach</dt><dd>Prompt-aware auto-player</dd></div>
+    <div><dt>Tools</dt><dd>Python sockets, netcat</dd></div>
+    <div><dt>Finding</dt><dd>Choices don't gate the flag</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag" title="click to reveal" role="button" tabindex="0">academy{7ru57_15_34rn3d_45944167}</span>
+    <span class="wu-flag-hint">(click to reveal)</span>
+  </div>
+
+  <div class="wu-body">
+    <h2>Summary</h2>
+    <p>The hints make it clear this is a story game, not a puzzle: the game pauses often, and the flag prints near the end. Connect, press through the pauses, answer the choices, read the flag. The twist was automating a <strong>slow, mixed-prompt</strong> CLI reliably.</p>
+    <div class="wu-insight"><p>Two prompt types: “Press Enter to continue” (blank line) and choice prompts <code>[a/b/c] &gt;</code> that reject a blank. Blasting Enter gets stuck forever on the first choice.</p></div>
+    <h2>The auto-player</h2>
+    <p>A socket client reads the stream and reacts to whatever prompt is waiting: send a newline for a pause, or score the options and send a letter for a choice. It logs the transcript live and stops as soon as <code>academy{...}</code> appears.</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>python</span><button class="wu-copy">copy</button></div>
+<pre><code>def pick_choice(text):
+    opts = re.findall(r"^\s*([A-Za-z])\)\s*(.*)$", text, re.M)
+    good = ["independently","look it up","verify","source","check"]
+    bad  = ["type it directly","sounds right","trust","just use","copy"]
+    best, bestscore = None, -999
+    for letter, desc in opts:
+        d = desc.lower(); score = 0
+        score += 2*sum(g in d for g in good) - 3*sum(b in d for b in bad)
+        if score > bestscore: bestscore, best = score, letter.lower()
+    return best</code></pre>
+    </div>
+    <p>Two real-world fixes made it work: respond only after the stream goes quiet for ~1.2s (a prompt is really waiting) rather than on a fixed timer, and write the transcript to disk <strong>live</strong> so a timeout never loses the flag.</p>
+    <h2>An honest bug — and a finding</h2>
+    <p>In one scene my scorer picked the <em>wrong</em> (non-verify) option, because I'd carelessly left <code>"run it"</code> in the <strong>good</strong> keyword list. The flag still printed — which revealed that <strong>the choices don't gate the flag</strong>; you reach the ending regardless. They only reframe the story.</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>Final choices: b, a, b
+...
+academy{7ru57_15_34rn3d_45944167}</code></pre>
+    </div>
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Read the hints first</strong> — they described the whole challenge and saved any reversing.</li>
+      <li><strong>Detect the prompt before responding</strong>; mixed prompt types break naive Enter-spam.</li>
+      <li><strong>Wait on the signal, not a timer</strong>, and flush output live so a kill never loses progress.</li>
+      <li>One stray keyword flipped a choice — the same unchecked assumption the game is about: <em>trust, but verify.</em></li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>

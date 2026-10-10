@@ -29,6 +29,7 @@
     <li><a href="#certificates">Certs</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="writeups/index.html">Writeups</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
@@ -119,18 +120,24 @@
       <div class="reveal">
         <div class="chart-wrap">
           <div class="chart-title">⬡ Proficiency Levels</div>
+          <!-- Values mirror the Skills Radar: a baseline plus difficulty-weighted
+               credit from the solved CTF labs (see js/charts.js and /writeups/). -->
           <div class="skill-bars">
             <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Penetration Testing</span><span>88%</span></div>
+              <div class="skill-bar-label"><span>Penetration Testing</span><span>90%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-label"><span>Python Development</span><span>90%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-label"><span>Network Security</span><span>88%</span></div>
               <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div>
             </div>
             <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Python Development</span><span>85%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Network Security</span><span>82%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="82"></div></div>
+              <div class="skill-bar-label"><span>Backend Development</span><span>80%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
             </div>
             <div class="skill-bar-item">
               <div class="skill-bar-label"><span>Digital Forensics</span><span>78%</span></div>
@@ -141,16 +148,20 @@
               <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
             </div>
             <div class="skill-bar-item">
+              <div class="skill-bar-label"><span>Reverse Engineering</span><span>74%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="74"></div></div>
+            </div>
+            <div class="skill-bar-item">
               <div class="skill-bar-label"><span>Cloud Security (AWS)</span><span>70%</span></div>
               <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70"></div></div>
             </div>
             <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Malware Analysis</span><span>68%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="68"></div></div>
+              <div class="skill-bar-label"><span>Web Exploitation</span><span>66%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="66"></div></div>
             </div>
             <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Backend Development</span><span>80%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
+              <div class="skill-bar-label"><span>Cryptography</span><span>62%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="62"></div></div>
             </div>
           </div>
         </div>
@@ -173,6 +184,9 @@
             <span class="skill-tag hot">Digital Forensics</span>
             <span class="skill-tag">Metasploit</span>
             <span class="skill-tag">Nmap</span>
+            <span class="skill-tag hot">Ghidra</span>
+            <span class="skill-tag">GDB</span>
+            <span class="skill-tag">pwntools</span>
           </div>
         </div>
       </div>
@@ -459,11 +473,32 @@
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact" class="section-pad">
+<!-- WRITEUPS -->
+<section id="writeups" class="section-pad">
   <div class="container">
     <div class="section-header reveal">
-      <span class="section-tag">// 07 — CONTACT</span>
+      <span class="section-tag">// 07 — WRITEUPS</span>
+      <h2 class="section-title">CTF Writeups</h2>
+      <p class="section-sub">Hands-on CTF and security-lab solutions — the recon, the flaw, and the exploit, written up across several categories.</p>
+    </div>
+    <div class="reveal" style="display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-bottom:2rem;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--magenta);border:1px solid var(--magenta);border-radius:6px;padding:5px 12px;">Cryptography</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);border:1px solid var(--cyan);border-radius:6px;padding:5px 12px;">Binary Exploitation</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);border:1px solid var(--green);border-radius:6px;padding:5px 12px;">Web</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--yellow);border:1px solid var(--yellow);border-radius:6px;padding:5px 12px;">Reverse Engineering</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:#a78bfa;border:1px solid #a78bfa;border-radius:6px;padding:5px 12px;">General Skills</span>
+    </div>
+    <div class="reveal" style="text-align:center;">
+      <a href="writeups/index.html" class="btn btn-primary" style="display:inline-block;">Browse all 7 writeups →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section-pad" style="background:var(--bg2);">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// 08 — CONTACT</span>
       <h2 class="section-title">Get In Touch</h2>
       <div class="section-line"></div>
     </div>
@@ -530,6 +565,7 @@
     <a href="#skills">Skills</a>
     <a href="#experience">Experience</a>
     <a href="#certificates">Certs</a>
+    <a href="writeups/index.html">Writeups</a>
     <a href="#contact">Contact</a>
   </div>
 </footer>
