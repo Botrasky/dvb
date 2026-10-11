@@ -14,6 +14,7 @@
   .hamburger{display:flex;}
 }
 @media(max-width:500px){
+  .nav-logo{font-size:0.6rem;padding:4px 10px;gap:6px;}
   .hero-stats{gap:1rem;}
   .stat-num{font-size:1.3rem;}
   .roadmap-grid{grid-template-columns:1fr;}
