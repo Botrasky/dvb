@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moneybox — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="Full compromise of the Moneybox Linux box: anonymous FTP + steghide foothold, SSH key reuse for lateral movement, and a sudo NOPASSWD Perl privilege escalation to root. An OffSec Proving Grounds writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo">DVB.SEC</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-general">General</span>
+    <span class="diff diff-easy">Easy</span>
+  </div>
+  <h1 class="wu-page-title">Moneybox</h1>
+  <p class="wu-meta-line"><b>OffSec Proving Grounds</b> · Linux · boot-to-root · category Pentesting</p>
+
+  <!-- At a glance -->
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Leaked secrets → stego foothold → SSH key reuse → sudo Perl</dd></div>
+    <div><dt>Impact</dt><dd>Full compromise — local and root flags captured (2/2)</dd></div>
+    <div><dt>Tools</dt><dd>nmap, ftp, gobuster, steghide, hydra, ssh</dd></div>
+    <div><dt>Given</dt><dd>A single IP, no credentials</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAGS&nbsp; <span class="wu-flag-redacted">✓ local + root captured — values redacted</span>
+  </div>
+
+  <div class="wu-body">
+
+    <h2>Summary</h2>
+    <p>Moneybox is a Linux host rated <strong>Easy</strong>. A full compromise came from chaining a series of
+    small information leaks into a complete takeover: anonymous FTP handed over an image with data hidden
+    inside it, a public web page leaked the passphrase to unlock that image, the extracted note named a user
+    with a weak password, and from that first shell a reused SSH key and a careless <code>sudo</code> rule
+    walked the way to root.</p>
+
+    <div class="wu-insight">
+      <p><strong>Key insight:</strong> no single bug here was exotic. The box falls because each service leaks
+      just a little — a readable file, a comment, a reused key — and the leaks compound. Defence means closing
+      every one of them, not just the last.</p>
+    </div>
+
+    <h2>Recon</h2>
+    <p>A full TCP scan followed by a service/script scan on the open ports:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>nmap -p- --min-rate 5000 &lt;target&gt;
+nmap -sC -sV -p 21,22,80 &lt;target&gt;</code></pre>
+    </div>
+
+    <table class="wu-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Version</th></tr></thead>
+      <tbody>
+        <tr><td>21</td><td>FTP</td><td>vsftpd 3.0.3</td></tr>
+        <tr><td>22</td><td>SSH</td><td>OpenSSH 7.9p1 (Debian)</td></tr>
+        <tr><td>80</td><td>HTTP</td><td>Apache 2.4.38 (Debian)</td></tr>
+      </tbody>
+    </table>
+
+    <p>The script scan also flagged that <strong>anonymous FTP login was permitted</strong> and listed a single
+    file, <code>trytofind.jpg</code>.</p>
+
+    <h2>FTP — anonymous access</h2>
+    <p>Logging in as <code>anonymous</code> with a blank password and pulling the file down:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>ftp &lt;target&gt;
+Name: anonymous
+Password: &lt;blank&gt;
+ftp&gt; ls -la
+-rw-r--r-- 1 0 0 1093656 Feb 26 2021 trytofind.jpg
+ftp&gt; get trytofind.jpg</code></pre>
+    </div>
+
+    <p>The filename is a nudge: something is hidden in the image. But an image on its own is useless without
+    the passphrase — which the web server turned out to be giving away.</p>
+
+    <h2>Web enumeration</h2>
+    <p>Directory brute-forcing the web root turned up a <code>/blogs/</code> directory:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>gobuster dir -u http://&lt;target&gt; -w /usr/share/wordlists/dirb/common.txt -x php,txt,html</code></pre>
+    </div>
+
+    <p>The page at <code>/blogs/</code> carried an HTML comment pointing at a second hidden directory, and that
+    directory's source held a second comment disclosing a secret key:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>html · page source</span><button class="wu-copy">copy</button></div>
+<pre><code>&lt;!-- the hint is the another secret directory is S3cr3t-T3xt --&gt;
+...
+&lt;!.. Secret Key &lt;redacted&gt; &gt;</code></pre>
+    </div>
+
+    <div class="wu-insight">
+      <p><strong>Why this matters:</strong> HTML comments are served to every visitor. "Hidden" directories and
+      keys left in page source are not hidden at all — they are public.</p>
+    </div>
+
+    <h2>Foothold — steganography</h2>
+    <p>Triaging the image first (<code>exiftool</code>, <code>strings</code>, <code>binwalk</code>,
+    <code>xxd | tail</code>) showed no appended data and a clean JPEG end marker — meaning the data was
+    <em>embedded</em>, not tacked onto the end. That points at <code>steghide</code>, and the secret key from
+    the web page was the passphrase:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>steghide extract -sf trytofind.jpg -p &lt;key&gt;
+wrote extracted data to "data.txt"</code></pre>
+    </div>
+
+    <p><code>data.txt</code> held a message addressed to <strong>renu</strong>, warning that the account's
+    password was weak — effectively naming a user and inviting a guessing attack.</p>
+
+    <h2>SSH credential attack</h2>
+    <p>With a username and a hint that the password was weak, a wordlist attack against SSH recovered it:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>hydra -l renu -P &lt;wordlist&gt; ssh://&lt;target&gt; -t 4
+[22][ssh] login: renu password: &lt;redacted&gt;</code></pre>
+    </div>
+
+    <h2>Local flag</h2>
+    <p>SSH as <code>renu</code> succeeded and the first flag was readable in the home directory. <code>renu</code>
+    had no sudo rights:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>renu@MoneyBox:~$ id
+uid=1001(renu) gid=1001(renu) groups=1001(renu)
+renu@MoneyBox:~$ cat ~/local.txt
+&lt;redacted&gt;
+renu@MoneyBox:~$ sudo -l
+Sorry, user renu may not run sudo on MoneyBox.</code></pre>
+    </div>
+
+    <h2>Lateral movement — renu → lily</h2>
+    <p><code>renu</code>'s shell history referenced generating an SSH key and copying it to a second user,
+    <code>lily</code>. A hash comparison confirmed <code>renu</code>'s <em>public</em> key was the entire
+    contents of <code>lily</code>'s <code>authorized_keys</code> — so <code>renu</code>'s private key logs
+    straight in as <code>lily</code>:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>sha256sum ~/.ssh/id_rsa.pub /home/lily/.ssh/authorized_keys
+886437...5732  /home/renu/.ssh/id_rsa.pub
+886437...5732  /home/lily/.ssh/authorized_keys</code></pre>
+    </div>
+
+    <p>Logging in as <code>lily</code> with the matching private key succeeded with no password prompt.</p>
+
+    <h2>Privilege escalation — lily → root</h2>
+    <p><code>lily</code> was allowed to run the Perl interpreter as root with no password:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>lily@MoneyBox:~$ sudo -l
+User lily may run the following commands on MoneyBox:
+    (ALL : ALL) NOPASSWD: /usr/bin/perl</code></pre>
+    </div>
+
+    <p>Perl can spawn a shell, and under <code>sudo</code> that shell runs as root — a standard GTFOBins
+    technique:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>lily@MoneyBox:~$ sudo perl -e 'exec "/bin/sh";'
+# id
+uid=0(root) ...
+# cat /root/proof.txt
+&lt;redacted&gt;</code></pre>
+    </div>
+
+    <p>Root flag captured — full compromise achieved.</p>
+
+    <h2>Findings &amp; remediation</h2>
+    <table class="wu-table">
+      <thead><tr><th>#</th><th>Finding</th><th>Severity</th><th>Remediation</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Anonymous FTP enabled</td><td>Medium</td><td>Disable anonymous login; remove vsftpd if unused</td></tr>
+        <tr><td>2</td><td>Secret leaked in HTML comments</td><td>Medium</td><td>Strip comments and hidden paths from public pages</td></tr>
+        <tr><td>3</td><td>Secret hidden in a publicly served image</td><td>Medium</td><td>Never store secrets in web-accessible files</td></tr>
+        <tr><td>4</td><td>Weak SSH password, no lockout</td><td>High</td><td>Enforce key-based auth; set <code>PasswordAuthentication no</code>; add fail2ban</td></tr>
+        <tr><td>5</td><td>SSH key reuse across accounts</td><td>High</td><td>Audit every <code>authorized_keys</code>; a user's key in another user's file is a finding</td></tr>
+        <tr><td>6</td><td><code>sudo NOPASSWD</code> on Perl interpreter</td><td>Critical</td><td>Remove NOPASSWD on interpreters; they cannot be exposed via sudo safely</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Leaks compound.</strong> A readable FTP file, a comment in page source, and a reused key are
+      each minor; chained together they are a root shell.</li>
+      <li><strong>Interpreters in sudo are game over.</strong> Any entry like <code>perl</code>, <code>python</code>
+      or <code>vim</code> under <code>NOPASSWD</code> is a direct path to root — check GTFOBins.</li>
+      <li><strong>Enumerate every service.</strong> The win needed FTP, HTTP and SSH together; stopping at the
+      first one would have dead-ended.</li>
+    </ul>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+</body>
+</html>
