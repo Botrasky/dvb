@@ -57,8 +57,51 @@ The site is plain static files with no build step.
 
 - Production deploys are run by the owner, or by an AI agent only when the owner asks for that specific deploy.
 - Deploy from a clean checkout of `main`, never from a working folder with untracked files.
-- Until the Vercel GitHub integration is connected to this repo, deploys are manual (`vercel deploy --prod`). Once it is connected, merging to `main` deploys automatically and manual production deploys stop.
 - After a deploy, open the live URL and confirm the page loads.
+
+**Merging to `main` does not deploy the live site.** The live domain
+https://vathanakbotra.vercel.app is served by the Vercel project `portfolio-2026`, which is
+**not** connected to this repo. The GitHub integration builds two unrelated projects (`dvb`,
+`dvb-og72`) — those are the "Vercel – …" checks on pull requests, and they do not serve the
+live domain. So don't poll the live URL after a merge expecting it to change; production needs
+the manual deploy below.
+
+**Requirements before deploying**
+
+- **Vercel CLI 63 or newer** (`vercel --version`). Older versions report a blocked deployment as
+  status `UNKNOWN` with `?` duration, which makes a hard failure look like a slow build and hides
+  the reason. If the CLI is old, upgrade the copy that is actually on `PATH` — check
+  `which vercel` against `npm root -g`, because this machine has them in different prefixes
+  (`npm i -g --prefix /opt/homebrew vercel@latest`).
+
+**Deploy from a git-free copy of `main`**
+
+Deploying from the repo folder fails. Vercel attaches the HEAD commit's author, and after a
+GitHub pull-request merge that author is a `…@users.noreply.github.com` address which is not a
+permitted deployer on the project. The deployment goes to status `Blocked`
+("the commit author doesn't have permission to create deployments for this project") and never
+builds. Export the tree instead, so the deploy is attributed to the CLI login:
+
+```
+D=$(mktemp -d)
+git archive main | tar -x -C "$D"
+mkdir -p "$D/.vercel" && cp .vercel/project.json "$D/.vercel/"
+cd "$D" && vercel --prod
+```
+
+This also satisfies the "clean checkout, no untracked files" rule, because `git archive` exports
+only tracked content. A successful run prints `Aliased https://vathanakbotra.vercel.app` and
+`Ready` in a few seconds.
+
+**Verify the deploy, don't watch the spinner**
+
+```
+vercel inspect <deployment-url>
+curl -s -o /dev/null -w '%{http_code}\n' https://vathanakbotra.vercel.app/<new-page>/
+```
+
+`vercel inspect` prints a `reason` field explaining a `Blocked` or failed deployment. A `Blocked`
+deployment is terminal — waiting will never make it finish.
 
 ## Adding a writeup (how this scales)
 
