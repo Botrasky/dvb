@@ -65,6 +65,31 @@ preview deployment, linked from the "Vercel" check on the PR.
 So the whole release flow is just the pipeline above: PR into `test`, PR into `main`, merge. There
 is no separate deploy step for anyone to run.
 
+**Where production lives — read this before touching Vercel**
+
+| | |
+| --- | --- |
+| Repository | `Botrasky/dvb` |
+| Vercel project | **`dvb-og72`** |
+| Live URL | https://vathanakbotra.vercel.app |
+
+The production project is called **`dvb-og72`**. The name is historical and tells you nothing, but
+it is the real one: it is connected to this repository, it owns the live domain, and it is what
+deploys when `main` moves. **There is no project named `portfolio`.** A cryptic name is not
+evidence of a leftover — don't go looking for a "better named" project and don't deploy to one.
+
+Two things that look broken but are not:
+
+- `dvb-og72.vercel.app` (the project's own default subdomain) returns 404. Harmless. The custom
+  domain above is what serves the site.
+- Pull requests show a single "Vercel" check pointing at `dvb-og72`. One check is correct.
+
+**The repository and the Vercel account are the same identity** (GitHub `Botrasky`), and that is
+the whole point. Production previously sat in a second, unconnected Vercel account, so merging to
+`main` deployed nothing and manual deploys failed as `Blocked` — a long and avoidable mess. If you
+find a reference anywhere to a different Vercel account, or to a project named `portfolio-2026`,
+it is stale: ask the owner instead of acting on it.
+
 **After merging to `main`, verify the live site** rather than assuming:
 
 ```
