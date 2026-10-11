@@ -111,6 +111,16 @@
 .wu-body strong{color:var(--text);}
 .wu-body a{color:var(--cyan);}
 
+/* data tables — port scans, findings/remediation */
+.wu-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem;
+  border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.wu-table th,.wu-table td{text-align:left;padding:0.6rem 0.85rem;border-bottom:1px solid var(--border2);
+  vertical-align:top;color:var(--text2);}
+.wu-table thead th{background:var(--surface);font-family:'IBM Plex Mono',monospace;font-size:0.66rem;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text3);}
+.wu-table tbody tr:last-child td{border-bottom:none;}
+.wu-table td code{white-space:nowrap;}
+
 /* a callout for the key insight */
 .wu-insight{background:rgba(0,229,255,0.05);border:1px solid var(--border);
   border-left:3px solid var(--cyan);border-radius:var(--radius);padding:1.1rem 1.25rem;margin:1.5rem 0;}
