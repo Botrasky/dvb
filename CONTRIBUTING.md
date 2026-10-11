@@ -55,10 +55,34 @@ The site is plain static files with no build step.
 
 ## Deploying
 
-- Production deploys are run by the owner, or by an AI agent only when the owner asks for that specific deploy.
-- Deploy from a clean checkout of `main`, never from a working folder with untracked files.
-- Until the Vercel GitHub integration is connected to this repo, deploys are manual (`vercel deploy --prod`). Once it is connected, merging to `main` deploys automatically and manual production deploys stop.
-- After a deploy, open the live URL and confirm the page loads.
+**Deploys are automatic. Do not deploy by hand.**
+
+The Vercel project `portfolio` is connected to this repository under the same GitHub identity
+that owns it. Merging a pull request into `main` builds and publishes
+https://vathanakbotra.vercel.app on its own, usually within seconds. Pull requests get their own
+preview deployment, linked from the "Vercel" check on the PR.
+
+So the whole release flow is just the pipeline above: PR into `test`, PR into `main`, merge. There
+is no separate deploy step for anyone to run.
+
+**After merging to `main`, verify the live site** rather than assuming:
+
+```
+curl -s -o /dev/null -w '%{http_code}\n' https://vathanakbotra.vercel.app/
+curl -s -o /dev/null -w '%{http_code}\n' https://vathanakbotra.vercel.app/writeups/<slug>/
+```
+
+Both should return `200`. If a new page 404s, the deployment has not finished or has failed —
+check the project's Deployments tab before changing anything.
+
+**Do not run `vercel --prod`.** A manual CLI deploy from this folder is both unnecessary and
+unreliable: Vercel attributes a CLI deploy to the HEAD commit's author, and after a GitHub merge
+that author is a `…@users.noreply.github.com` address, which can leave the deployment stuck in
+status `Blocked` instead of building. Let the Git integration deploy.
+
+If you ever do need to debug a deployment, `vercel inspect <deployment-url>` prints a `reason`
+field. A `Blocked` deployment is terminal — waiting will never make it finish. Use Vercel CLI 63
+or newer; older versions display `Blocked` as `UNKNOWN`, which hides the reason entirely.
 
 ## Adding a writeup (how this scales)
 
@@ -79,7 +103,10 @@ Conventions to keep as this grows:
 ## Known gaps to close as the project scales
 
 - **Protect `test`.** Only `main` requires a passing `checks` run, so a red commit can still land on `test`. Add the same branch protection to `test` (require `checks`) so staging stays green.
-- **One Vercel account.** The live domain is served from one Vercel account while the repo auto-builds `dvb` / `dvb-og72` on another; consolidate so previews and production live together and merging to `main` can deploy automatically.
+- ~~**One Vercel account.**~~ Closed. The site previously lived in a second Vercel account that was
+  not connected to this repo, so merging to `main` never deployed and production had to be pushed
+  by hand. Production now runs from the `portfolio` project under the same account as the
+  repository, previews and production sit together, and merging to `main` deploys automatically.
 
 ## Rollback
 
