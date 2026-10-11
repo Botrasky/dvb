@@ -37,6 +37,7 @@ const SKILL_BASE = [
   ['Cloud (AWS)', 70], ['Backend Dev', 80],
 ];
 const SOLVED_LABS = [
+  { name: 'Moneybox',            diff: 'easy',   skills: ['Pentesting', 'Network Sec', 'Web Exploit', 'Forensics'] },
   { name: 'VEN RSA',             diff: 'medium', skills: ['Cryptography', 'Python'] },
   { name: 'Pizza Router',        diff: 'hard',   skills: ['Pentesting', 'Reverse Eng', 'Python'] },
   { name: 'Printer Shares 3',    diff: 'hard',   skills: ['Pentesting', 'Network Sec'] },
