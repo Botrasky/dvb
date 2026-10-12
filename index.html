@@ -37,8 +37,9 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+      <span class="theme-toggle-label" id="themeLabel">Dark</span>
+      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
     </button>
     <div class="hamburger" id="hamburger" onclick="toggleMenu()">
       <span></span><span></span><span></span>
