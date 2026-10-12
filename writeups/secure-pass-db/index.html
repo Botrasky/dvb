@@ -82,20 +82,20 @@
     <p>Because the binary isn't stripped, the obfuscated bytes and the djb2 hash are right there. I rebuilt the secret and its hash offline:</p>
     <div class="wu-code">
       <div class="wu-code-head"><span>python</span><button class="wu-copy">copy</button></div>
-<pre><code>obf = [0xc3,0xff,0xc8,0xc2,0x92,0x9b,0x8b,0xc0,0x80,0xc2,0xc4,0x8b]
+<pre><code>obf = [ ... 12 obfuscated bytes from the binary, redacted ... ]
 sec = bytes(b ^ 0xaa for b in obf)
-print(sec.decode())            # iUbh81!j*hn!
+print(sec.decode())            # &lt;12-byte secret, redacted&gt;
 
 h = 5381                       # djb2, 64-bit
 for c in sec:
     h = (h*33 + c) &amp; (2**64 - 1)
-print(h)                       # 15237662580160011234</code></pre>
+print(h)                       # &lt;djb2 hash, redacted&gt;</code></pre>
     </div>
     <h2>Getting the flag</h2>
     <p>The live instance matched the binary I analysed, so the precomputed hash was enough — the password and length can be anything; only the hash is checked.</p>
     <div class="wu-code">
       <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
-<pre><code>printf 'a\n5\n15237662580160011234\n' | nc xebec.cylabacademy.net 22132
+<pre><code>printf 'a\n5\n&lt;djb2 hash, redacted&gt;\n' | nc xebec.cylabacademy.net 22132
 # ...
 # Enter your hash to access your account!
 # &lt;flag redacted&gt;</code></pre>
