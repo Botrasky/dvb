@@ -64,6 +64,98 @@
     FLAGS&nbsp; <span class="wu-flag-redacted">✓ local + root captured — values redacted</span>
   </div>
 
+  <!-- Cyber Kill Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Cyber Kill Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Reconnaissance</span><span class="step-detail">nmap, gobuster</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Exploitation</span><span class="step-detail">steghide, hydra</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Credential Access</span><span class="step-detail">SSH login</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="lateral"><span class="step-name">Lateral Movement</span><span class="step-detail">SSH key reuse</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="privesc"><span class="step-name">Privilege Escalation</span><span class="step-detail">sudo perl</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">root access</span></div>
+    </div>
+  </div>
+
+  <!-- MITRE ATT&CK Framework -->
+  <div class="wu-mitre-table">
+    <h2 style="border-left: 3px solid var(--magenta); padding-left: 0.85rem; color: var(--text); margin-bottom: 1rem;">MITRE ATT&CK Mapping</h2>
+    <table class="wu-table">
+      <thead>
+        <tr>
+          <th>Tactic</th>
+          <th>Technique</th>
+          <th>ID</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Reconnaissance</strong></td>
+          <td>Active Scanning: Vulnerability Scanning</td>
+          <td><a href="https://attack.mitre.org/techniques/T1046/" target="_blank" style="color: var(--cyan);">T1046</a></td>
+          <td>nmap scan discovered open ports 21, 22, 80</td>
+        </tr>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>Active Scanning: Wordlist Scanning</td>
+          <td><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" style="color: var(--cyan);">T1595.003</a></td>
+          <td>gobuster enumeration revealed /blogs/ and /S3cr3t-T3xt/ directories</td>
+        </tr>
+        <tr>
+          <td><strong>Credential Access</strong></td>
+          <td>Brute Force: Password Guessing</td>
+          <td><a href="https://attack.mitre.org/techniques/T1110/001/" target="_blank" style="color: var(--cyan);">T1110.001</a></td>
+          <td>hydra performed password attack against SSH user 'renu'</td>
+        </tr>
+        <tr>
+          <td><strong>Collection</strong></td>
+          <td>Credentials In Files</td>
+          <td><a href="https://attack.mitre.org/techniques/T1552/001/" target="_blank" style="color: var(--cyan);">T1552.001</a></td>
+          <td>steghide extracted hidden message from JPEG image</td>
+        </tr>
+        <tr>
+          <td><strong>Lateral Movement</strong></td>
+          <td>Unsecured Credentials: Private Keys / Remote Services: SSH</td>
+          <td><a href="https://attack.mitre.org/techniques/T1552/004/" target="_blank" style="color: var(--cyan);">T1552.004</a> + <a href="https://attack.mitre.org/techniques/T1021/004/" target="_blank" style="color: var(--cyan);">T1021.004</a></td>
+          <td>SSH public key hash matched between renu and lily authorized_keys</td>
+        </tr>
+        <tr>
+          <td><strong>Privilege Escalation</strong></td>
+          <td>Abuse Elevation Control Mechanism: Sudo and Sudo Caching</td>
+          <td><a href="https://attack.mitre.org/techniques/T1548/003/" target="_blank" style="color: var(--cyan);">T1548.003</a></td>
+          <td>sudo NOPASSWD Perl allowed direct execution as root</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Causes:</strong> Six independent misconfigurations, each minor, chained into complete compromise.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-540: Inclusion of Sensitive Information in Source Code</strong> — HTML comments disclosed hidden paths and a secret key</li>
+      <li><strong>CWE-321: Use of Hard-coded Cryptographic Key</strong> — Secret key embedded in web page source</li>
+      <li><strong>CWE-521: Weak Password Requirements</strong> — Weak SSH password, hinted at in steganographic data, was crackable by brute force</li>
+      <li><strong>CWE-798: Use of Hard-coded Credentials</strong> — Same SSH key accepted across accounts without rotation</li>
+      <li><strong>CWE-273: Improper Check for Dropped Privileges</strong> — Unchecked sudo NOPASSWD on an interpreter</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — these are configuration weaknesses on a lab host, not a scored vulnerability in a shipped product. The end result is unauthenticated-to-root compromise.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/540.html" class="cve-link" target="_blank">CWE-540</a>
+      <a href="https://cwe.mitre.org/data/definitions/321.html" class="cve-link" target="_blank">CWE-321</a>
+      <a href="https://cwe.mitre.org/data/definitions/521.html" class="cve-link" target="_blank">CWE-521</a>
+      <a href="https://cwe.mitre.org/data/definitions/798.html" class="cve-link" target="_blank">CWE-798</a>
+      <a href="https://cwe.mitre.org/data/definitions/273.html" class="cve-link" target="_blank">CWE-273</a>
+    </p>
+  </div>
+
   <div class="wu-body">
 
     <h2>Summary</h2>
@@ -239,6 +331,28 @@ uid=0(root) ...
       first one would have dead-ended.</li>
     </ul>
 
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">MITRE Framework</li>
+      <li><a href="https://attack.mitre.org/" target="_blank">MITRE ATT&CK — Adversary Tactics, Techniques, and Common Knowledge</a></li>
+
+      <li class="ref-category">NIST Cybersecurity Framework</li>
+      <li><a href="https://www.nist.gov/cyberframework" target="_blank">NIST Cybersecurity Framework (CSF) — Identify, Protect, Detect, Respond, Recover</a></li>
+      <li><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf" target="_blank">NIST SP 800-61: Computer Security Incident Handling Guide</a></li>
+
+      <li class="ref-category">OWASP &amp; CWE</li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10 — Most Critical Web Application Security Risks</a></li>
+      <li><a href="https://cwe.mitre.org/" target="_blank">CWE — Common Weakness Enumeration</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://gtfobins.github.io/" target="_blank">GTFOBins — curated Unix binaries usable to bypass local security restrictions (relevant to the sudo/Perl escalation)</a></li>
+      <li><a href="https://www.cisecurity.org/cis-benchmarks/" target="_blank">CIS Benchmarks — Security Configuration Standards</a></li>
+      <li><a href="https://cheatsheetseries.owasp.org/" target="_blank">OWASP Cheat Sheet Series — Practical Security Guidance</a></li>
+    </ul>
   </div>
 </main>
 
