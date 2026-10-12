@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bypass Me — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="A setuid binary filters digits from the password before comparing it — but the real secret still sits in memory. Breaking at strcmp and reading registers leaks it. A CyLab reverse-engineering writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo" aria-label="Status: Junior">
+    <span class="nav-logo-dot" aria-hidden="true"></span>
+    <span class="nav-logo-key">STATUS:</span>
+    <span class="nav-logo-val">JUNIOR</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-re">Reverse Engineering</span>
+    <span class="diff diff-medium">Medium</span>
+  </div>
+  <h1 class="wu-page-title">Bypass Me</h1>
+  <p class="wu-meta-line"><b>CyLab 2026</b> · Reverse Engineering · Medium</p>
+
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Secret recoverable from memory at runtime</dd></div>
+    <div><dt>Impact</dt><dd>Bypass a setuid root password check</dd></div>
+    <div><dt>Tools</dt><dd>nm, lldb, expect</dd></div>
+    <div><dt>Binary</dt><dd>setuid ELF 64-bit, not stripped</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
+
+  </div>
+
+  <!-- Attack Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Attack Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Recon</span><span class="step-detail">file, nm symbols</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="analysis"><span class="step-name">Behavior Analysis</span><span class="step-detail">sanitize() strips digits</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Dynamic Analysis</span><span class="step-detail">lldb, break on strcmp</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Memory Leak</span><span class="step-detail">read password from RSI</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">auth bypassed, flag captured</span></div>
+    </div>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Cause:</strong> The program filters input by blacklisting digits, but that filter is irrelevant — the real password is held in cleartext in process memory and can be read straight out of a CPU register at the comparison point, no matter what the filter allows through.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-184: Incomplete List of Disallowed Inputs</strong> — <code>sanitize()</code> only blocks digits; it does nothing to stop the actual attack, which never depends on what characters are typed</li>
+      <li><strong>CWE-312: Cleartext Storage of Sensitive Information</strong> — the decoded password sits unencrypted in memory, so any debugger attached to the process can read it directly</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — this is a lab-built binary, not a scored vulnerability in a shipped product. The practical effect is a full authentication bypass on a setuid-root binary.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/184.html" class="cve-link" target="_blank">CWE-184</a>
+      <a href="https://cwe.mitre.org/data/definitions/312.html" class="cve-link" target="_blank">CWE-312</a>
+    </p>
+  </div>
+
+  <div class="wu-body">
+    <h2>Summary</h2>
+    <p>A setuid-root binary, <code>bypassme.bin</code>, asks for a password and rejects anything wrong. Typing a password with digits in it shows the first crack: the program silently strips every digit before checking it, so it isn't comparing what I actually typed. But chasing that filter is the wrong path entirely — the binary is dynamically linked and not stripped, so I can just attach a debugger, break at the string comparison, and read the real password straight out of a register.</p>
+    <div class="wu-insight"><p><strong>Key insight:</strong> Input sanitization only decides what reaches the comparison — it does nothing to protect the secret the comparison is made against. If that secret is sitting in plaintext in memory, a debugger bypasses the filter entirely.</p></div>
+
+    <h2>Recon</h2>
+    <p>The password prompt over SSH is interactive, so I automated the login with an <code>expect</code> script rather than typing it by hand each run:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code># automated via login.exp
+ssh -o StrictHostKeyChecking=no -p &lt;port&gt; ctf-player@&lt;host&gt;
+# (challenge-issued SSH password, not the binary's password)</code></pre>
+    </div>
+    <p>Once in, I checked what I was dealing with:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>ctf-player@pico-chall$ ls -la
+-rwsr-xr-x 1 root root 21672 Mar  6 20:10 bypassme.bin
+
+ctf-player@pico-chall$ file bypassme.bin
+bypassme.bin: setuid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV),
+              dynamically linked, ... not stripped</code></pre>
+    </div>
+    <p>Setuid root, dynamically linked, and <strong>not stripped</strong> — symbol names survive, so the logic is easy to map before touching a debugger.</p>
+
+    <h2>Finding the sanitization logic</h2>
+    <p>Entering a numeric password first showed the filter in action:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text</span><button class="wu-copy">copy</button></div>
+<pre><code>[3 tries left] Enter password: 6dd28e9b
+Raw Input:      [6dd28e9b]
+Sanitized Input:[ddeb]</code></pre>
+    </div>
+    <div class="wu-insight"><p>Every digit (0–9) is stripped before the comparison. Any password containing numbers gets silently rewritten first — so brute-forcing the raw string makes no sense.</p></div>
+    <p>Listing the binary's symbols points straight at the authentication flow:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>ctf-player@pico-chall$ nm -C bypassme.bin
+0000000000001457 T auth_sequence()
+0000000000001333 T decode_password(char*)
+00000000000013c4 T sanitize(char const*, char*)</code></pre>
+    </div>
+    <p><code>decode_password</code> suggests the real secret is obfuscated and only decoded at runtime — which means the plaintext has to exist in memory at some point, however briefly.</p>
+
+    <h2>Dynamic analysis with lldb</h2>
+    <p>Rather than reverse the decoding, I let the program decode it for me and read the result at the comparison point.</p>
+    <p><strong>Step 1 — break on main.</strong> Shared libraries aren't mapped until execution starts, so a breakpoint on a library function set too early stays "pending". Breaking on <code>main</code> first guarantees the environment is ready:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>lldb</span><button class="wu-copy">copy</button></div>
+<pre><code>(lldb) b main
+(lldb) run</code></pre>
+    </div>
+    <p><strong>Step 2 — intercept the comparison.</strong> <code>auth_sequence</code> eventually calls <code>strcmp</code> to check the sanitized input against the real secret:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>lldb</span><button class="wu-copy">copy</button></div>
+<pre><code>(lldb) b strcmp
+(lldb) c
+[3 tries left] Enter password: AABBCC</code></pre>
+    </div>
+    <p><strong>Step 3 — read the registers.</strong> In the x86-64 calling convention, <code>strcmp(rdi, rsi)</code> compares the string in <code>RDI</code> against the string in <code>RSI</code> — one of those two is the sanitized input I just typed, and the other is the real secret:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>lldb</span><button class="wu-copy">copy</button></div>
+<pre><code>(lldb) register read rdi rsi
+rdi = 0x00007fffd5f33b50
+rsi = 0x00007fffd5f33c50
+(lldb) x/s $rdi
+0x7fffd5f33b50: "AABBCC"
+(lldb) x/s $rsi
+0x7fffd5f33c50: "SuperSecure"</code></pre>
+    </div>
+    <div class="wu-insight"><p><code>RDI</code> held my sanitized input, confirming <code>RSI</code> is the program's own decoded secret — sitting in memory as plain text, with nothing stopping a debugger from reading it directly.</p></div>
+
+    <h2>Result</h2>
+    <p>Running the binary again with the leaked value instead of guessing:</p>
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>ctf-player@pico-chall$ ./bypassme.bin
+Enter password: SuperSecure
+Authenticating...
+&lt;flag redacted&gt;</code></pre>
+    </div>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Symbols are gold.</strong> An unstripped binary lets <code>nm</code>/<code>objdump</code> map the logic before a debugger is even opened.</li>
+      <li><strong>Sanitization is not security.</strong> Filtering user input does nothing if the underlying secret can be read straight out of memory.</li>
+      <li><strong>Dynamic beats static here.</strong> Obfuscated decoding logic is tedious to reverse by hand but trivial to bypass by reading the result at runtime.</li>
+      <li><strong>Break on main first.</strong> Setting a library breakpoint before the process starts risks a "pending" breakpoint that never fires.</li>
+      <li><strong>Automate the boring parts.</strong> An <code>expect</code> script made the SSH login reproducible and removed manual typing mistakes from the loop.</li>
+    </ul>
+
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/184.html" target="_blank">CWE-184: Incomplete List of Disallowed Inputs</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/312.html" target="_blank">CWE-312: Cleartext Storage of Sensitive Information</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html" target="_blank">OWASP Input Validation Cheat Sheet</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/scroll.js"></script>
+<script src="../writeups.js"></script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>
