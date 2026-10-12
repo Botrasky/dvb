@@ -61,7 +61,35 @@
 
   <div class="wu-flag-wrap">
     FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
-    
+
+  </div>
+
+  <!-- Attack Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Attack Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Static Analysis</span><span class="step-detail">unstripped binary, symbols intact</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Over-read</span><span class="step-detail">attacker-controlled readback length</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Secret Recovery</span><span class="step-detail">deobfuscate + djb2 hash</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">hash unlocks flag</span></div>
+    </div>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Cause:</strong> The readback loop trusts an attacker-supplied length instead of the password's real length, letting a read past the password into adjacent buffer memory that holds a hidden secret.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-125: Out-of-bounds Read</strong> — A user-controlled length drives how far past the intended data the readback loop goes</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Same bug class as a real CVE:</strong> this is the same root cause as <a href="https://nvd.nist.gov/vuln/detail/CVE-2014-0160" class="cve-link" target="_blank">CVE-2014-0160 (Heartbleed)</a> — OpenSSL's heartbeat extension trusted a client-supplied length field and read past the intended buffer into adjacent memory. No CVSS score applies to this lab binary itself; it is not a shipped, scored product.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/125.html" class="cve-link" target="_blank">CWE-125</a>
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2014-0160" class="cve-link" target="_blank">CVE-2014-0160</a>
+    </p>
   </div>
 
   <div class="wu-body">
@@ -115,6 +143,19 @@ as ASCII, recompute djb2 over those bytes, and submit that number.</code></pre>
       <li><strong>The flag spells out the lesson:</strong> don't trust user input.</li>
     </ul>
 
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/125.html" target="_blank">CWE-125: Out-of-bounds Read</a></li>
+
+      <li class="ref-category">Related Real-World CVE</li>
+      <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2014-0160" target="_blank">CVE-2014-0160 (Heartbleed) — NVD entry, same bug class</a></li>
+      <li><a href="https://www.cisa.gov/news-events/alerts/2014/04/08/openssl-heartbleed-vulnerability-cve-2014-0160" target="_blank">CISA Alert: OpenSSL Heartbleed Vulnerability</a></li>
+    </ul>
   </div>
 </main>
 

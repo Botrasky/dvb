@@ -191,6 +191,13 @@
 .wu-chain-box[data-phase="privesc"] .step-name{color:var(--green);}
 .wu-chain-box[data-phase="impact"]{border-color:var(--magenta);background:rgba(255,0,128,0.06);}
 .wu-chain-box[data-phase="impact"] .step-name{color:var(--magenta);}
+/* crypto-analysis labs (no attacker tactics, so a separate phase set) */
+.wu-chain-box[data-phase="analysis"]{border-color:var(--yellow);}
+.wu-chain-box[data-phase="analysis"] .step-name{color:var(--yellow);}
+.wu-chain-box[data-phase="crypto"]{border-color:var(--magenta);}
+.wu-chain-box[data-phase="crypto"] .step-name{color:var(--magenta);}
+.wu-chain-box[data-phase="recovery"]{border-color:var(--cyan3);}
+.wu-chain-box[data-phase="recovery"] .step-name{color:var(--cyan3);}
 @media(max-width:640px){
   .wu-chain{flex-direction:column;gap:0.6rem;}
   .wu-chain-arrow{transform:rotate(90deg);padding:0.1rem 0;align-self:center;}

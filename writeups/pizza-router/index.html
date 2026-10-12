@@ -61,7 +61,38 @@
 
   <div class="wu-flag-wrap">
     FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
-    
+
+  </div>
+
+  <!-- Attack Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Attack Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Recon</span><span class="step-detail">objdump, diff live binary</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="analysis"><span class="step-name">Live Analysis</span><span class="step-detail">GDB leaks offsets</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Arbitrary Write</span><span class="step-detail">unbounded reroute index</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="privesc"><span class="step-name">Callback Hijack</span><span class="step-detail">finish pointer → win()</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">dispatch triggers win()</span></div>
+    </div>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Cause:</strong> <code>reroute</code> takes a signed heap index with no bounds check, turning a route-cost update into an arbitrary 32-bit write anywhere relative to the route list.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-129: Improper Validation of Array Index</strong> — <code>heap_idx</code> is never checked against the route list's real bounds</li>
+      <li><strong>CWE-787: Out-of-bounds Write</strong> — The unvalidated index lets <code>new_cost</code> write past the intended structure, eventually onto a function-pointer slot</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — this is a lab-built binary, not a scored vulnerability in a shipped product. The practical effect is full code execution via a hijacked callback.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/129.html" class="cve-link" target="_blank">CWE-129</a>
+      <a href="https://cwe.mitre.org/data/definitions/787.html" class="cve-link" target="_blank">CWE-787</a>
+    </p>
   </div>
 
   <div class="wu-body">
@@ -108,6 +139,19 @@ win = pie+0x2480  fx_draw_basic = pie+0x2270</code></pre>
       <li><strong>Leak-driven, not hardcoded</strong> — computing pie/heap from runtime leaks makes the exploit ASLR-proof and instance-independent.</li>
     </ul>
 
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/129.html" target="_blank">CWE-129: Improper Validation of Array Index</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/787.html" target="_blank">CWE-787: Out-of-bounds Write</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://owasp.org/www-community/vulnerabilities/Buffer_Overflow" target="_blank">OWASP: Buffer Overflow</a></li>
+    </ul>
   </div>
 </main>
 
