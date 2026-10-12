@@ -61,7 +61,63 @@
 
   <div class="wu-flag-wrap">
     FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
-    
+
+  </div>
+
+  <!-- Attack Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Attack Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Recon</span><span class="step-detail">protocol framing, 1-attempt/connection</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Credential Stuffing</span><span class="step-detail">1500 leaked pairs replayed</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Reliability Fix</span><span class="step-detail">sequential, read-to-close</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Valid Login</span><span class="step-detail">flag captured</span></div>
+    </div>
+  </div>
+
+  <!-- MITRE ATT&CK Framework -->
+  <div class="wu-mitre-table">
+    <h2 style="border-left: 3px solid var(--green); padding-left: 0.85rem; color: var(--text); margin-bottom: 1rem;">MITRE ATT&CK Mapping</h2>
+    <table class="wu-table">
+      <thead>
+        <tr>
+          <th>Tactic</th>
+          <th>Technique</th>
+          <th>ID</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Credential Access</strong></td>
+          <td>Brute Force: Credential Stuffing</td>
+          <td><a href="https://attack.mitre.org/techniques/T1110/004/" target="_blank" style="color: var(--cyan);">T1110.004</a></td>
+          <td>Replayed 1500 leaked <code>username;password</code> pairs against the login</td>
+        </tr>
+        <tr>
+          <td><strong>Initial Access</strong></td>
+          <td>Valid Accounts</td>
+          <td><a href="https://attack.mitre.org/techniques/T1078/" target="_blank" style="color: var(--cyan);">T1078</a></td>
+          <td>One reused pair authenticated, granting access to the account</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Cause:</strong> The login has no real lockout or throttling on failed attempts — only an incidental concurrency cap unrelated to abuse prevention — so a leaked credential list can be replayed to completion.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-307: Improper Restriction of Excessive Authentication Attempts</strong> — No account lockout or rate limiting stopped 1500 sequential login attempts</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — this is a lab-built login service, not a scored vulnerability in a shipped product. The practical effect is account takeover whenever a user reuses a breached password.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/307.html" class="cve-link" target="_blank">CWE-307</a>
+    </p>
   </div>
 
   <div class="wu-body">
@@ -119,6 +175,22 @@ Welcome &lt;user&gt;!
       <li><strong>The flag spells out the moral:</strong> don't reuse credentials.</li>
     </ul>
 
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">MITRE Framework</li>
+      <li><a href="https://attack.mitre.org/" target="_blank">MITRE ATT&CK — Adversary Tactics, Techniques, and Common Knowledge</a></li>
+
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/307.html" target="_blank">CWE-307: Improper Restriction of Excessive Authentication Attempts</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html" target="_blank">OWASP Credential Stuffing Prevention Cheat Sheet</a></li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10 — Most Critical Web Application Security Risks</a></li>
+    </ul>
   </div>
 </main>
 
