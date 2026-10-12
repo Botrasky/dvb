@@ -59,6 +59,33 @@
     <div><dt>Binary</dt><dd>ELF64 PIE, not stripped</dd></div>
   </dl>
 
+  <!-- Attack Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Attack Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Triage</span><span class="step-detail">file, strings</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="analysis"><span class="step-name">Static Analysis</span><span class="step-detail">objdump, encode_flag</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="crypto"><span class="step-name">Reverse the Transform</span><span class="step-detail">division inverts multiplication</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">flag decoded</span></div>
+    </div>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Cause:</strong> The "encoding" is a single known multiplication, not an actual cryptographic transform — anyone who knows the multiplier (the math prompt's own answer) can invert it with one division per byte.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-327: Use of a Broken or Risky Cryptographic Algorithm</strong> — A trivially-invertible multiply stands in for encryption and offers no real confidentiality</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — this is a lab-built obfuscation, not a scored vulnerability in a shipped product.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/327.html" class="cve-link" target="_blank">CWE-327</a>
+    </p>
+  </div>
+
   <div class="wu-body">
     <h2>Summary</h2>
     <p>The binary asks a simple math question (<code>What is A op B?</code>). Answer correctly and it prints the flag — but <strong>encoded</strong>: each flag byte is multiplied by your answer. Because multiplication is reversible, dividing each encoded value by the answer recovers the original byte.</p>
@@ -100,6 +127,18 @@ print(flag)</code></pre>
       <li><strong>A reversible transform is not encryption.</strong> Multiply-by-known inverts cleanly with division.</li>
     </ul>
 
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/327.html" target="_blank">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank">OWASP Cryptographic Storage Cheat Sheet</a></li>
+    </ul>
   </div>
 </main>
 

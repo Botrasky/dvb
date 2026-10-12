@@ -62,7 +62,38 @@
 
   <div class="wu-flag-wrap">
     FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
-    
+
+  </div>
+
+  <!-- Cyber Kill Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Cyber Kill Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Reconnaissance</span><span class="step-detail">netcat connect</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="analysis"><span class="step-name">Analysis</span><span class="step-detail">check parity</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="crypto"><span class="step-name">Cryptanalysis</span><span class="step-detail">factor N</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="recovery"><span class="step-name">Key Recovery</span><span class="step-detail">derive d</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Decrypt</span><span class="step-detail">flag</span></div>
+    </div>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Cause:</strong> The key generator never enforces that both RSA primes are large — it accepts <code>p = 2</code>, which collapses the factorization problem to a single division.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-326: Inadequate Encryption Strength</strong> — A modulus with one 1-bit "prime" (<code>p = 2</code>) carries none of the strength RSA depends on</li>
+      <li><strong>CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)</strong> — The hidden <code>get_primes()</code> gives no guarantee its output is large or non-trivial</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — this is a lab-built key generator, not a scored vulnerability in a shipped product. The practical effect is a full break: any ciphertext from this service decrypts in milliseconds.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/326.html" class="cve-link" target="_blank">CWE-326</a>
+      <a href="https://cwe.mitre.org/data/definitions/338.html" class="cve-link" target="_blank">CWE-338</a>
+    </p>
   </div>
 
   <div class="wu-body">
@@ -179,6 +210,20 @@ Flag: &lt;flag redacted&gt;</code></pre>
       complete break.</li>
     </ul>
 
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">Cryptography Standards</li>
+      <li><a href="https://csrc.nist.gov/pubs/fips/186-5/final" target="_blank">FIPS 186-5: Digital Signature Standard (DSS) — RSA key-pair generation requirements</a></li>
+      <li><a href="https://www.rfc-editor.org/rfc/rfc8017" target="_blank">RFC 8017: PKCS #1 — RSA Cryptography Specifications</a></li>
+
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/326.html" target="_blank">CWE-326: Inadequate Encryption Strength</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/338.html" target="_blank">CWE-338: Use of Cryptographically Weak PRNG</a></li>
+    </ul>
   </div>
 </main>
 

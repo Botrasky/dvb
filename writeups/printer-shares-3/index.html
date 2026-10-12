@@ -61,7 +61,77 @@
 
   <div class="wu-flag-wrap">
     FLAG&nbsp; <span class="wu-flag-redacted">✓ captured — flag redacted</span>
-    
+
+  </div>
+
+  <!-- Attack Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Attack Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Reconnaissance</span><span class="step-detail">smbclient -L</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Write Access</span><span class="step-detail">overwrite script.sh</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="privesc"><span class="step-name">Privileged Execution</span><span class="step-detail">cron runs script as root</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Collection</span><span class="step-detail">flag read via cron.log</span></div>
+    </div>
+  </div>
+
+  <!-- MITRE ATT&CK Framework -->
+  <div class="wu-mitre-table">
+    <h2 style="border-left: 3px solid var(--cyan); padding-left: 0.85rem; color: var(--text); margin-bottom: 1rem;">MITRE ATT&CK Mapping</h2>
+    <table class="wu-table">
+      <thead>
+        <tr>
+          <th>Tactic</th>
+          <th>Technique</th>
+          <th>ID</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>Network Share Discovery</td>
+          <td><a href="https://attack.mitre.org/techniques/T1135/" target="_blank" style="color: var(--cyan);">T1135</a></td>
+          <td><code>smbclient -L</code> enumerated a writable null-session share</td>
+        </tr>
+        <tr>
+          <td><strong>Lateral Movement</strong></td>
+          <td>Remote Services: SMB/Windows Admin Shares</td>
+          <td><a href="https://attack.mitre.org/techniques/T1021/002/" target="_blank" style="color: var(--cyan);">T1021.002</a></td>
+          <td>Wrote a replacement <code>script.sh</code> to the share over SMB</td>
+        </tr>
+        <tr>
+          <td><strong>Privilege Escalation</strong></td>
+          <td>Scheduled Task/Job: Cron</td>
+          <td><a href="https://attack.mitre.org/techniques/T1053/003/" target="_blank" style="color: var(--cyan);">T1053.003</a></td>
+          <td>A privileged cron job executed the attacker-controlled script every minute</td>
+        </tr>
+        <tr>
+          <td><strong>Collection</strong></td>
+          <td>Data from Local System</td>
+          <td><a href="https://attack.mitre.org/techniques/T1005/" target="_blank" style="color: var(--cyan);">T1005</a></td>
+          <td>Flag file content appeared in the world-readable <code>cron.log</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Cause:</strong> A privileged cron job executes a script that an anonymous SMB session can overwrite — the script's permissions, not the job's privilege level, are the actual flaw.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-732: Incorrect Permission Assignment for Critical Resource</strong> — <code>script.sh</code> is writable by an anonymous null SMB session despite being run with elevated privilege</li>
+      <li><strong>CWE-276: Incorrect Default Permissions</strong> — The <code>shares</code> export allows unauthenticated write access by default</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — this is a lab misconfiguration, not a scored vulnerability in a shipped product. The practical effect is anonymous-to-root code execution.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/732.html" class="cve-link" target="_blank">CWE-732</a>
+      <a href="https://cwe.mitre.org/data/definitions/276.html" class="cve-link" target="_blank">CWE-276</a>
+    </p>
   </div>
 
   <div class="wu-body">
@@ -106,6 +176,23 @@ for f in $(find / -iname 'flag*' 2>/dev/null); do echo "&gt;&gt; $f"; cat "$f" 2
       <li>Fix: cron scripts should be root-owned and <strong>not writable</strong> by anonymous users.</li>
     </ul>
 
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">MITRE Framework</li>
+      <li><a href="https://attack.mitre.org/" target="_blank">MITRE ATT&CK — Adversary Tactics, Techniques, and Common Knowledge</a></li>
+
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/732.html" target="_blank">CWE-732: Incorrect Permission Assignment for Critical Resource</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/276.html" target="_blank">CWE-276: Incorrect Default Permissions</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://www.cisecurity.org/cis-benchmarks/" target="_blank">CIS Benchmarks — Security Configuration Standards</a></li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10 — Most Critical Web Application Security Risks</a></li>
+    </ul>
   </div>
 </main>
 
