@@ -161,7 +161,73 @@
 .wu-flag-redacted{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;
   background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 12px;color:var(--green);}
 
+/* ============================================================
+   METHODOLOGY FRAMEWORKS — Kill Chain, MITRE ATT&CK, References
+   ============================================================ */
+.wu-kill-chain{margin:2.5rem 0;padding:1.5rem;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);}
+.wu-kill-chain-title{font-family:'Orbitron',sans-serif;font-weight:600;font-size:1.1rem;
+  color:var(--cyan);margin-bottom:1rem;letter-spacing:0.5px;}
+.wu-chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0.9rem;}
+.wu-chain-box{flex:1 1 140px;min-width:120px;padding:1rem 0.9rem;background:var(--surface2);
+  border:1.5px solid var(--cyan);border-radius:6px;text-align:center;transition:transform var(--transition);}
+.wu-chain-box:hover{transform:translateY(-2px);}
+.wu-chain-box .step-name{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;
+  font-weight:600;color:var(--cyan);line-height:1.3;}
+.wu-chain-box .step-detail{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+  color:var(--text2);margin-top:0.35rem;}
+.wu-chain-arrow{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  color:var(--text3);font-size:1.1rem;padding:0 0.1rem;}
+/* phase color coding — same palette the rest of the site already uses */
+.wu-chain-box[data-phase="recon"]{border-color:var(--cyan);}
+.wu-chain-box[data-phase="recon"] .step-name{color:var(--cyan);}
+.wu-chain-box[data-phase="exploit"]{border-color:var(--yellow);}
+.wu-chain-box[data-phase="exploit"] .step-name{color:var(--yellow);}
+.wu-chain-box[data-phase="credential"]{border-color:var(--magenta);}
+.wu-chain-box[data-phase="credential"] .step-name{color:var(--magenta);}
+.wu-chain-box[data-phase="lateral"]{border-color:var(--cyan3);}
+.wu-chain-box[data-phase="lateral"] .step-name{color:var(--cyan3);}
+.wu-chain-box[data-phase="privesc"]{border-color:var(--green);}
+.wu-chain-box[data-phase="privesc"] .step-name{color:var(--green);}
+.wu-chain-box[data-phase="impact"]{border-color:var(--magenta);background:rgba(255,0,128,0.06);}
+.wu-chain-box[data-phase="impact"] .step-name{color:var(--magenta);}
+@media(max-width:640px){
+  .wu-chain{flex-direction:column;gap:0.6rem;}
+  .wu-chain-arrow{transform:rotate(90deg);padding:0.1rem 0;align-self:center;}
+  .wu-chain-box{width:100%;}
+}
+
+.wu-mitre-table{margin:2.5rem 0;}
+.wu-mitre-table .wu-table{font-size:0.8rem;}
+.wu-mitre-table .wu-table th{background:var(--surface2);}
+
+.wu-vuln-analysis{margin:2.5rem 0;padding:1.5rem;background:rgba(255,0,128,0.04);
+  border:1px solid var(--border);border-left:3px solid var(--magenta);border-radius:var(--radius);}
+.wu-vuln-analysis h3{color:var(--magenta);margin-top:0;}
+.wu-vuln-analysis p{margin:0.5rem 0;}
+.wu-vuln-analysis .cve-link{display:inline-block;font-family:'IBM Plex Mono',monospace;
+  background:var(--surface);padding:2px 8px;border-radius:4px;color:var(--cyan);text-decoration:none;
+  border:1px solid var(--border);margin:0.25rem 0;transition:all var(--transition);}
+.wu-vuln-analysis .cve-link:hover{color:var(--magenta);border-color:var(--magenta);}
+
+.wu-references{margin:3rem 0;padding:1.5rem;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);}
+.wu-references h3{margin-top:0;color:var(--cyan);}
+.wu-references ul{list-style:none;padding:0;margin:0;}
+.wu-references li{margin:0.6rem 0;padding-left:1.5rem;position:relative;}
+.wu-references li::before{content:'→';position:absolute;left:0;color:var(--cyan);}
+.wu-references a{color:var(--cyan);text-decoration:none;word-break:break-word;}
+.wu-references a:hover{text-decoration:underline;}
+.wu-references li.ref-category{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;
+  color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.6rem;margin-top:1rem;
+  padding-left:0;}
+.wu-references li.ref-category::before{content:none;}
+.wu-references li.ref-category:first-of-type{margin-top:0;}
+
 @media(max-width:640px){
   .wu-main{padding:100px 1.2rem 60px;}
   .wu-body{max-width:none;}
+  .wu-kill-chain{padding:1rem;}
+  .wu-vuln-analysis{padding:1rem;}
+  .wu-references{padding:1rem;}
 }
