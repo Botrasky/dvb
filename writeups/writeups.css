@@ -238,3 +238,9 @@
   .wu-vuln-analysis{padding:1rem;}
   .wu-references{padding:1rem;}
 }
+
+/* phones: chain steps keep their natural height, wide tables scroll sideways */
+@media(max-width:640px){
+  .wu-chain-box{flex:0 0 auto;}
+  .wu-table{display:block;overflow-x:auto;}
+}
