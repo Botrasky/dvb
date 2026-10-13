@@ -18,6 +18,13 @@
     });
   }
 
+  // The theme toggle sets its class on <body>; mirror it on <html> so the
+  // cube faces and the early-theme rule in fx-head.js stay in step. This runs
+  // with the effects off too, or a saved light theme could not be switched off.
+  function syncTheme() { html.classList.toggle('light-mode', document.body.classList.contains('light-mode')); }
+  syncTheme();
+  new MutationObserver(syncTheme).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
   if (!FX.on) {
     // The original behaviour: fade up on scroll, fill the skill bars.
     var plain = new IntersectionObserver(function (entries) {
@@ -30,12 +37,6 @@
     Array.prototype.forEach.call(document.querySelectorAll('#skills'), function (el) { bars.observe(el); });
     return;
   }
-
-  // The theme toggle sets its class on <body>; mirror it on <html> so the
-  // cube faces and the early-theme rule in fx-head.js stay in step.
-  function syncTheme() { html.classList.toggle('light-mode', document.body.classList.contains('light-mode')); }
-  syncTheme();
-  new MutationObserver(syncTheme).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
   // ----- backdrop: a hooded figure at a laptop, behind all content -----
   // Drawn inline (no image file). It sits under the sections, takes no clicks,
@@ -341,7 +342,7 @@
   // The side each homepage section arrives from when moving down the page.
   var SIDE = { hero: 'top', about: 'right', skills: 'bottom', experience: 'left', certificates: 'right',
                education: 'bottom', roadmap: 'left', writeups: 'right', contact: 'bottom' };
-  var turning = false;
+  var turning = false, queued = null;
 
   function sectionAt(y) {
     var found = null;
@@ -357,8 +358,8 @@
     var from = window.scrollY;
     var max = html.scrollHeight - window.innerHeight;
     var to = Math.max(0, Math.min(max, Math.round(target.getBoundingClientRect().top + from)));
+    if (turning) { queued = [target, hash]; return true; }   // the last click during a turn wins
     if (Math.abs(to - from) < 8) return true;
-    if (turning) return true;
 
     var here = sectionAt(from), dir;
     if (to > from) dir = SIDE[target.id] || 'right';
@@ -377,6 +378,7 @@
       delete html.dataset.cube;
       turning = false;
       FX.log.push('done');
+      if (queued) { var next = queued; queued = null; turnToSection(next[0], next[1]); }
     });
     return true;
   }

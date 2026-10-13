@@ -332,3 +332,10 @@ html[data-cube="top"]::view-transition-group(fx-cap){animation-name:fx-cube-cap-
 html[data-cube="bottom"]::view-transition-old(root){animation-name:fx-cube-old-bottom;}
 html[data-cube="bottom"]::view-transition-new(root){animation-name:fx-cube-new-bottom;}
 html[data-cube="bottom"]::view-transition-group(fx-cap){animation-name:fx-cube-cap-bottom;}
+
+/* printing: show everything (nothing has scrolled into view on paper) and leave the figure out */
+@media print{
+  html.fx-on .fx:not(.fx-in),html.fx-on .fx-chain:not(.fx-play) > *{opacity:1 !important;}
+  html.fx-on .fx,html.fx-on .fx *{animation:none !important;}
+  .fx-hacker,.fx-reactor,.fx-hud,.fx-progress{display:none !important;}
+}
