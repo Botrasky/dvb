@@ -46,6 +46,7 @@ const SOLVED_LABS = [
   { name: 'Hidden Cipher 2',     diff: 'medium', skills: ['Reverse Eng', 'Python'] },
   { name: 'Trust But Verify',    diff: 'easy',   skills: ['Python'] },
   { name: 'Bypass Me',           diff: 'medium', skills: ['Reverse Eng', 'Pentesting'] },
+  { name: 'Amaterasu',           diff: 'medium', skills: ['Web Exploit', 'Pentesting', 'Python'] },
 ];
 const SKILL_CAP = 90;
 function computeSkillScores() {
