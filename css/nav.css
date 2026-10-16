@@ -69,8 +69,8 @@ nav{
 }
 .light-mode .theme-toggle-thumb{
   transform:translateX(20px);
-  background:var(--yellow);
-  box-shadow:0 0 8px rgba(183,134,11,0.45),0 1px 3px rgba(0,0,0,0.2);
+  background:#ffffff;
+  box-shadow:0 0 10px rgba(255,255,255,0.6),0 1px 3px rgba(0,0,0,0.2);
 }
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
 .hamburger span{width:22px;height:2px;background:var(--cyan);border-radius:2px;transition:all var(--transition);}

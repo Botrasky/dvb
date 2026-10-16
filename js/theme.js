@@ -10,19 +10,26 @@ function setStoredTheme(value) {
 }
 function applyTheme(dark) {
   document.body.classList.toggle('light-mode', !dark);
+  document.documentElement.classList.toggle('light-mode', !dark);
   const btn = document.getElementById('themeToggle');
   const label = document.getElementById('themeLabel');
   if (label) label.textContent = dark ? 'Dark' : 'Light';
   if (btn) btn.setAttribute('aria-pressed', String(!dark));
 }
 
-let isDark = getStoredTheme() !== 'light';
+let isDark = getStoredTheme() === 'dark';
 applyTheme(isDark);
 
 function toggleTheme() {
   isDark = !isDark;
   setStoredTheme(isDark ? 'dark' : 'light');
-  applyTheme(isDark);
-  // Charts only exist on the homepage; writeup pages share this file without them.
+  const html = document.documentElement;
+  if (!document.startViewTransition) {
+    applyTheme(isDark);
+  } else {
+    html.classList.add('theme-changing');
+    const vt = document.startViewTransition(() => applyTheme(isDark));
+    vt.finished.finally(() => html.classList.remove('theme-changing'));
+  }
   if (typeof updateCharts === 'function') updateCharts();
 }
