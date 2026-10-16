@@ -22,25 +22,122 @@
   --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .light-mode {
-  --bg: #f3f6fb;
-  --bg2: #eaf0f8;
-  --bg3: #dde8f2;
+  --bg: #ffffff;
+  --bg2: #f4f7fb;
+  --bg3: #e8edf5;
   --surface: #ffffff;
-  --surface2: #f0f4fa;
-  --cyan: #0a66c2;
-  --cyan2: #0d5ca8;
-  --cyan3: #4a9fd4;
-  --green: #057642;
-  --magenta: #c0392b;
-  --yellow: #b7860b;
-  --text: #0a0f1a;
-  --text2: #1a3550;
-  --text3: #4a6880;
-  --border: rgba(10,102,194,0.2);
-  --border2: rgba(10,102,194,0.08);
-  --nav-bg: rgba(255,255,255,0.92);
-  --glow: 0 2px 16px rgba(10,102,194,0.15), 0 1px 4px rgba(10,102,194,0.08);
-  --glow-sm: 0 1px 8px rgba(10,102,194,0.18);
+  --surface2: #eef2f8;
+  --cyan: #1e4a7a;
+  --cyan2: #2a5a8e;
+  --cyan3: #3a6aaa;
+  --green: #0d6e3f;
+  --magenta: #b5213a;
+  --yellow: #9a6e00;
+  --text: #1a2f4a;
+  --text2: #1e3a5f;
+  --text3: #4a6a8a;
+  --border: rgba(30,74,122,0.15);
+  --border2: rgba(30,74,122,0.06);
+  --nav-bg: rgba(255,255,255,0.97);
+  --glow: 0 4px 24px rgba(30,74,122,0.13), 0 1px 4px rgba(30,74,122,0.08);
+  --glow-sm: 0 2px 10px rgba(30,74,122,0.15);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* ---- light-mode nav: floating pill (desktop) ---- */
+@media (min-width: 721px) {
+  .light-mode nav {
+    left: 50%;
+    right: auto;
+    top: 14px;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100vw - 2rem);
+    height: 52px;
+    padding: 0 1.25rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: #0a2540;
+    box-shadow: 0 8px 32px rgba(10,37,64,0.22), 0 2px 8px rgba(10,37,64,0.12);
+  }
+  .light-mode .nav-links a { padding: 5px 10px; }
+}
+
+/* mobile: full bar, still navy */
+@media (max-width: 720px) {
+  .light-mode nav {
+    background: #0a2540;
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+}
+
+.light-mode .nav-logo {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.18);
+  color: #ffffff;
+}
+.light-mode .nav-logo:hover {
+  border-color: rgba(255,255,255,0.45);
+  box-shadow: none;
+}
+.light-mode .nav-logo-key { color: rgba(255,255,255,0.6); }
+.light-mode .nav-links a {
+  color: rgba(255,255,255,0.8);
+}
+.light-mode .nav-links a:hover {
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+}
+.light-mode .theme-toggle {
+  color: rgba(255,255,255,0.8);
+}
+.light-mode .theme-toggle:hover { color: #ffffff; }
+.light-mode .theme-toggle-track {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.25);
+}
+.light-mode .hamburger span { background: #ffffff; }
+
+/* ---- light-mode overrides for hardcoded cyan rgba values ---- */
+.light-mode .hero-glow {
+  background: radial-gradient(ellipse, rgba(10,37,64,0.04) 0%, transparent 70%);
+}
+.light-mode .btn-primary {
+  box-shadow: 0 2px 14px rgba(30,74,122,0.28);
+}
+.light-mode .btn-primary:hover {
+  background: var(--cyan2);
+  box-shadow: 0 4px 22px rgba(30,74,122,0.38);
+}
+.light-mode .btn-outline:hover {
+  background: rgba(30,74,122,0.06);
+}
+.light-mode .skill-bar-fill {
+  background: linear-gradient(90deg, var(--cyan), var(--cyan3));
+  box-shadow: none;
+}
+.light-mode .skill-tag:hover,
+.light-mode .skill-tag.hot {
+  background: rgba(30,74,122,0.07);
+}
+.light-mode .timeline-item::before {
+  box-shadow: 0 0 8px rgba(30,74,122,0.25);
+}
+.light-mode .nav-links a:hover {
+  background: rgba(30,74,122,0.07);
+}
+.light-mode .theme-toggle:hover .theme-toggle-track {
+  border-color: var(--cyan);
+  box-shadow: 0 0 8px rgba(30,74,122,0.18);
+}
+.light-mode .slide-nav {
+  background: rgba(255,255,255,0.9);
+  color: var(--cyan);
+}
+.light-mode .slide-nav:hover {
+  background: var(--cyan);
+  color: #ffffff;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:16px}
@@ -51,6 +148,41 @@ body{
   line-height:1.7;
   transition:background var(--transition),color var(--transition);
   overflow-x:hidden;
+}
+
+/* ---- theme-switch view transition (MacBook-style) ---- */
+nav { view-transition-name: main-nav; }
+
+html.theme-changing::view-transition-old(root) {
+  animation: theme-out 0.22s ease-in forwards;
+}
+html.theme-changing::view-transition-new(root) {
+  animation: theme-in 0.38s ease-out 0.12s both;
+}
+@keyframes theme-out {
+  to { opacity: 0; }
+}
+@keyframes theme-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+html.theme-changing::view-transition-group(main-nav) {
+  animation-duration: 0.52s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.theme-changing::view-transition-old(main-nav) {
+  animation: nav-fade-out 0.15s ease-in forwards;
+}
+html.theme-changing::view-transition-new(main-nav) {
+  animation: nav-fade-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+@keyframes nav-fade-out {
+  to { opacity: 0; }
+}
+@keyframes nav-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* GRID BG */
