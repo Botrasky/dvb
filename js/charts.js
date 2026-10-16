@@ -47,6 +47,7 @@ const SOLVED_LABS = [
   { name: 'Trust But Verify',    diff: 'easy',   skills: ['Python'] },
   { name: 'Bypass Me',           diff: 'medium', skills: ['Reverse Eng', 'Pentesting'] },
   { name: 'Amaterasu',           diff: 'medium', skills: ['Web Exploit', 'Pentesting', 'Python'] },
+  { name: 'ColddBox: Easy',      diff: 'easy',   skills: ['Web Exploit', 'Pentesting'] },
 ];
 const SKILL_CAP = 90;
 function computeSkillScores() {
