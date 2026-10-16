@@ -29,7 +29,7 @@
     // The original behaviour: fade up on scroll, fill the skill bars.
     var plain = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) en.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
+    }, { threshold: 0 });
     Array.prototype.forEach.call(document.querySelectorAll('.reveal'), function (el) { plain.observe(el); });
     var bars = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) skillBars(en.target); });
