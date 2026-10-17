@@ -25,8 +25,8 @@
   --bg: #ffffff;
   --bg2: #f4f7fb;
   --bg3: #e8edf5;
-  --surface: #ffffff;
-  --surface2: #eef2f8;
+  --surface: rgba(30,74,122,0.06);
+  --surface2: rgba(30,74,122,0.11);
   --cyan: #1e4a7a;
   --cyan2: #2a5a8e;
   --cyan3: #3a6aaa;
@@ -76,6 +76,16 @@
     box-shadow: 0 8px 32px rgba(10,37,64,0.22), 0 2px 8px rgba(10,37,64,0.12);
     padding: 0 1rem;
     height: 52px;
+  }
+  /* open menu drops below the pill */
+  .light-mode .nav-links.open {
+    top: 72px;
+    left: 1rem;
+    right: 1rem;
+    border-radius: 16px;
+    background: #0a2540;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
   }
 }
 
