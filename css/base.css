@@ -64,11 +64,18 @@
   .light-mode .nav-links a { padding: 5px 10px; }
 }
 
-/* mobile: full bar, still navy */
+/* mobile: floating pill (inset from edges) */
 @media (max-width: 720px) {
   .light-mode nav {
+    left: 1rem;
+    right: 1rem;
+    top: 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
     background: #0a2540;
-    border-bottom-color: rgba(255,255,255,0.08);
+    box-shadow: 0 8px 32px rgba(10,37,64,0.22), 0 2px 8px rgba(10,37,64,0.12);
+    padding: 0 1rem;
+    height: 52px;
   }
 }
 
