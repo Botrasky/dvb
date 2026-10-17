@@ -64,6 +64,13 @@
   .light-mode .nav-links a { padding: 5px 10px; }
 }
 
+/* open menu: always dark navy in light mode (hamburger shows up to 900px) */
+.light-mode .nav-links.open {
+  background: #0a2540;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.light-mode .nav-links.open a { color: rgba(255,255,255,0.85); }
+
 /* mobile: floating pill (inset from edges) */
 @media (max-width: 720px) {
   .light-mode nav {
@@ -77,15 +84,13 @@
     padding: 0 1rem;
     height: 52px;
   }
-  /* open menu drops below the pill */
+  /* open menu drops below the pill on mobile */
   .light-mode .nav-links.open {
     top: 72px;
     left: 1rem;
     right: 1rem;
     border-radius: 16px;
-    background: #0a2540;
     border: 1px solid rgba(255,255,255,0.12);
-    border-bottom: 1px solid rgba(255,255,255,0.12);
   }
 }
 
