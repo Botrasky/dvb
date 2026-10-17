@@ -8,6 +8,9 @@
 @media (min-width: 721px) {
   .light-mode #hero { padding-top: 80px; }
 }
+@media (max-width: 720px) {
+  .light-mode #hero { padding-top: 80px; }
+}
 .hero-glow{
   position:absolute;top:20%;left:50%;transform:translateX(-50%);
   width:600px;height:600px;
