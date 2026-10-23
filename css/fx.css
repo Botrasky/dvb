@@ -236,14 +236,14 @@ html.fx-on .wu-references.fx-in:not(.fx-done) li{
   position:fixed;right:-3vw;bottom:0;z-index:1;pointer-events:none;
   width:min(62vw,calc(96vh * 1.055));height:96vh;opacity:.3;
 }
-html.light-mode .fx-hacker{opacity:.38;}
+html.light-mode .fx-hacker{opacity:.12;}
 html.light-mode .fx-hacker path,
 html.light-mode .fx-hacker rect,
 html.light-mode .fx-hacker circle{stroke:#1e4a7a;}
 html.light-mode .fx-hacker .line > :first-child{fill:rgba(30,74,122,0.13);}
 html.light-mode .fx-hacker .glow > :first-child{fill:rgba(30,74,122,0.07);stroke:#1e4a7a;}
 html.light-mode .fx-hacker .glow *{stroke:#1e4a7a;opacity:.18;}
-html.light-mode .fx-hacker .void{fill:rgba(255,255,255,0.7);}
+html.light-mode .fx-hacker .void{fill:rgba(255,255,255,0.3);}
 html.light-mode .fx-hacker .eyes{stroke:#1e4a7a;}
 html.light-mode .fx-hacker .term text{fill:#1e4a7a;}
 html.light-mode .fx-hacker .term circle{fill:#1e4a7a;}
