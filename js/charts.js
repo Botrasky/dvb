@@ -50,7 +50,7 @@ const SOLVED_LABS = [
   { name: 'ColddBox: Easy',      diff: 'easy',   skills: ['Web Exploit', 'Pentesting'] },
   { name: 'Electron1',           diff: 'medium', skills: ['Web Exploit', 'Pentesting', 'Network Sec'] },
   { name: 'DriftingBlues6',      diff: 'easy',   skills: ['Web Exploit', 'Pentesting', 'Python'] },
-  { name: 'Home Network Pentest', diff: 'hard',  skills: ['Pentesting', 'Network Sec', 'Web Exploit', 'Python'] },
+  { name: 'PHP2Shell Exploit Sandbox', diff: 'hard',  skills: ['Pentesting', 'Network Sec', 'Web Exploit', 'Python'] },
 ];
 const SKILL_CAP = 90;
 function computeSkillScores() {
