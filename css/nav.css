@@ -11,7 +11,7 @@ nav{
 }
 .nav-logo{
   display:inline-flex;align-items:center;gap:7px;
-  font-family:'Orbitron',monospace;
+  font-family:var(--font-ui);
   font-weight:700;font-size:0.68rem;
   letter-spacing:1.5px;
   text-decoration:none;
@@ -39,7 +39,7 @@ nav{
   color:var(--text2);font-size:0.72rem;
   text-decoration:none;letter-spacing:1px;
   padding:6px 12px;border-radius:6px;
-  font-family:'Rajdhani',sans-serif;font-weight:600;
+  font-family:var(--font-ui);font-weight:600;
   text-transform:uppercase;
   transition:all var(--transition);
 }
@@ -48,7 +48,7 @@ nav{
 .theme-toggle{
   background:none;border:none;cursor:pointer;
   display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:999px;
-  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.72rem;
+  font-family:var(--font-ui);font-weight:700;font-size:0.72rem;
   letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;
   transition:color var(--transition);
 }

@@ -4,11 +4,11 @@
 .section-tag{
   font-size:0.65rem;color:var(--cyan);
   letter-spacing:4px;text-transform:uppercase;
-  font-family:'Orbitron',monospace;
+  font-family:var(--font-ui);
   display:block;margin-bottom:0.6rem;
 }
 .section-title{
-  font-family:'Orbitron',monospace;
+  font-family:var(--font-ui);
   font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);
   color:var(--text);
   position:relative;display:inline-block;
@@ -61,7 +61,7 @@
   background:rgba(0,229,255,0.08);
   border:1px solid var(--border);
   border-radius:20px;padding:6px 16px;
-  font-family:'Orbitron',monospace;font-size:0.75rem;
+  font-family:var(--font-ui);font-size:0.75rem;
   color:var(--cyan);margin-bottom:1rem;
   box-shadow:var(--glow-sm);
 }
@@ -74,7 +74,7 @@
   position:relative;
 }
 .chart-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);}
-.chart-title{font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--cyan);letter-spacing:2px;margin-bottom:1rem;text-transform:uppercase;}
+.chart-title{font-family:var(--font-ui);font-size:0.8rem;color:var(--cyan);letter-spacing:2px;margin-bottom:1rem;text-transform:uppercase;}
 .skill-tags{
   display:flex;flex-wrap:wrap;gap:0.6rem;
 }
@@ -83,7 +83,7 @@
   border-radius:6px;padding:5px 12px;
   font-size:0.72rem;color:var(--text2);
   transition:all var(--transition);
-  font-family:'Rajdhani',sans-serif;font-weight:500;letter-spacing:0.5px;
+  font-family:var(--font-ui);font-weight:500;letter-spacing:0.5px;
 }
 .skill-tag:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,0.06);}
 .skill-tag.hot{border-color:var(--cyan);color:var(--cyan);}
@@ -125,9 +125,9 @@
 .exp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--cyan),transparent);opacity:0;transition:opacity var(--transition);}
 .exp-card:hover::before{opacity:1;}
 .exp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem;flex-wrap:wrap;gap:0.4rem;}
-.exp-role{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.05rem;color:var(--text);}
-.exp-date{font-size:0.7rem;color:var(--cyan);letter-spacing:1px;font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
-.exp-org{color:var(--cyan2);font-size:0.82rem;margin-bottom:0.8rem;font-family:'Rajdhani',sans-serif;font-weight:500;}
+.exp-role{font-family:var(--font-ui);font-weight:700;font-size:1.05rem;color:var(--text);}
+.exp-date{font-size:0.7rem;color:var(--cyan);letter-spacing:1px;font-family:var(--font-ui);white-space:nowrap;}
+.exp-org{color:var(--cyan2);font-size:0.82rem;margin-bottom:0.8rem;font-family:var(--font-ui);font-weight:500;}
 .exp-list{list-style:none;}
 .exp-list li{
   font-size:0.78rem;color:var(--text2);
@@ -163,7 +163,7 @@
   padding:1.5rem 1rem 0.75rem;
   text-align:center;
   font-size:0.75rem;color:var(--cyan3);
-  font-family:'Rajdhani',sans-serif;font-weight:500;letter-spacing:1px;
+  font-family:var(--font-ui);font-weight:500;letter-spacing:1px;
 }
 .light-mode .slide-caption{background:linear-gradient(transparent,rgba(240,244,250,0.92));color:var(--cyan2);}
 .slide-nav{
@@ -196,8 +196,8 @@
 }
 .edu-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);}
 .edu-card:hover{box-shadow:var(--glow);border-color:var(--cyan);}
-.edu-degree{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;color:var(--text);margin-bottom:0.3rem;}
-.edu-school{color:var(--cyan);font-size:0.8rem;margin-bottom:0.5rem;font-family:'IBM Plex Mono',monospace;}
+.edu-degree{font-family:var(--font-ui);font-weight:700;font-size:1rem;color:var(--text);margin-bottom:0.3rem;}
+.edu-school{color:var(--cyan);font-size:0.8rem;margin-bottom:0.5rem;font-family:var(--font-ui);}
 .edu-detail{font-size:0.75rem;color:var(--text3);}
 
 /* ACHIEVEMENTS */
@@ -209,7 +209,7 @@
 }
 .ach-card:hover{box-shadow:var(--glow);border-color:var(--cyan);transform:translateY(-4px);}
 .ach-icon{font-size:2rem;margin-bottom:0.75rem;}
-.ach-title{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.9rem;color:var(--text);}
+.ach-title{font-family:var(--font-ui);font-weight:600;font-size:0.9rem;color:var(--text);}
 .ach-sub{font-size:0.72rem;color:var(--text3);margin-top:0.25rem;}
 
 /* ROADMAP */
@@ -221,8 +221,8 @@
 }
 .road-card:hover{box-shadow:var(--glow);border-color:var(--cyan);}
 .road-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);}
-.road-phase{font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--cyan);letter-spacing:3px;margin-bottom:0.5rem;text-transform:uppercase;}
-.road-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;color:var(--text);margin-bottom:0.75rem;}
+.road-phase{font-family:var(--font-ui);font-size:0.65rem;color:var(--cyan);letter-spacing:3px;margin-bottom:0.5rem;text-transform:uppercase;}
+.road-title{font-family:var(--font-ui);font-weight:700;font-size:1rem;color:var(--text);margin-bottom:0.75rem;}
 .road-goals{list-style:none;}
 .road-goals li{font-size:0.75rem;color:var(--text2);padding:3px 0 3px 14px;position:relative;line-height:1.5;}
 .road-goals li::before{content:'◆';position:absolute;left:0;color:var(--cyan);font-size:0.5rem;top:6px;}
@@ -239,7 +239,7 @@
 .contact-item:hover{border-color:var(--cyan);box-shadow:var(--glow-sm);}
 .contact-icon{font-size:1.2rem;}
 .contact-text .label{font-size:0.65rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
-.contact-text .value{font-size:0.82rem;color:var(--text);font-family:'Rajdhani',sans-serif;font-weight:500;}
+.contact-text .value{font-size:0.82rem;color:var(--text);font-family:var(--font-ui);font-weight:500;}
 .contact-cta{text-align:center;}
 .cta-box{
   background:var(--surface);border:1px solid var(--border);
@@ -247,6 +247,6 @@
   position:relative;overflow:hidden;
 }
 .cta-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green));}
-.cta-heading{font-family:'Orbitron',monospace;font-size:1.1rem;color:var(--text);margin-bottom:0.75rem;}
+.cta-heading{font-family:var(--font-ui);font-size:1.1rem;color:var(--text);margin-bottom:0.75rem;}
 .cta-sub{font-size:0.8rem;color:var(--text2);margin-bottom:1.5rem;line-height:1.7;}
 

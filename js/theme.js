@@ -23,13 +23,13 @@ applyTheme(isDark);
 function toggleTheme() {
   isDark = !isDark;
   setStoredTheme(isDark ? 'dark' : 'light');
-  const html = document.documentElement;
-  if (!document.startViewTransition) {
+  const renderTheme = () => {
     applyTheme(isDark);
+    if (typeof updateCharts === 'function') updateCharts();
+  };
+  if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.startViewTransition(renderTheme);
   } else {
-    html.classList.add('theme-changing');
-    const vt = document.startViewTransition(() => applyTheme(isDark));
-    vt.finished.finally(() => html.classList.remove('theme-changing'));
+    renderTheme();
   }
-  if (typeof updateCharts === 'function') updateCharts();
 }
