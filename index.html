@@ -7,7 +7,7 @@
   <title>DVB Cyber Lab — Cybersecurity Learning Dashboard</title>
   <script src="js/fx-head.js?v=20261109-cyber-layout"></script>
   <link rel="stylesheet" href="css/base.css?v=20261109-readable-type">
-  <link rel="stylesheet" href="css/dashboard.css?v=1">
+  <link rel="stylesheet" href="css/dashboard.css?v=2">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="dashboard-page">
@@ -50,10 +50,16 @@
       <section class="brief panel" id="brief" aria-labelledby="brief-title" aria-roledescription="carousel">
         <div class="brief-header"><div><p class="eyebrow"><span></span> Security news</p><h2 id="brief-title">Threat brief</h2></div><span class="brief-state" id="brief-state">Source picks</span></div>
         <div class="brief-slide" id="brief-slide" aria-live="polite" aria-atomic="true">
-          <p class="brief-source" id="brief-source">NIST · Standards</p>
-          <h3 id="brief-headline">NIST Cybersecurity Framework 2.0</h3>
-          <p id="brief-summary">Start with the framework behind many cybersecurity programs. It covers how to govern, identify, protect, detect, respond, and recover.</p>
-          <a class="brief-original" id="brief-link" href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20">Read original <span aria-hidden="true">↗</span></a>
+          <div class="brief-thumb" id="brief-thumb" data-publisher="nist" aria-hidden="true">
+            <span class="brief-thumb-label" id="brief-thumb-label">NIST</span>
+            <span class="brief-thumb-image" id="brief-thumb-image"></span>
+          </div>
+          <div class="brief-story">
+            <p class="brief-source" id="brief-source">NIST · Standards</p>
+            <h3 id="brief-headline">NIST Cybersecurity Framework 2.0</h3>
+            <p id="brief-summary">Start with the framework behind many cybersecurity programs. It covers how to govern, identify, protect, detect, respond, and recover.</p>
+            <a class="brief-original" id="brief-link" href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20">Read original <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
         <div class="brief-controls" id="brief-controls" hidden>
           <span id="brief-counter">01 / 06</span>
@@ -90,6 +96,6 @@
   </main>
   <footer class="dash-footer"><span>DVB Cyber Lab <span aria-hidden="true">/</span> Independent cybersecurity notes</span><div><a href="writeups/index.html">Writeups</a><a href="about.html#contact">Contact</a></div></footer>
   <script src="js/theme.js?v=20261109-readable-type"></script>
-  <script src="js/dashboard.js?v=2"></script>
+  <script src="js/dashboard.js?v=3"></script>
 </body>
 </html>

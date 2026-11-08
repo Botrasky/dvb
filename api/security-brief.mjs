@@ -44,6 +44,20 @@ function sourceLink(value, publisher) {
   }
 }
 
+function thumbnail(item, publisher) {
+  const imageTags = item.matchAll(/<(enclosure|media:thumbnail|media:content)\b([^>]*?)\/?>/gi);
+  for (const [, tag, attributes] of imageTags) {
+    const type = attributes.match(/\btype\s*=\s*(['"])(.*?)\1/i)?.[2] || '';
+    const medium = attributes.match(/\bmedium\s*=\s*(['"])(.*?)\1/i)?.[2] || '';
+    const candidate = attributes.match(/(?:^|\s)url\s*=\s*(['"])(.*?)\1/i)?.[2];
+    const url = sourceLink(candidate, { ...publisher, pathPrefix: '' });
+    const isImage = /^image\/(?:png|jpe?g|webp|avif)$/i.test(type);
+    const isThumbnail = !type && (tag.toLowerCase() === 'media:thumbnail' || medium.toLowerCase() === 'image');
+    if (url && (isImage || isThumbnail)) return url;
+  }
+  return '';
+}
+
 export function parseFeed(xml, publisher) {
   const items = [];
   for (const [, item] of xml.matchAll(/<item(?:\s[^>]*)?>([\s\S]*?)<\/item>/gi)) {
@@ -51,8 +65,9 @@ export function parseFeed(xml, publisher) {
     const url = sourceLink(field(item, 'feedburner:origLink'), publisher) || sourceLink(field(item, 'link'), publisher);
     const date = Date.parse(plainText(field(item, 'pubDate') || field(item, 'dc:date'), 80));
     if (!title || !url || !Number.isFinite(date)) continue;
+    const image = thumbnail(item, publisher);
     items.push({ title, url, date: new Date(date).toISOString(), source: publisher.name,
-      kind: publisher.kind, summary: plainText(field(item, 'description'), 165) });
+      kind: publisher.kind, summary: plainText(field(item, 'description'), 165), ...(image && { image }) });
   }
   return newest(items);
 }

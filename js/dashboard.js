@@ -35,6 +35,17 @@
       url: 'https://www.bleepingcomputer.com/news/security/',
     },
   ];
+  const publishers = new Map([
+    ['NIST', ['nist', 'NIST']],
+    ['Cloud Security Alliance', ['csa', 'CSA']],
+    ['Cloudflare', ['cloudflare', 'CF']],
+    ['NVD', ['nvd', 'NVD']],
+    ['The Hacker News', ['thn', 'THN']],
+    ['BleepingComputer', ['bc', 'BC']],
+  ]);
+  const thumb = document.getElementById('brief-thumb');
+  const thumbLabel = document.getElementById('brief-thumb-label');
+  const thumbImage = document.getElementById('brief-thumb-image');
   const source = document.getElementById('brief-source');
   const headline = document.getElementById('brief-headline');
   const summary = document.getElementById('brief-summary');
@@ -48,6 +59,22 @@
   let interacted = false;
   let timer = null;
 
+  function renderThumbnail(story) {
+    const [style, label] = publishers.get(story.source) || ['unknown', 'NEWS'];
+    thumb.dataset.publisher = style;
+    thumbLabel.textContent = label;
+    thumbImage.replaceChildren();
+    if (typeof story.image !== 'string' || !story.image.startsWith('https://')) return;
+    const image = document.createElement('img');
+    image.alt = '';
+    image.decoding = 'async';
+    image.referrerPolicy = 'no-referrer';
+    image.addEventListener('load', () => image.classList.add('is-ready'), { once: true });
+    image.addEventListener('error', () => image.remove(), { once: true });
+    image.src = story.image;
+    thumbImage.append(image);
+  }
+
   function render(animate = false) {
     const story = stories[active];
     const date = Date.parse(story.date);
@@ -56,6 +83,7 @@
     headline.textContent = story.title;
     summary.textContent = story.summary || 'Open the original story for the full update.';
     original.href = story.url;
+    renderThumbnail(story);
     renderCounter();
     if (animate) {
       slide.classList.remove('is-changing');
