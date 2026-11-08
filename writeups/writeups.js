@@ -7,7 +7,9 @@
   const cards = [...grid.querySelectorAll('.wu-card')];
   const search = document.getElementById('wuSearch');
   const filters = [...document.querySelectorAll('.wu-filter')];
-  let activeCat = 'all';
+  const topic = new URLSearchParams(location.search).get('topic');
+  const initialFilter = filters.find(button => button.dataset.filter === topic);
+  let activeCat = initialFilter?.dataset.filter || 'all';
   const difficulty = document.getElementById('wuDifficulty');
 
   function apply() {
@@ -25,6 +27,14 @@
     if (empty) empty.style.display = shown ? 'none' : '';
     const count = document.getElementById('wuCount');
     if(count) count.textContent = shown + ' of ' + cards.length + ' writeups';
+  }
+
+  if (initialFilter) {
+    for (const button of filters) {
+      const active = button === initialFilter;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    }
   }
 
   filters.forEach(btn => btn.addEventListener('click', () => {

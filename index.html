@@ -1,222 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cybersecurity Writeups &amp; Learning — Dos Vathanak Botra</title>
-<meta name="description" content="CTF and security lab writeups by Dos Vathanak Botra — cryptography, binary exploitation, web, reverse engineering and more.">
-<link rel="stylesheet" href="css/base.css?v=20261109-readable-type">
-<link rel="stylesheet" href="css/nav.css?v=20261109-readable-type">
-<link rel="stylesheet" href="css/footer.css?v=20261109-readable-type">
-<link rel="stylesheet" href="css/animations.css?v=20261109-cyber-layout">
-<link rel="stylesheet" href="css/responsive.css?v=20261109-cyber-layout">
-<link rel="stylesheet" href="writeups/writeups.css?v=20261109-readable-type">
-<script src="js/fx-head.js?v=20261109-cyber-layout"></script>
-<link rel="stylesheet" href="css/site.css?v=20261109-readable-type">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An independent cybersecurity learning dashboard with hands-on labs, CTF writeups, and updates from trusted security publishers.">
+  <title>DVB Cyber Lab — Cybersecurity Learning Dashboard</title>
+  <script src="js/fx-head.js?v=20261109-cyber-layout"></script>
+  <link rel="stylesheet" href="css/base.css?v=20261109-readable-type">
+  <link rel="stylesheet" href="css/dashboard.css?v=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
-<body class="page-home">
-<a class="skip-link" href="#main-content">Skip to content</a>
-<div class="fx-cube-cap" aria-hidden="true"></div>
+<body class="dashboard-page">
+  <a class="dash-skip" href="#main">Skip to content</a>
+  <header class="dash-header">
+    <a class="dash-brand" href="index.html"><span class="dash-logo" aria-hidden="true">D</span><span>DVB <strong>Cyber Lab</strong></span></a>
+    <nav class="dash-nav" aria-label="Main navigation">
+      <a href="index.html" aria-current="page">Dashboard</a>
+      <a href="writeups/index.html">Writeups</a>
+      <a href="author.html">Author</a>
+      <a href="about.html">Portfolio</a>
+    </nav>
+    <button class="dash-theme" id="themeToggle" type="button" aria-label="Toggle light and dark theme"><span aria-hidden="true">◐</span> <span id="themeLabel">Light</span></button>
+  </header>
 
-<div class="grid-bg"></div>
-<div class="scanlines"></div>
+  <main id="main" class="dash-shell">
+    <div class="dash-masthead">
+      <div><p class="eyebrow"><span></span> Independent learning space</p><h1>Cybersecurity dashboard</h1><p>Practice in the lab. Follow what’s happening in security.</p></div>
+      <a class="masthead-link" href="author.html"><span class="author-initials" aria-hidden="true">VB</span><span>By Vathanak Botra Dos<small>Meet the author ↗</small></span></a>
+    </div>
 
-<nav id="navbar" aria-label="Main navigation">
-  <a href="index.html" class="nav-logo" aria-label="DVB Learning home"><span class="brand-mark">DVB</span><span class="brand-caption">Learning notes</span></a>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="index.html" aria-current="page">Explore</a></li>
-    <li><a href="about.html" >About the author</a></li>
-    <li><a href="about.html#contact">Contact</a></li>
-  </ul>
-  <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><span id="themeLabel">Dark</span><span aria-hidden="true">◐</span></button>
-    <button type="button" class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open navigation" aria-controls="navLinks" aria-expanded="false"><span></span><span></span><span></span></button>
-  </div>
-</nav>
+    <div class="dash-lead">
+      <section class="mission panel" aria-labelledby="mission-title">
+        <div class="mission-copy">
+          <p class="eyebrow"><span></span> The lab</p>
+          <h2 id="mission-title">Learn security.<br>Think like a defender.</h2>
+          <p>Work through real lab scenarios, understand what went wrong, and take the lessons back to your own practice.</p>
+          <div class="mission-links"><a class="dash-button primary" href="writeups/index.html">Explore writeups <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#learning">Choose a topic <span aria-hidden="true">↓</span></a></div>
+        </div>
+        <svg class="mission-art" viewBox="0 0 320 260" fill="none" aria-hidden="true">
+          <defs><pattern id="mission-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#a7f6df" stroke-opacity=".12"/></pattern><linearGradient id="signal" x1="52" y1="208" x2="272" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#54b8e8"/><stop offset="1" stop-color="#a4ffcf"/></linearGradient></defs>
+          <path d="M30 20h260v220H30z" fill="url(#mission-grid)"/>
+          <g stroke="#a7f6df" stroke-opacity=".24"><circle cx="174" cy="127" r="91"/><circle cx="174" cy="127" r="67"/><circle cx="174" cy="127" r="44"/><path d="M174 25v204M72 127h204M51 34h17m-17 0v17m244 0V34h-17M51 208v17h17m210 0h17v-17"/></g>
+          <path class="signal-trace" pathLength="100" d="M42 173h48l18-33 17 54 27-98 20 58 17-27h29l20-39h58" stroke="url(#signal)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <g fill="#a4ffcf"><circle cx="174" cy="127" r="3"/><circle cx="238" cy="88" r="4"/><circle cx="108" cy="140" r="3"/></g>
+          <g fill="#a7f6df" opacity=".65" font-family="monospace" font-size="9"><text x="55" y="64">LAB SIGNAL</text><text x="230" y="207">DVB / 01</text></g>
+        </svg>
+      </section>
 
-<main id="main-content" class="wu-main wu-hub">
-  <aside class="wu-sidebar" aria-labelledby="library-title">
-    <h1 id="library-title" class="wu-sidebar-title">Cybersecurity<br> writeups</h1>
-    <p class="wu-sidebar-intro">Practical CTF and security lab walkthroughs by Dos Vathanak Botra.</p>
-    <a class="wu-author-link" href="about.html">About the author ↗</a>
-    <details class="wu-filter-panel" open><summary>Browse &amp; filter</summary>
-    <div class="wu-controls" role="group" aria-label="Filter writeups">
-    <input type="text" id="wuSearch" class="wu-search" placeholder="Search writeups…" aria-label="Search writeups">
-    <button class="wu-filter active" aria-pressed="true" data-filter="all">All</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="crypto">Cryptography</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="pwn">Binary exploitation</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="web">Web</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="re">Reverse engineering</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="general">General</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="misc">Other labs</button>
-  </div>
-    <label class="wu-sidebar-label" for="wuDifficulty">Difficulty</label>
-    <select id="wuDifficulty" class="wu-search"><option value="all">All levels</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select>
-    <button class="wu-reset" id="wuReset" type="button">Clear filters</button>
-    </details>
-  </aside>
-  <section class="wu-results" aria-label="Writeup collection">
-    <div class="collection-toolbar"><h2>Explore the collection</h2><span id="wuCount" role="status" aria-live="polite"></span></div>
-  <div class="wu-grid" id="wuGrid">
+      <section class="brief panel" id="brief" aria-labelledby="brief-title" aria-roledescription="carousel">
+        <div class="brief-header"><div><p class="eyebrow"><span></span> Security news</p><h2 id="brief-title">Threat brief</h2></div><span class="brief-state" id="brief-state">Source picks</span></div>
+        <div class="brief-slide" id="brief-slide" aria-live="polite" aria-atomic="true">
+          <p class="brief-source" id="brief-source">NIST · Standards</p>
+          <h3 id="brief-headline">NIST Cybersecurity Framework 2.0</h3>
+          <p id="brief-summary">Start with the framework behind many cybersecurity programs. It covers how to govern, identify, protect, detect, respond, and recover.</p>
+          <a class="brief-original" id="brief-link" href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20">Read original <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="brief-controls" id="brief-controls" hidden>
+          <span id="brief-counter">01 / 03</span>
+          <div><button type="button" id="brief-play" aria-label="Play slideshow">Play</button><button type="button" id="brief-prev" aria-label="Previous story">←</button><button type="button" id="brief-next" aria-label="Next story">→</button></div>
+        </div>
+        <div class="brief-sources" aria-label="News sources"><a href="https://csrc.nist.gov/news">NIST</a><a href="https://cloudsecurityalliance.org/blog">Cloud Security Alliance</a><a href="https://blog.cloudflare.com/tag/security/">Cloudflare</a></div>
+      </section>
+    </div>
 
-    <!-- LIVE -->
-    <a class="wu-card reveal" href="writeups/php2shell-exploit-sandbox/index.html" data-category="general">
-      <div class="wu-card-badges">
-        <span class="badge cat-general">General</span>
-        <span class="diff diff-hard">Hard</span>
+    <section id="learning" class="dash-section" aria-labelledby="learning-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">01 / Learn by topic</p><h2 id="learning-title">Pick a learning path</h2></div><a href="writeups/index.html">All topics <span aria-hidden="true">↗</span></a></div>
+      <div class="topic-grid">
+        <a class="topic-card panel" href="writeups/index.html?topic=web"><span class="topic-icon web" aria-hidden="true">&lt;/&gt;</span><span><strong>Web security</strong><small>Authentication, APIs, and input handling</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="writeups/index.html?topic=crypto"><span class="topic-icon crypto" aria-hidden="true">◇</span><span><strong>Cryptography</strong><small>Explore mistakes in keys and algorithms</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="writeups/index.html?topic=re"><span class="topic-icon reverse" aria-hidden="true">⟲</span><span><strong>Reverse engineering</strong><small>Read program behavior from the binary</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="writeups/index.html?topic=general"><span class="topic-icon network" aria-hidden="true">⌘</span><span><strong>Systems &amp; networks</strong><small>Linux, network services, and security labs</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
       </div>
-      <div class="wu-card-title">Network Security Research Lab</div>
-      <p class="wu-card-hook">Anonymous FTP and unauthenticated UPnP on a NetAxis gateway, PHP2Shell pre-auth session poisoning (CVE-2026-109618, CVSS 9.2), and a CyberRoute node accepting null SSH encryption — six critical findings, full attack chain documented.</p>
-      <div class="wu-card-meta"><span>VMware Local Lab · Network</span><span class="arrow">read →</span></div>
-    </a>
+    </section>
 
-    <a class="wu-card reveal" href="writeups/moneybox/index.html" data-category="general">
-      <div class="wu-card-badges">
-        <span class="badge cat-general">General</span>
-        <span class="diff diff-easy">Easy</span>
+    <section class="dash-section" aria-labelledby="featured-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">02 / The writeup library</p><h2 id="featured-title">Start with a lab</h2></div><a href="writeups/index.html">Browse all writeups <span aria-hidden="true">↗</span></a></div>
+      <div class="featured-grid">
+        <a class="lab-card panel" href="writeups/moneybox/index.html"><span class="lab-meta"><span class="lab-number">LAB 01</span><span class="lab-level easy">Easy</span></span><h3>Moneybox</h3><p>Follow a Linux lab from service discovery to the security lessons at the end.</p><span class="lab-read">Linux · OffSec PG <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="writeups/amaterasu/index.html"><span class="lab-meta"><span class="lab-number">LAB 02</span><span class="lab-level medium">Medium</span></span><h3>Amaterasu</h3><p>Study a vulnerable web API and see why file handling matters.</p><span class="lab-read">Web · OffSec PG <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="writeups/ven-rsa/index.html"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>VEN RSA</h3><p>Explore how one weak choice can undermine an otherwise strong encryption scheme.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
       </div>
-      <div class="wu-card-title">Moneybox</div>
-      <p class="wu-card-hook">Chain anonymous FTP, a steghide-hidden note and a reused SSH key into a foothold, then ride a sudo NOPASSWD Perl entry to root.</p>
-      <div class="wu-card-meta"><span>OffSec PG · Linux</span><span class="arrow">read →</span></div>
-    </a>
+    </section>
 
-    <a class="wu-card reveal" href="writeups/ven-rsa/index.html" data-category="crypto">
-      <div class="wu-card-badges">
-        <span class="badge cat-crypto">Crypto</span>
-        <span class="diff diff-medium">Medium</span>
-      </div>
-      <div class="wu-card-title">VEN RSA Can Be Broken???</div>
-      <p class="wu-card-hook">An even RSA modulus means one prime is 2 — enough to factor N, rebuild the private key and decrypt the flag.</p>
-      <div class="wu-card-meta"><span>CyLab · 200 pts</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/pizza-router/index.html" data-category="pwn">
-      <div class="wu-card-badges">
-        <span class="badge cat-pwn">Pwn</span>
-        <span class="diff diff-hard">Hard</span>
-      </div>
-      <div class="wu-card-title">Pizza Router</div>
-      <p class="wu-card-hook">Overwrite a heap callback pointer in a drone-routing binary to redirect execution to win().</p>
-      <div class="wu-card-meta"><span>CyLab · Pwn</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/printer-shares-3/index.html" data-category="general">
-      <div class="wu-card-badges">
-        <span class="badge cat-general">General</span>
-        <span class="diff diff-hard">Hard</span>
-      </div>
-      <div class="wu-card-title">Printer Shares 3</div>
-      <p class="wu-card-hook">A writable SMB share feeds a privileged cron job — overwrite its script to read the protected flag.</p>
-      <div class="wu-card-meta"><span>CyLab · SMB</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/secure-pass-db/index.html" data-category="re">
-      <div class="wu-card-badges">
-        <span class="badge cat-re">Rev</span>
-        <span class="diff diff-medium">Medium</span>
-      </div>
-      <div class="wu-card-title">Secure Password Database</div>
-      <p class="wu-card-hook">A Heartbleed-style buffer over-read leaks a hidden secret the program never means to print.</p>
-      <div class="wu-card-meta"><span>CyLab · RE</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/creds-surf/index.html" data-category="web">
-      <div class="wu-card-badges">
-        <span class="badge cat-web">Web</span>
-        <span class="diff diff-medium">Medium</span>
-      </div>
-      <div class="wu-card-title">Credential Stuffing</div>
-      <p class="wu-card-hook">Replay a leaked username/password list against a login form until one pair unlocks the flag.</p>
-      <div class="wu-card-meta"><span>CyLab · Web</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/hidden-cipher-2/index.html" data-category="re">
-      <div class="wu-card-badges">
-        <span class="badge cat-re">Rev</span>
-        <span class="diff diff-medium">Medium</span>
-      </div>
-      <div class="wu-card-title">Hidden Cipher 2</div>
-      <p class="wu-card-hook">Disassemble the binary to reverse the transform it applies to the flag, then undo it.</p>
-      <div class="wu-card-meta"><span>CyLab · RE</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/bypass-me/index.html" data-category="re">
-      <div class="wu-card-badges">
-        <span class="badge cat-re">Rev</span>
-        <span class="diff diff-medium">Medium</span>
-      </div>
-      <div class="wu-card-title">Bypass Me</div>
-      <p class="wu-card-hook">A digit-stripping input filter looks like the whole defense — but the real password is sitting in memory, readable straight from a CPU register with lldb.</p>
-      <div class="wu-card-meta"><span>CyLab · RE</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/amaterasu/index.html" data-category="web">
-      <div class="wu-card-badges">
-        <span class="badge cat-web">Web</span>
-        <span class="diff diff-medium">Medium</span>
-      </div>
-      <div class="wu-card-title">Amaterasu</div>
-      <p class="wu-card-hook">A custom REST API's path traversal maps the box, then a field mismatch in its upload filter plants an SSH key — a root cron PATH hijack finishes the job.</p>
-      <div class="wu-card-meta"><span>OffSec PG · Linux</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/electron1/index.html" data-category="web">
-      <div class="wu-card-badges">
-        <span class="badge cat-web">Web</span>
-        <span class="diff diff-medium">Medium</span>
-      </div>
-      <div class="wu-card-title">Electron1</div>
-      <p class="wu-card-hook">An app log published to the web leaks plaintext credentials over SSH, then a SUID-root Serv-U binary hands over root via CVE-2019-12181.</p>
-      <div class="wu-card-meta"><span>OffSec PG · Linux</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/driftingblues6/index.html" data-category="web">
-      <div class="wu-card-badges">
-        <span class="badge cat-web">Web</span>
-        <span class="diff diff-easy">Easy</span>
-      </div>
-      <div class="wu-card-title">DriftingBlues6</div>
-      <p class="wu-card-hook">A cracked webroot zip hands over Textpattern CMS credentials, authenticated file-upload RCE gives www-data, then Dirty COW rewrites root's password.</p>
-      <div class="wu-card-meta"><span>OffSec PG · Linux</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/coldbox-easy/index.html" data-category="web">
-      <div class="wu-card-badges">
-        <span class="badge cat-web">Web</span>
-        <span class="diff diff-easy">Easy</span>
-      </div>
-      <div class="wu-card-title">ColddBox: Easy</div>
-      <p class="wu-card-hook">WordPress user enumeration and a cracked login unlock the theme editor for RCE, then a SUID find binary hands over root.</p>
-      <div class="wu-card-meta"><span>OffSec PG · Linux</span><span class="arrow">read →</span></div>
-    </a>
-
-    <a class="wu-card reveal" href="writeups/trust-but-verify/index.html" data-category="misc">
-      <div class="wu-card-badges">
-        <span class="badge cat-misc">Misc</span>
-        <span class="diff diff-easy">Easy</span>
-      </div>
-      <div class="wu-card-title">Trust But Verify</div>
-      <p class="wu-card-hook">An interactive-fiction game — scripted an auto-player to walk the story to its hidden flag.</p>
-      <div class="wu-card-meta"><span>CyLab · Misc</span><span class="arrow">read →</span></div>
-    </a>
-
-  </div>
-  <p class="wu-empty" id="wuEmpty" style="display:none;">No matching writeups. Try another search or clear the filters.</p>
-  </section>
-</main>
-
-<footer>
-  <div class="footer-name">DOS VATHANAK BOTRA</div>
-  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
-  <div class="footer-links"><a href="index.html">Explore writeups</a><a href="about.html">About the author</a><a href="about.html#contact">Contact</a></div>
-</footer>
-
-<script src="js/theme.js?v=20261109-readable-type"></script>
-<script src="js/nav.js?v=20261109-cyber-layout"></script>
-<script src="js/fx.js?v=20261109-cyber-layout"></script>
-<script src="writeups/writeups.js?v=20261109-cyber-layout"></script>
-<script src="js/analytics.js?v=20261109-cyber-layout"></script>
-<script src="js/site.js?v=20261109-cyber-layout"></script>
+    <section class="dash-section author-strip panel" aria-labelledby="author-teaser-title">
+      <span class="author-initials" aria-hidden="true">VB</span>
+      <div><p class="eyebrow">Behind the lab</p><h2 id="author-teaser-title">Vathanak Botra Dos</h2><p>SOC analyst and cybersecurity learner. Explore the person behind the writeups and the work behind the portfolio.</p></div>
+      <div class="author-actions"><a class="dash-button secondary" href="author.html">Meet the author</a><a class="quiet-link" href="about.html">View portfolio ↗</a></div>
+    </section>
+  </main>
+  <footer class="dash-footer"><span>DVB Cyber Lab <span aria-hidden="true">/</span> Independent cybersecurity notes</span><div><a href="writeups/index.html">Writeups</a><a href="about.html#contact">Contact</a></div></footer>
+  <script src="js/theme.js?v=20261109-readable-type"></script>
+  <script src="js/dashboard.js?v=1"></script>
 </body>
 </html>
