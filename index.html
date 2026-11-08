@@ -44,25 +44,24 @@
   </div>
 </nav>
 
-<main class="wu-main">
-  <span class="wu-tag">// CTF &amp; Lab Writeups</span>
-  <h1 class="wu-page-title">Cybersecurity Writeups</h1>
-  <p class="wu-page-sub">Hands-on CTF and security-lab solutions across cryptography, binary exploitation,
-  web, reverse engineering and general skills — each one a walk-through of the recon, the flaw, and the exploit.</p>
-
-  <p class="wu-page-sub">Explore practical lab walkthroughs by Dos Vathanak Botra. <a href="about.html">About the author →</a></p>
-
-  <div class="wu-controls">
+<main class="wu-main wu-hub">
+  <aside class="wu-sidebar" aria-labelledby="library-title">
+    <h1 id="library-title" class="wu-sidebar-title">Cybersecurity<br> writeups</h1>
+    <p class="wu-sidebar-intro">Practical CTF and security lab walkthroughs by Dos Vathanak Botra.</p>
+    <a class="wu-author-link" href="about.html">About the author ↗</a>
+    <div class="wu-sidebar-label">Browse the collection</div>
+    <div class="wu-controls" role="group" aria-label="Filter writeups">
     <input type="text" id="wuSearch" class="wu-search" placeholder="Search writeups…" aria-label="Search writeups">
-    <button class="wu-filter active" data-filter="all">All</button>
-    <button class="wu-filter" data-filter="crypto">Crypto</button>
-    <button class="wu-filter" data-filter="pwn">Pwn</button>
-    <button class="wu-filter" data-filter="web">Web</button>
-    <button class="wu-filter" data-filter="re">Rev</button>
-    <button class="wu-filter" data-filter="general">General</button>
-    <button class="wu-filter" data-filter="misc">Misc</button>
+    <button class="wu-filter active" aria-pressed="true" data-filter="all">All</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="crypto">Crypto</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="pwn">Pwn</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="web">Web</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="re">Rev</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="general">General</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="misc">Misc</button>
   </div>
-
+  </aside>
+  <section class="wu-results" aria-label="Writeup collection">
   <div class="wu-grid" id="wuGrid">
 
     <!-- LIVE -->
@@ -208,6 +207,7 @@
 
   </div>
   <p class="wu-empty" id="wuEmpty" style="display:none;">No writeups match that filter.</p>
+  </section>
 </main>
 
 <footer>
