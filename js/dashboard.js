@@ -19,6 +19,21 @@
       summary: 'How post-quantum cryptography could help protect the privacy protocols that websites use to prevent abuse.',
       url: 'https://blog.cloudflare.com/vole-mole/',
     },
+    {
+      source: 'NVD', kind: 'Vulnerability database', title: 'Browse the National Vulnerability Database',
+      summary: 'Look up published vulnerabilities, their severity scores, and links to advisories.',
+      url: 'https://nvd.nist.gov/vuln/search',
+    },
+    {
+      source: 'The Hacker News', kind: 'Threat news', title: 'Latest from The Hacker News',
+      summary: 'Find reporting on new threats, security flaws, and cyberattacks.',
+      url: 'https://thehackernews.com/',
+    },
+    {
+      source: 'BleepingComputer', kind: 'Incidents & patches', title: 'BleepingComputer security news',
+      summary: 'Follow security incidents, malware campaigns, and patch releases.',
+      url: 'https://www.bleepingcomputer.com/news/security/',
+    },
   ];
   const source = document.getElementById('brief-source');
   const headline = document.getElementById('brief-headline');
@@ -93,17 +108,27 @@
       const fresh = (Array.isArray(data.items) ? data.items : []).filter(item =>
         item && typeof item.title === 'string' && typeof item.url === 'string' && item.url.startsWith('https://'));
       if (!fresh.length) return;
+      const nextStories = [...fresh];
+      const missing = picks.filter(pick => !fresh.some(story => story.source === pick.source));
+      nextStories.push(...missing);
+
       if (interacted || slide.contains(document.activeElement)) {
-        stories = [...stories, ...fresh.filter(item => !stories.some(story => story.url === item.url))];
-        status.textContent = 'Feed + source picks';
+        const current = stories[active];
+        active = nextStories.findIndex(story => story.url === current.url);
+        if (active < 0) {
+          // Keep the displayed pick until the reader moves to another story.
+          active = nextStories.findIndex(story => story.source === current.source);
+          nextStories[active] = current;
+          status.textContent = 'Feed + source picks';
+        } else {
+          status.textContent = missing.length ? 'Feed + source picks' : 'From live feeds';
+        }
+        stories = nextStories;
         renderCounter();
         return;
       }
-      stories = [...fresh];
-      for (const pick of picks) {
-        if (!fresh.some(story => story.source === pick.source || story.url === pick.url)) stories.push(pick);
-      }
-      status.textContent = data.sources === picks.length ? 'From live feeds' : 'Feed + source picks';
+      stories = nextStories;
+      status.textContent = missing.length ? 'Feed + source picks' : 'From live feeds';
       render();
     })
     .catch(() => { /* Keep the labeled source picks if the feed cannot load. */ });
