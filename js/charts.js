@@ -146,5 +146,14 @@ function updateCharts() {
     donutChart.update();
   }
 }
-initCharts();
+if (typeof Chart !== 'undefined') {
+  initCharts();
+} else {
+  document.querySelectorAll('#radarChart, #donutChart').forEach(canvas => {
+    const fallback = document.createElement('p');
+    fallback.className = 'chart-fallback';
+    fallback.textContent = 'The chart could not load. Skills and experience are listed on this page.';
+    canvas.replaceWith(fallback);
+  });
+}
 

@@ -14,42 +14,31 @@
 <link rel="stylesheet" href="css/footer.css">
 <link rel="stylesheet" href="css/animations.css">
 <link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="css/fx.css">
 <script src="js/fx-head.js"></script>
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
-<body>
+<body class="page-about">
+<a class="skip-link" href="#main-content">Skip to content</a>
 <div class="fx-cube-cap" aria-hidden="true"></div>
 
 <div class="grid-bg"></div>
 <div class="scanlines"></div>
 
-<nav id="navbar">
-  <a href="#hero" class="nav-logo" aria-label="Dos Vathanak Botra">
-    <span class="nav-logo-dot" aria-hidden="true"></span>
-    <span class="nav-logo-key">DVB</span>
-  </a>
+<nav id="navbar" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo" aria-label="DVB Learning home"><span class="brand-mark">DVB</span><span class="brand-caption">Learning notes</span></a>
   <ul class="nav-links" id="navLinks">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="#about">About the Author</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#certificates">Certs</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="writeups/index.html">Writeups</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="index.html" >Explore</a></li>
+    <li><a href="about.html" aria-current="page">About the author</a></li>
+    <li><a href="about.html#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
-      <span class="theme-toggle-label" id="themeLabel">Dark</span>
-      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
-    </button>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><span id="themeLabel">Dark</span><span aria-hidden="true">◐</span></button>
+    <button type="button" class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open navigation" aria-controls="navLinks" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
+<main id="main-content">
 <!-- HERO -->
 <section id="hero">
   <div class="hero-glow"></div>
@@ -557,18 +546,11 @@
 </section>
 
 <!-- FOOTER -->
+</main>
 <footer>
   <div class="footer-name">DOS VATHANAK BOTRA</div>
   <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
-  <div class="footer-links">
-    <a href="index.html">Home</a>
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#experience">Experience</a>
-    <a href="#certificates">Certs</a>
-    <a href="writeups/index.html">Writeups</a>
-    <a href="#contact">Contact</a>
-  </div>
+  <div class="footer-links"><a href="index.html">Explore writeups</a><a href="about.html">About the author</a><a href="about.html#contact">Contact</a></div>
 </footer>
 
 <script src="js/theme.js"></script>
@@ -578,5 +560,6 @@
 <script src="js/charts.js"></script>
 <script src="js/slideshow.js"></script>
 <script src="js/analytics.js"></script>
+<script src="js/site.js"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@
   const search = document.getElementById('wuSearch');
   const filters = [...document.querySelectorAll('.wu-filter')];
   let activeCat = 'all';
+  const difficulty = document.getElementById('wuDifficulty');
 
   function apply() {
     const q = (search?.value || '').trim().toLowerCase();
@@ -15,12 +16,15 @@
     cards.forEach(card => {
       const catOk = activeCat === 'all' || card.dataset.category === activeCat;
       const textOk = !q || card.textContent.toLowerCase().includes(q);
-      const show = catOk && textOk;
+      const levelOk = !difficulty || difficulty.value === 'all' || !!card.querySelector('.diff-' + difficulty.value);
+      const show = catOk && textOk && levelOk;
       card.style.display = show ? '' : 'none';
       if (show) shown++;
     });
     const empty = document.getElementById('wuEmpty');
     if (empty) empty.style.display = shown ? 'none' : '';
+    const count = document.getElementById('wuCount');
+    if(count) count.textContent = shown + ' of ' + cards.length + ' writeups';
   }
 
   filters.forEach(btn => btn.addEventListener('click', () => {
@@ -31,6 +35,12 @@
     apply();
   }));
   search?.addEventListener('input', apply);
+  difficulty?.addEventListener('change', apply);
+  document.getElementById('wuReset')?.addEventListener('click', () => {
+    search.value = ''; difficulty.value = 'all'; activeCat = 'all';
+    filters.forEach(b => { const active=b.dataset.filter === 'all'; b.classList.toggle('active',active); b.setAttribute('aria-pressed',String(active)); }); apply();
+  });
+  apply();
 })();
 
 // --- Report page: copy buttons on code blocks ---

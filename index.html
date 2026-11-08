@@ -12,56 +12,53 @@
 <link rel="stylesheet" href="css/animations.css">
 <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="writeups/writeups.css">
-<link rel="stylesheet" href="css/fx.css">
 <script src="js/fx-head.js"></script>
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
-<body>
+<body class="page-home">
+<a class="skip-link" href="#main-content">Skip to content</a>
 <div class="fx-cube-cap" aria-hidden="true"></div>
 
 <div class="grid-bg"></div>
 <div class="scanlines"></div>
 
-<nav id="navbar">
-  <a href="index.html" class="nav-logo" aria-label="Status: Junior">
-    <span class="nav-logo-dot" aria-hidden="true"></span>
-    <span class="nav-logo-key">STATUS:</span>
-    <span class="nav-logo-val">JUNIOR</span>
-  </a>
+<nav id="navbar" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo" aria-label="DVB Learning home"><span class="brand-mark">DVB</span><span class="brand-caption">Learning notes</span></a>
   <ul class="nav-links" id="navLinks">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="writeups/index.html">Writeups</a></li>
-    <li><a href="about.html">About the Author</a></li>
+    <li><a href="index.html" aria-current="page">Explore</a></li>
+    <li><a href="about.html" >About the author</a></li>
     <li><a href="about.html#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
-      <span class="theme-toggle-label" id="themeLabel">Dark</span>
-      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
-    </button>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><span id="themeLabel">Dark</span><span aria-hidden="true">◐</span></button>
+    <button type="button" class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open navigation" aria-controls="navLinks" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
-<main class="wu-main wu-hub">
+<main id="main-content" class="wu-main wu-hub">
   <aside class="wu-sidebar" aria-labelledby="library-title">
     <h1 id="library-title" class="wu-sidebar-title">Cybersecurity<br> writeups</h1>
     <p class="wu-sidebar-intro">Practical CTF and security lab walkthroughs by Dos Vathanak Botra.</p>
     <a class="wu-author-link" href="about.html">About the author ↗</a>
-    <div class="wu-sidebar-label">Browse the collection</div>
+    <details class="wu-filter-panel" open><summary>Browse &amp; filter</summary>
     <div class="wu-controls" role="group" aria-label="Filter writeups">
     <input type="text" id="wuSearch" class="wu-search" placeholder="Search writeups…" aria-label="Search writeups">
     <button class="wu-filter active" aria-pressed="true" data-filter="all">All</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="crypto">Crypto</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="pwn">Pwn</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="crypto">Cryptography</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="pwn">Binary exploitation</button>
     <button class="wu-filter" aria-pressed="false" data-filter="web">Web</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="re">Rev</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="re">Reverse engineering</button>
     <button class="wu-filter" aria-pressed="false" data-filter="general">General</button>
-    <button class="wu-filter" aria-pressed="false" data-filter="misc">Misc</button>
+    <button class="wu-filter" aria-pressed="false" data-filter="misc">Other labs</button>
   </div>
+    <label class="wu-sidebar-label" for="wuDifficulty">Difficulty</label>
+    <select id="wuDifficulty" class="wu-search"><option value="all">All levels</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select>
+    <button class="wu-reset" id="wuReset" type="button">Clear filters</button>
+    </details>
   </aside>
   <section class="wu-results" aria-label="Writeup collection">
+    <div class="collection-toolbar"><h2>Explore the collection</h2><span id="wuCount" role="status" aria-live="polite"></span></div>
   <div class="wu-grid" id="wuGrid">
 
     <!-- LIVE -->
@@ -206,20 +203,14 @@
     </a>
 
   </div>
-  <p class="wu-empty" id="wuEmpty" style="display:none;">No writeups match that filter.</p>
+  <p class="wu-empty" id="wuEmpty" style="display:none;">No matching writeups. Try another search or clear the filters.</p>
   </section>
 </main>
 
 <footer>
   <div class="footer-name">DOS VATHANAK BOTRA</div>
   <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
-  <div class="footer-links">
-    <a href="index.html">Home</a>
-    <a href="about.html#about">About the Author</a>
-    <a href="about.html#skills">Skills</a>
-    <a href="writeups/index.html">Writeups</a>
-    <a href="about.html#contact">Contact</a>
-  </div>
+  <div class="footer-links"><a href="index.html">Explore writeups</a><a href="about.html">About the author</a><a href="about.html#contact">Contact</a></div>
 </footer>
 
 <script src="js/theme.js"></script>
@@ -227,5 +218,6 @@
 <script src="js/fx.js"></script>
 <script src="writeups/writeups.js"></script>
 <script src="js/analytics.js"></script>
+<script src="js/site.js"></script>
 </body>
 </html>
