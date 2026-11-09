@@ -176,3 +176,21 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
   .topic-card:hover,.lab-card:hover,.dash-button:hover{transform:translateY(-3px);}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}body.dashboard-page{transition:none;}}
+
+/* Keep motion brief, with the same page fade across the site. */
+@view-transition{navigation:auto;}
+::view-transition-old(root),::view-transition-new(root){animation-duration:180ms;}
+.brief-state{white-space:normal;text-align:center;max-width:145px;}
+.dash-nav a,.dash-theme,.brief-controls button{transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease;}
+.topic-card:focus-visible,.lab-card:focus-visible{border-color:var(--dash-accent);box-shadow:var(--dash-shadow);}
+@media(prefers-reduced-motion:no-preference){
+  html{scroll-behavior:smooth;}
+  .brief-thumb-image img{transition:opacity 220ms ease;}
+  .topic-arrow,.lab-read span{transition:transform 180ms ease;}
+  .topic-card:is(:hover,:focus-visible) .topic-arrow,.lab-card:is(:hover,:focus-visible) .lab-read span{transform:translate(2px,-2px);}
+  .dash-button:active,.brief-controls button:active{transform:scale(.97);}
+}
+@media(prefers-reduced-motion:reduce){
+  @view-transition{navigation:none;}
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+}

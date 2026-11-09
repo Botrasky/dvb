@@ -147,16 +147,16 @@
           // Keep the displayed pick until the reader moves to another story.
           active = nextStories.findIndex(story => story.source === current.source);
           nextStories[active] = current;
-          status.textContent = 'Feed + source picks';
+          status.textContent = 'News & suggested reading';
         } else {
-          status.textContent = missing.length ? 'Feed + source picks' : 'From live feeds';
+          status.textContent = missing.length ? 'News & suggested reading' : 'Publisher feeds';
         }
         stories = nextStories;
         renderCounter();
         return;
       }
       stories = nextStories;
-      status.textContent = missing.length ? 'Feed + source picks' : 'From live feeds';
+      status.textContent = missing.length ? 'News & suggested reading' : 'Publisher feeds';
       render();
     })
     .catch(() => { /* Keep the labeled source picks if the feed cannot load. */ });

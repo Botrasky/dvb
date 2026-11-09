@@ -20,15 +20,18 @@ function applyTheme(dark) {
 let isDark = getStoredTheme() === 'dark';
 applyTheme(isDark);
 
+let themeTransition;
 function toggleTheme() {
   isDark = !isDark;
   setStoredTheme(isDark ? 'dark' : 'light');
+  const dark = isDark;
+  themeTransition?.skipTransition();
   const renderTheme = () => {
-    applyTheme(isDark);
+    applyTheme(dark);
     if (typeof updateCharts === 'function') updateCharts();
   };
   if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.startViewTransition(renderTheme);
+    themeTransition = document.startViewTransition(renderTheme);
   } else {
     renderTheme();
   }

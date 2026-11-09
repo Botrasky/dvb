@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="An independent cybersecurity learning dashboard with hands-on labs, CTF writeups, and updates from trusted security publishers.">
-  <title>DVB Cyber Lab — Cybersecurity Learning Dashboard</title>
+  <title>DVB Cyber Lab | Cybersecurity Learning Dashboard</title>
   <script src="js/fx-head.js?v=20261109-cyber-layout"></script>
   <link rel="stylesheet" href="css/base.css?v=20261109-readable-type">
-  <link rel="stylesheet" href="css/dashboard.css?v=2">
+  <link rel="stylesheet" href="css/dashboard.css?v=4">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="dashboard-page">
@@ -25,7 +25,7 @@
 
   <main id="main" class="dash-shell">
     <div class="dash-masthead">
-      <div><p class="eyebrow"><span></span> Independent learning space</p><h1>Cybersecurity dashboard</h1><p>Practice in the lab. Follow what’s happening in security.</p></div>
+      <div><p class="eyebrow"><span></span> Notes from my security labs</p><h1>Cybersecurity dashboard</h1><p>My lab writeups and updates from security publishers.</p></div>
       <a class="masthead-link" href="author.html"><span class="author-initials" aria-hidden="true">VB</span><span>By Vathanak Botra Dos<small>Meet the author ↗</small></span></a>
     </div>
 
@@ -33,8 +33,8 @@
       <section class="mission panel" aria-labelledby="mission-title">
         <div class="mission-copy">
           <p class="eyebrow"><span></span> The lab</p>
-          <h2 id="mission-title">Learn security.<br>Think like a defender.</h2>
-          <p>Work through real lab scenarios, understand what went wrong, and take the lessons back to your own practice.</p>
+          <h2 id="mission-title">See the steps.<br>Understand the flaw.</h2>
+          <p>Read how I worked through each lab, what I found, and what I learned.</p>
           <div class="mission-links"><a class="dash-button primary" href="writeups/index.html">Explore writeups <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#learning">Choose a topic <span aria-hidden="true">↓</span></a></div>
         </div>
         <svg class="mission-art" viewBox="0 0 320 260" fill="none" aria-hidden="true">
@@ -43,12 +43,11 @@
           <g stroke="#a7f6df" stroke-opacity=".24"><circle cx="174" cy="127" r="91"/><circle cx="174" cy="127" r="67"/><circle cx="174" cy="127" r="44"/><path d="M174 25v204M72 127h204M51 34h17m-17 0v17m244 0V34h-17M51 208v17h17m210 0h17v-17"/></g>
           <path class="signal-trace" pathLength="100" d="M42 173h48l18-33 17 54 27-98 20 58 17-27h29l20-39h58" stroke="url(#signal)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
           <g fill="#a4ffcf"><circle cx="174" cy="127" r="3"/><circle cx="238" cy="88" r="4"/><circle cx="108" cy="140" r="3"/></g>
-          <g fill="#a7f6df" opacity=".65" font-family="monospace" font-size="9"><text x="55" y="64">LAB SIGNAL</text><text x="230" y="207">DVB / 01</text></g>
         </svg>
       </section>
 
       <section class="brief panel" id="brief" aria-labelledby="brief-title" aria-roledescription="carousel">
-        <div class="brief-header"><div><p class="eyebrow"><span></span> Security news</p><h2 id="brief-title">Threat brief</h2></div><span class="brief-state" id="brief-state">Source picks</span></div>
+        <div class="brief-header"><div><p class="eyebrow"><span></span> Security news</p><h2 id="brief-title">Threat brief</h2></div><span class="brief-state" id="brief-state">Suggested reading</span></div>
         <div class="brief-slide" id="brief-slide" aria-live="polite" aria-atomic="true">
           <div class="brief-thumb" id="brief-thumb" data-publisher="nist" aria-hidden="true">
             <span class="brief-thumb-label" id="brief-thumb-label">NIST</span>
@@ -70,7 +69,7 @@
     </div>
 
     <section id="learning" class="dash-section" aria-labelledby="learning-title">
-      <div class="dash-section-heading"><div><p class="eyebrow">01 / Learn by topic</p><h2 id="learning-title">Pick a learning path</h2></div><a href="writeups/index.html">All topics <span aria-hidden="true">↗</span></a></div>
+      <div class="dash-section-heading"><div><p class="eyebrow">01 / Learn by topic</p><h2 id="learning-title">Find a topic to explore</h2></div><a href="writeups/index.html">All topics <span aria-hidden="true">↗</span></a></div>
       <div class="topic-grid">
         <a class="topic-card panel" href="writeups/index.html?topic=web"><span class="topic-icon web" aria-hidden="true">&lt;/&gt;</span><span><strong>Web security</strong><small>Authentication, APIs, and input handling</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
         <a class="topic-card panel" href="writeups/index.html?topic=crypto"><span class="topic-icon crypto" aria-hidden="true">◇</span><span><strong>Cryptography</strong><small>Explore mistakes in keys and algorithms</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
@@ -82,20 +81,21 @@
     <section class="dash-section" aria-labelledby="featured-title">
       <div class="dash-section-heading"><div><p class="eyebrow">02 / The writeup library</p><h2 id="featured-title">Start with a lab</h2></div><a href="writeups/index.html">Browse all writeups <span aria-hidden="true">↗</span></a></div>
       <div class="featured-grid">
-        <a class="lab-card panel" href="writeups/moneybox/index.html"><span class="lab-meta"><span class="lab-number">LAB 01</span><span class="lab-level easy">Easy</span></span><h3>Moneybox</h3><p>Follow a Linux lab from service discovery to the security lessons at the end.</p><span class="lab-read">Linux · OffSec PG <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="writeups/moneybox/index.html"><span class="lab-meta"><span class="lab-number">LAB 01</span><span class="lab-level easy">Easy</span></span><h3>Moneybox</h3><p>A Linux lab covering exposed services and unsafe permissions.</p><span class="lab-read">Linux · OffSec PG <span aria-hidden="true">↗</span></span></a>
         <a class="lab-card panel" href="writeups/amaterasu/index.html"><span class="lab-meta"><span class="lab-number">LAB 02</span><span class="lab-level medium">Medium</span></span><h3>Amaterasu</h3><p>Study a vulnerable web API and see why file handling matters.</p><span class="lab-read">Web · OffSec PG <span aria-hidden="true">↗</span></span></a>
-        <a class="lab-card panel" href="writeups/ven-rsa/index.html"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>VEN RSA</h3><p>Explore how one weak choice can undermine an otherwise strong encryption scheme.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="writeups/ven-rsa/index.html"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>VEN RSA</h3><p>An RSA challenge with a weak prime and a lesson in key generation.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
       </div>
     </section>
 
     <section class="dash-section author-strip panel" aria-labelledby="author-teaser-title">
       <span class="author-initials" aria-hidden="true">VB</span>
-      <div><p class="eyebrow">Behind the lab</p><h2 id="author-teaser-title">Vathanak Botra Dos</h2><p>SOC analyst and cybersecurity learner. Explore the person behind the writeups and the work behind the portfolio.</p></div>
+      <div><p class="eyebrow">Behind the lab</p><h2 id="author-teaser-title">Vathanak Botra Dos</h2><p>I share my lab notes here. My portfolio covers my experience, projects, and education.</p></div>
       <div class="author-actions"><a class="dash-button secondary" href="author.html">Meet the author</a><a class="quiet-link" href="about.html">View portfolio ↗</a></div>
     </section>
   </main>
   <footer class="dash-footer"><span>DVB Cyber Lab <span aria-hidden="true">/</span> Independent cybersecurity notes</span><div><a href="writeups/index.html">Writeups</a><a href="about.html#contact">Contact</a></div></footer>
   <script src="js/theme.js?v=20261109-readable-type"></script>
-  <script src="js/dashboard.js?v=3"></script>
+  <script src="js/dashboard.js?v=4"></script>
+<script src="js/motion.js?v=1"></script>
 </body>
 </html>

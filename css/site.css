@@ -21,8 +21,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,
 .wu-sidebar-intro{font-size:.95rem;line-height:1.55;}
 .wu-author-link{font-size:.9rem;text-decoration:none;margin-bottom:24px;}
 .wu-filter-panel summary{font-size:.875rem;font-weight:700;color:var(--text2);cursor:pointer;list-style:none;}
-.wu-filter-panel summary::after{content:'−';float:right;}
-.wu-filter-panel:not([open]) summary::after{content:'+';}
+.wu-filter-panel summary::after{content:'⌃';float:right;}
+.wu-filter-panel:not([open]) summary::after{content:'⌄';}
 .wu-filter-panel summary::-webkit-details-marker{display:none;}
 .wu-sidebar .wu-filter{text-transform:none;letter-spacing:0;font-size:.875rem;border-color:transparent;}
 .wu-sidebar .wu-filter.active{background:var(--surface2);color:var(--cyan);border-color:var(--border);font-weight:700;}
