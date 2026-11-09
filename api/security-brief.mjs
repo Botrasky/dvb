@@ -1,11 +1,13 @@
 const maxPerPublisher = 2;
 
 const publishers = [
-  { name: 'NIST', kind: 'Standards & guidance', feed: 'https://www.nist.gov/blogs/cybersecurity-insights/rss.xml', hosts: ['csrc.nist.gov', 'www.nist.gov'] },
-  { name: 'Cloud Security Alliance', kind: 'Cloud security', feed: 'https://cloudsecurityalliance.org/feed/', hosts: ['cloudsecurityalliance.org'] },
-  { name: 'Cloudflare', kind: 'Security research', feed: 'https://blog.cloudflare.com/tag/security/rss/', hosts: ['blog.cloudflare.com'] },
-  { name: 'The Hacker News', kind: 'Threat news', feed: 'https://feeds.feedburner.com/TheHackersNews', hosts: ['thehackernews.com', 'www.thehackernews.com'] },
-  { name: 'BleepingComputer', kind: 'Incidents & patches', feed: 'https://www.bleepingcomputer.com/feed/', hosts: ['www.bleepingcomputer.com', 'bleepingcomputer.com'], pathPrefix: '/news/security/' },
+  { name: 'NIST', kind: 'Standards & guidance', feed: 'https://www.nist.gov/blogs/cybersecurity-insights/rss.xml', hosts: ['csrc.nist.gov', 'www.nist.gov'], imageHosts: ['www.nist.gov'] },
+  { name: 'Cloud Security Alliance', kind: 'Cloud security', feed: 'https://cloudsecurityalliance.org/feed/', hosts: ['cloudsecurityalliance.org'], imageHosts: ['cloudsecurityalliance.org'] },
+  { name: 'Cloudflare', kind: 'Security research', feed: 'https://blog.cloudflare.com/tag/security/rss/', hosts: ['blog.cloudflare.com'], imageHosts: ['blog.cloudflare.com', 'cf-assets.www.cloudflare.com'] },
+  { name: 'Palo Alto Unit 42', kind: 'Threat intelligence', feed: 'https://unit42.paloaltonetworks.com/feed/', hosts: ['unit42.paloaltonetworks.com'], imageHosts: ['unit42.paloaltonetworks.com'] },
+  { name: 'IBM Research', kind: 'Security research', feed: 'https://research.ibm.com/rss', hosts: ['research.ibm.com'], imageHosts: ['research.ibm.com', 'assets.ibm.com'], match: /security|cyber|vulnerab|privacy|cryptograph|zero[ -]trust|threat|malware|ransomware|attack|identity|authentication|quantum-safe|post-quantum/i },
+  { name: 'The Hacker News', kind: 'Threat news', feed: 'https://feeds.feedburner.com/TheHackersNews', hosts: ['thehackernews.com', 'www.thehackernews.com'], imageHosts: ['blogger.googleusercontent.com', 'blogspot.com', 'thehackernews.com', 'www.thehackernews.com'] },
+  { name: 'BleepingComputer', kind: 'Incidents & patches', feed: 'https://www.bleepingcomputer.com/feed/', hosts: ['www.bleepingcomputer.com', 'bleepingcomputer.com'], imageHosts: ['www.bleepingcomputer.com', 'www.bleepstatic.com'], pathPrefix: '/news/security/' },
 ];
 
 const entities = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
@@ -45,15 +47,23 @@ function sourceLink(value, publisher) {
 }
 
 function thumbnail(item, publisher) {
+  const imagePublisher = { ...publisher, hosts: publisher.imageHosts || publisher.hosts, pathPrefix: '' };
+  const direct = sourceLink(field(item, 'featuredImage'), imagePublisher);
+  if (direct) return direct;
   const imageTags = item.matchAll(/<(enclosure|media:thumbnail|media:content)\b([^>]*?)\/?>/gi);
   for (const [, tag, attributes] of imageTags) {
     const type = attributes.match(/\btype\s*=\s*(['"])(.*?)\1/i)?.[2] || '';
     const medium = attributes.match(/\bmedium\s*=\s*(['"])(.*?)\1/i)?.[2] || '';
     const candidate = attributes.match(/(?:^|\s)url\s*=\s*(['"])(.*?)\1/i)?.[2];
-    const url = sourceLink(candidate, { ...publisher, pathPrefix: '' });
+    const url = sourceLink(candidate, imagePublisher);
     const isImage = /^image\/(?:png|jpe?g|webp|avif)$/i.test(type);
     const isThumbnail = !type && (tag.toLowerCase() === 'media:thumbnail' || medium.toLowerCase() === 'image');
     if (url && (isImage || isThumbnail)) return url;
+  }
+  const html = field(item, 'content:encoded') || field(item, 'description');
+  for (const match of html.matchAll(/<img\b[^>]*?\bsrc\s*=\s*(['"])(.*?)\1/gi)) {
+    const url = sourceLink(match[2], imagePublisher);
+    if (url) return url;
   }
   return '';
 }
@@ -62,12 +72,14 @@ export function parseFeed(xml, publisher) {
   const items = [];
   for (const [, item] of xml.matchAll(/<item(?:\s[^>]*)?>([\s\S]*?)<\/item>/gi)) {
     const title = plainText(field(item, 'title'), 165);
+    const rawDescription = field(item, 'description');
+    if (publisher.match && !publisher.match.test(title + ' ' + plainText(rawDescription, 500))) continue;
     const url = sourceLink(field(item, 'feedburner:origLink'), publisher) || sourceLink(field(item, 'link'), publisher);
     const date = Date.parse(plainText(field(item, 'pubDate') || field(item, 'dc:date'), 80));
     if (!title || !url || !Number.isFinite(date)) continue;
     const image = thumbnail(item, publisher);
     items.push({ title, url, date: new Date(date).toISOString(), source: publisher.name,
-      kind: publisher.kind, summary: plainText(field(item, 'description'), 165), ...(image && { image }) });
+      kind: publisher.kind, summary: plainText(rawDescription, 165), ...(image && { image }) });
   }
   return newest(items);
 }
