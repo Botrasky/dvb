@@ -194,3 +194,8 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
   @view-transition{navigation:none;}
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
 }
+
+/* The full copy reserves its space while a visual layer types over it. */
+.brief-typing{position:relative;}
+.brief-text-full{opacity:0;}
+.brief-text-ink{position:absolute;inset:0;white-space:normal;overflow-wrap:anywhere;}

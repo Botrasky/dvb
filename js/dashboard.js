@@ -58,6 +58,9 @@
   let active = 0;
   let interacted = false;
   let timer = null;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let playing = !reducedMotion.matches && !document.hidden;
+  let typingVersion = 0;
 
   function renderThumbnail(story) {
     const [style, label] = publishers.get(story.source) || ['unknown', 'NEWS'];
@@ -76,6 +79,7 @@
   }
 
   function render(animate = false) {
+    stopTyping();
     const story = stories[active];
     const date = Date.parse(story.date);
     const byline = Number.isFinite(date) ? [story.source, story.kind, dateFormat.format(date)] : [story.source, story.kind];
@@ -85,6 +89,7 @@
     original.href = story.url;
     renderThumbnail(story);
     renderCounter();
+    if (playing) typeStory();
     if (animate) {
       slide.classList.remove('is-changing');
       void slide.offsetWidth;
@@ -102,26 +107,86 @@
     render(true);
   }
 
-  function pause() {
-    if (timer === null) return;
-    clearInterval(timer);
+  function stopTyping() {
+    clearTimeout(timer);
     timer = null;
-    slide.setAttribute('aria-live', 'polite');
-    play.textContent = 'Play';
-    play.setAttribute('aria-label', 'Play slideshow');
+    typingVersion++;
+    [headline, summary].forEach(el => {
+      if (el.dataset.fullText !== undefined) {
+        el.textContent = el.dataset.fullText;
+        delete el.dataset.fullText;
+      }
+      el.classList.remove('brief-typing');
+    });
+  }
+
+  function updatePlayback() {
+    slide.setAttribute('aria-live', playing ? 'off' : 'polite');
+    play.textContent = playing ? 'Pause' : 'Play';
+    play.setAttribute('aria-label', playing ? 'Pause slideshow' : 'Play slideshow');
+  }
+
+  function typeStory() {
+    updatePlayback();
+    const version = typingVersion;
+    const fields = [headline, summary].map(el => {
+      const full = el.textContent;
+      el.dataset.fullText = full;
+      el.classList.add('brief-typing');
+      const layout = document.createElement('span');
+      layout.className = 'brief-text-full';
+      layout.textContent = full;
+      const ink = document.createElement('span');
+      ink.className = 'brief-text-ink';
+      ink.setAttribute('aria-hidden', 'true');
+      el.replaceChildren(layout, ink);
+      const chars = typeof Intl.Segmenter === 'function'
+        ? [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(full)].map(part => part.segment)
+        : Array.from(full);
+      return { el, ink, chars };
+    });
+    let field = 0, cursor = 0;
+    function tick() {
+      if (!playing || version !== typingVersion) return;
+      const current = fields[field];
+      cursor = Math.min(cursor + 2, current.chars.length);
+      current.ink.textContent = current.chars.slice(0, cursor).join('');
+      if (cursor < current.chars.length) {
+        timer = setTimeout(tick, 28);
+      } else if (++field < fields.length) {
+        cursor = 0;
+        timer = setTimeout(tick, 180);
+      } else {
+        stopTyping();
+        // Keep the completed story readable before moving to another publisher.
+        timer = setTimeout(() => {
+          const currentSource = stories[active].source;
+          let offset = 1;
+          while (offset < stories.length && stories[(active + offset) % stories.length].source === currentSource) offset++;
+          advance(offset);
+        }, 4500);
+      }
+    }
+    tick();
+  }
+
+  function pause() {
+    playing = false;
+    stopTyping();
+    updatePlayback();
   }
 
   play.addEventListener('click', () => {
-    if (timer !== null) {
-      pause();
-      return;
-    }
     interacted = true;
-    slide.setAttribute('aria-live', 'off');
-    play.textContent = 'Pause';
-    play.setAttribute('aria-label', 'Pause slideshow');
-    timer = setInterval(() => advance(1), 8000);
+    if (playing) return pause();
+    playing = true;
+    if (reducedMotion.matches) {
+      // Explicit playback is allowed, but avoid the character animation.
+      updatePlayback();
+      timer = setTimeout(() => { pause(); advance(1); }, 8000);
+    } else render();
   });
+  reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) pause(); });
   slide.addEventListener('focusin', pause);
   document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
   document.getElementById('brief-prev').addEventListener('click', () => { pause(); advance(-1); });
