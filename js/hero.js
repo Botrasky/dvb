@@ -19,12 +19,13 @@ function type() {
   }
   setTimeout(type, deleting ? 50 : 90);
 }
-type();
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) { document.getElementById('typingEl').textContent = phrases[0]; } else { type(); }
 
 // ========== COUNTER ANIMATION ==========
 function animateCounters() {
   document.querySelectorAll('[data-count]').forEach(el => {
     const target = parseInt(el.dataset.count);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = target; return; }
     const start = Date.now();
     const duration = 1800;
     function update() {

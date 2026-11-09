@@ -95,7 +95,7 @@ function initCharts() {
           beginAtZero:true, max:100,
           grid:{ color: c.gridColor },
           ticks:{ display:false, stepSize:20 },
-          pointLabels:{ color: c.textColor, font:{ size:10, family:"'IBM Plex Mono', monospace" } },
+          pointLabels:{ color: c.textColor, font:{ size:10, family:'Arial, Helvetica, sans-serif' } },
           angleLines:{ color: c.gridColor }
         }
       }
@@ -120,7 +120,7 @@ function initCharts() {
       plugins:{
         legend:{
           position:'bottom',
-          labels:{ color: c.textColor, font:{ size:10, family:"'IBM Plex Mono', monospace" }, padding:12 }
+          labels:{ color: c.textColor, font:{ size:10, family:'Arial, Helvetica, sans-serif' }, padding:12 }
         }
       },
       cutout:'65%',
@@ -146,5 +146,14 @@ function updateCharts() {
     donutChart.update();
   }
 }
-initCharts();
+if (typeof Chart !== 'undefined') {
+  initCharts();
+} else {
+  document.querySelectorAll('#radarChart, #donutChart').forEach(canvas => {
+    const fallback = document.createElement('p');
+    fallback.className = 'chart-fallback';
+    fallback.textContent = 'The chart could not load. Skills and experience are listed on this page.';
+    canvas.replaceWith(fallback);
+  });
+}
 

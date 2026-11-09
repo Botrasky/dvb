@@ -256,7 +256,7 @@ html.light-mode .fx-hacker .term circle{fill:#1e4a7a;}
 .fx-hacker .void{fill:var(--bg);}
 .fx-hacker .eyes{stroke:var(--green);stroke-width:4;animation:fx-eyes 5s ease-in-out infinite;}
 .fx-hacker .term text{
-  font:12px 'IBM Plex Mono',ui-monospace,Menlo,monospace;fill:var(--green);white-space:pre;
+  font:12px var(--font-code);fill:var(--green);white-space:pre;
 }
 .fx-hacker .term circle{fill:var(--cyan);stroke:none;}
 @keyframes fx-eyes{0%,92%,100%{opacity:1;}95%{opacity:.15;}}

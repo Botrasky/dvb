@@ -1,581 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dos Vathanak Botra — Cybersecurity Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/nav.css">
-<link rel="stylesheet" href="css/layout.css">
-<link rel="stylesheet" href="css/hero.css">
-<link rel="stylesheet" href="css/sections.css">
-<link rel="stylesheet" href="css/footer.css">
-<link rel="stylesheet" href="css/animations.css">
-<link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="css/fx.css">
-<script src="js/fx-head.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An independent cybersecurity learning dashboard with hands-on labs, CTF writeups, and updates from trusted security publishers.">
+  <title>DVB Cyber Lab | Cybersecurity Learning Dashboard</title>
+  <script src="js/fx-head.js?v=20261109-cyber-layout"></script>
+  <link rel="stylesheet" href="css/base.css?v=motion-2">
+  <link rel="stylesheet" href="css/dashboard.css?v=motion-2">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
-<body>
-<div class="fx-cube-cap" aria-hidden="true"></div>
+<body class="dashboard-page">
+  <a class="dash-skip" href="#main">Skip to content</a>
+  <header class="dash-header">
+    <a class="dash-brand" href="index.html"><span class="dash-logo" aria-hidden="true">D</span><span>DVB <strong>Cyber Lab</strong></span></a>
+    <nav class="dash-nav" aria-label="Main navigation">
+      <a href="index.html" aria-current="page">Dashboard</a>
+      <a href="writeups/index.html">Writeups</a>
+      <a href="author.html">Author</a>
+      <a href="about.html">Portfolio</a>
+    </nav>
+    <button class="dash-theme" id="themeToggle" type="button" aria-label="Toggle light and dark theme"><span aria-hidden="true">◐</span> <span id="themeLabel">Light</span></button>
+  </header>
 
-<div class="grid-bg"></div>
-<div class="scanlines"></div>
+  <main id="main" class="dash-shell">
+    <div class="dash-masthead">
+      <div><p class="eyebrow"><span></span> Notes from my security labs</p><h1>Cybersecurity dashboard</h1><p>My lab writeups and updates from security publishers.</p></div>
+      <a class="masthead-link" href="author.html"><span class="author-initials" aria-hidden="true">VB</span><span>By Vathanak Botra Dos<small>Meet the author ↗</small></span></a>
+    </div>
 
-<nav id="navbar">
-  <a href="#hero" class="nav-logo" aria-label="Dos Vathanak Botra">
-    <span class="nav-logo-dot" aria-hidden="true"></span>
-    <span class="nav-logo-key">DVB</span>
-  </a>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#certificates">Certs</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="writeups/index.html">Writeups</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
-      <span class="theme-toggle-label" id="themeLabel">Dark</span>
-      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
-    </button>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-content">
-    <div class="hero-tag">◈ CYBERSECURITY PROFESSIONAL ◈</div>
-    <h1 class="hero-name">DOS <span class="accent">Vathanak Botra</span></h1>
-    <div class="hero-subtitle">SOC Analyst · Ethical Hacker · Security Researcher</div>
-    <div class="hero-typing" id="typingEl"></div>
-    <div class="hero-btns">
-      <a href="#experience" class="btn btn-primary">View Experience</a>
-      <a href="#contact" class="btn btn-primary">Get In Touch</a>
-      <a href="https://www.linkedin.com/in/vathanakbotrados" target="_blank" rel="noopener noreferrer" class="btn btn-primary">🔗 LinkedIn</a>
-      <a href="https://github.com/Botrasky" target="_blank" rel="noopener noreferrer" class="btn btn-primary">⌥ GitHub</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num">CEH</div><div class="stat-label">Certified</div></div>
-      <div class="stat"><div class="stat-num" data-count="2">0</div><div class="stat-label">Internships</div></div>
-      <div class="stat"><div class="stat-num" data-count="2022">0</div><div class="stat-label">CTF Entry</div></div>
-    </div>
-  </div>
-  <div class="scroll-indicator"><span></span></div>
-</section>
-
-<!-- ABOUT -->
-<section id="about" class="section-pad">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 01 — ABOUT</span>
-      <h2 class="section-title">Who I Am</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <p>I'm a cybersecurity professional based in Phnom Penh, Cambodia, currently working as a SOC Analyst at Sathapana Bank PLC. I hold a Bachelor of Science in Information and Communications Technology from the American University of Phnom Penh (2025).</p>
-        <p>My passion lies at the intersection of offensive security, digital forensics, and threat intelligence. As a Certified Ethical Hacker (CEH), I combine strategic thinking with hands-on technical skills to identify, analyze, and neutralize threats.</p>
-        <p>I believe that technology isn't just about building systems — it's about building connections, trust, and a better future for everyone.</p>
-        <div class="motto-box">
-          "Technology isn't just about building systems; about building connections, trust, and a better future for everyone."
+    <div class="dash-lead">
+      <section class="mission panel" aria-labelledby="mission-title">
+        <div class="mission-copy">
+          <p class="eyebrow"><span></span> The lab</p>
+          <h2 id="mission-title">See the steps.<br>Understand the flaw.</h2>
+          <p>Read how I worked through each lab, what I found, and what I learned.</p>
+          <div class="mission-links"><a class="dash-button primary" href="writeups/index.html">Explore writeups <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#learning">Choose a topic <span aria-hidden="true">↓</span></a></div>
         </div>
-      </div>
-      <div class="about-card reveal">
-        <h3 style="font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--cyan);letter-spacing:2px;margin-bottom:1.25rem;text-transform:uppercase;">Profile Details</h3>
-        <div class="about-details">
-          <div class="detail-row"><span class="detail-key">Name</span><span class="detail-val">Dos Vathanak Botra</span></div>
-          <div class="detail-row"><span class="detail-key">Location</span><span class="detail-val">Phnom Penh, Cambodia</span></div>
-          <div class="detail-row"><span class="detail-key">Role</span><span class="detail-val">SOC Analyst</span></div>
-          <div class="detail-row"><span class="detail-key">Company</span><span class="detail-val">Sathapana Bank PLC</span></div>
-          <div class="detail-row"><span class="detail-key">Degree</span><span class="detail-val">B.Sc. in ICT — AUPP</span></div>
-          <div class="detail-row"><span class="detail-key">IELTS</span><span class="detail-val">Band 7 (British Council)</span></div>
-          <div class="detail-row"><span class="detail-key">Languages</span><span class="detail-val">Khmer, English</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        <svg class="mission-art" viewBox="0 0 320 260" fill="none" aria-hidden="true">
+          <defs><pattern id="mission-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#a7f6df" stroke-opacity=".12"/></pattern><linearGradient id="signal" x1="52" y1="208" x2="272" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#54b8e8"/><stop offset="1" stop-color="#a4ffcf"/></linearGradient></defs>
+          <path d="M30 20h260v220H30z" fill="url(#mission-grid)"/>
+          <g stroke="#a7f6df" stroke-opacity=".24"><circle cx="174" cy="127" r="91"/><circle cx="174" cy="127" r="67"/><circle cx="174" cy="127" r="44"/><path d="M174 25v204M72 127h204M51 34h17m-17 0v17m244 0V34h-17M51 208v17h17m210 0h17v-17"/></g>
+          <path class="signal-trace" pathLength="100" d="M42 173h48l18-33 17 54 27-98 20 58 17-27h29l20-39h58" stroke="url(#signal)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <g fill="#a4ffcf"><circle cx="174" cy="127" r="3"/><circle cx="238" cy="88" r="4"/><circle cx="108" cy="140" r="3"/></g>
+        </svg>
+      </section>
 
-<!-- SKILLS -->
-<section id="skills" class="section-pad" style="background:var(--bg2);">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 02 — SKILLS</span>
-      <h2 class="section-title">Technical Arsenal</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="skills-grid">
-      <div class="reveal">
-        <div class="chart-wrap">
-          <div class="chart-title">⬡ Skills Radar</div>
-          <canvas id="radarChart" height="260"></canvas>
-        </div>
-        <div class="chart-wrap" style="margin-top:1.5rem;">
-          <div class="chart-title">⬡ Domain Distribution</div>
-          <canvas id="donutChart" height="200"></canvas>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="chart-wrap">
-          <div class="chart-title">⬡ Proficiency Levels</div>
-          <!-- Values mirror the Skills Radar: a baseline plus difficulty-weighted
-               credit from the solved CTF labs (see js/charts.js and /writeups/). -->
-          <div class="skill-bars">
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Penetration Testing</span><span>90%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Python Development</span><span>90%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Network Security</span><span>88%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Backend Development</span><span>80%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Digital Forensics</span><span>78%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="78"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>SIEM & Threat Hunting</span><span>75%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Reverse Engineering</span><span>74%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="74"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Cloud Security (AWS)</span><span>70%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Web Exploitation</span><span>66%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="66"></div></div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label"><span>Cryptography</span><span>62%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="62"></div></div>
-            </div>
+      <section class="brief panel" id="brief" aria-labelledby="brief-title" aria-roledescription="carousel">
+        <div class="brief-header"><div><p class="eyebrow"><span></span> Security news</p><h2 id="brief-title">Threat brief</h2></div><span class="brief-state" id="brief-state">Suggested reading</span></div>
+        <div class="brief-slide" id="brief-slide" aria-live="polite" aria-atomic="true">
+          <div class="brief-thumb" id="brief-thumb" data-publisher="nist" aria-hidden="true">
+            <span class="brief-thumb-label" id="brief-thumb-label">NIST</span>
+            <span class="brief-thumb-image" id="brief-thumb-image"></span>
+          </div>
+          <div class="brief-story">
+            <p class="brief-source" id="brief-source">NIST · Standards</p>
+            <h3 id="brief-headline">NIST Cybersecurity Framework 2.0</h3>
+            <p id="brief-summary">Start with the framework behind many cybersecurity programs. It covers how to govern, identify, protect, detect, respond, and recover.</p>
+            <a class="brief-original" id="brief-link" href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20">Read original <span aria-hidden="true">↗</span></a>
           </div>
         </div>
-        <div style="margin-top:1.5rem;">
-          <div class="chart-title" style="font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem;">⬡ Tech Stack</div>
-          <div class="skill-tags">
-            <span class="skill-tag hot">Python</span>
-            <span class="skill-tag hot">Kali Linux</span>
-            <span class="skill-tag hot">CEH</span>
-            <span class="skill-tag">C / C++</span>
-            <span class="skill-tag">JavaScript</span>
-            <span class="skill-tag">React.js</span>
-            <span class="skill-tag">Java</span>
-            <span class="skill-tag">Python Flask</span>
-            <span class="skill-tag hot">AWS Cloud</span>
-            <span class="skill-tag">Wireshark</span>
-            <span class="skill-tag hot">SIEM Tools</span>
-            <span class="skill-tag">IDS/IPS</span>
-            <span class="skill-tag">SQL / Database</span>
-            <span class="skill-tag hot">Digital Forensics</span>
-            <span class="skill-tag">Metasploit</span>
-            <span class="skill-tag">Nmap</span>
-            <span class="skill-tag hot">Ghidra</span>
-            <span class="skill-tag">GDB</span>
-            <span class="skill-tag">pwntools</span>
-          </div>
+        <div class="brief-controls" id="brief-controls" hidden>
+          <span id="brief-counter">01 / 06</span>
+          <div><button type="button" id="brief-play" aria-label="Play slideshow">Play</button><button type="button" id="brief-prev" aria-label="Previous story">←</button><button type="button" id="brief-next" aria-label="Next story">→</button></div>
         </div>
-      </div>
+        <div class="brief-sources" aria-label="News sources"><a href="https://csrc.nist.gov/news">NIST</a><a href="https://cloudsecurityalliance.org/blog">Cloud Security Alliance</a><a href="https://blog.cloudflare.com/tag/security/">Cloudflare</a><a href="https://nvd.nist.gov/vuln/search">NVD</a><a href="https://thehackernews.com/">The Hacker News</a><a href="https://www.bleepingcomputer.com/news/security/">BleepingComputer</a></div>
+      </section>
     </div>
-  </div>
-</section>
 
-<!-- EXPERIENCE -->
-<section id="experience" class="section-pad">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 03 — EXPERIENCE</span>
-      <h2 class="section-title">Career Timeline</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="timeline">
-      <div class="timeline-item reveal">
-        <div class="exp-card">
-          <div class="exp-header">
-            <span class="exp-role">SOC Analyst</span>
-            <span class="exp-date">JUN 2025 — PRESENT</span>
-          </div>
-          <div class="exp-org">Sathapana Bank PLC · Phnom Penh, Cambodia</div>
-          <ul class="exp-list">
-            <li>Monitor and analyze security events across the bank's infrastructure</li>
-            <li>Assist in incident response and threat containment procedures</li>
-            <li>Support cybersecurity operations and daily SOC workflows</li>
-            <li>Develop practical skills in threat hunting and SIEM tool operations</li>
-          </ul>
-        </div>
+    <section id="learning" class="dash-section" aria-labelledby="learning-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">01 / Learn by topic</p><h2 id="learning-title">Find a topic to explore</h2></div><a href="writeups/index.html">All topics <span aria-hidden="true">↗</span></a></div>
+      <div class="topic-grid">
+        <a class="topic-card panel" href="writeups/index.html?topic=web"><span class="topic-icon web" aria-hidden="true">&lt;/&gt;</span><span><strong>Web security</strong><small>Authentication, APIs, and input handling</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="writeups/index.html?topic=crypto"><span class="topic-icon crypto" aria-hidden="true">◇</span><span><strong>Cryptography</strong><small>Explore mistakes in keys and algorithms</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="writeups/index.html?topic=re"><span class="topic-icon reverse" aria-hidden="true">⟲</span><span><strong>Reverse engineering</strong><small>Read program behavior from the binary</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="writeups/index.html?topic=general"><span class="topic-icon network" aria-hidden="true">⌘</span><span><strong>Systems &amp; networks</strong><small>Linux, network services, and security labs</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
       </div>
-      <div class="timeline-item reveal">
-        <div class="exp-card">
-          <div class="exp-header">
-            <span class="exp-role">Intern — English & Technology</span>
-            <span class="exp-date">JAN 2025 — APR 2025</span>
-          </div>
-          <div class="exp-org">U.S. Embassy Phnom Penh / U.S. Department of State</div>
-          <ul class="exp-list">
-            <li>Assisted in English Learning Educational Technology projects</li>
-            <li>Supported staff professional development initiatives</li>
-            <li>Facilitated AI tool integration for mission staff</li>
-            <li>Received Certificate of Appreciation from Chargé d'Affaires</li>
-          </ul>
-        </div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="exp-card">
-          <div class="exp-header">
-            <span class="exp-role">Software Development Intern</span>
-            <span class="exp-date">MAY 2024 — SEP 2024</span>
-          </div>
-          <div class="exp-org">DGacademy · Phnom Penh, Cambodia</div>
-          <ul class="exp-list">
-            <li>Built backend systems using Python Flask framework</li>
-            <li>Designed and implemented relational database schemas</li>
-            <li>Managed project scope and delivered features on schedule</li>
-          </ul>
-        </div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="exp-card">
-          <div class="exp-header">
-            <span class="exp-role">Project Manager & Backend Developer</span>
-            <span class="exp-date">2024 — 2025</span>
-          </div>
-          <div class="exp-org">AUPP eCampus — Final Year Project</div>
-          <ul class="exp-list">
-            <li>Led project scope definition and team timeline management</li>
-            <li>Managed cross-functional team communication and deliverables</li>
-            <li>Implemented backend features and full database design</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- CERTIFICATES -->
-<section id="certificates" class="section-pad" style="background:var(--bg2);">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 04 — CREDENTIALS</span>
-      <h2 class="section-title">Certifications</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="slideshow-wrap reveal">
-      <div class="slideshow" id="slideshow">
-        <div class="slide active">
-          <img src="assets/certificates/ceh.jpg" alt="CEH Certification">
-          <div class="slide-caption">Certified Ethical Hacker (CEH) — EC-Council · ECC1842597036 · <a href="https://aspen.eccouncil.org/VerifyBadge?&type=certification&a=9mIRiA1foMEVd3SehW6vOUki7LD0BmZ5HTBhr7vjDqY=" target="_blank" rel="noopener noreferrer">Verify ↗</a></div>
-        </div>
-        <div class="slide">
-          <img src="assets/certificates/aupp-bsc-degree.jpg" alt="BSc Degree AUPP">
-          <div class="slide-caption">Bachelor of Science in Information and Communications Technology — AUPP · May 2025</div>
-        </div>
-        <div class="slide">
-          <img src="assets/certificates/us-embassy-appreciation.jpg" alt="US Embassy Certificate">
-          <div class="slide-caption">Certificate of Appreciation — U.S. Embassy Phnom Penh · April 2025</div>
-        </div>
-        <div class="slide">
-          <img src="assets/certificates/vnisa-ctf-2022.jpg" alt="VNISA CTF Certificate">
-          <div class="slide-caption">VNISA CTF — ASEAN Student Contest on Information Security 2022</div>
-        </div>
-        <div class="slide">
-          <img src="assets/certificates/salacyber-ehe.jpg" alt="SalaCyber Certificate">
-          <div class="slide-caption">SalaCyber Ethical Hacking Essential · October 2022</div>
-        </div>
-        <button class="slide-nav slide-prev" onclick="prevSlide()">‹</button>
-        <button class="slide-nav slide-next" onclick="nextSlide()">›</button>
+    <section class="dash-section" aria-labelledby="featured-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">02 / The writeup library</p><h2 id="featured-title">Start with a lab</h2></div><a href="writeups/index.html">Browse all writeups <span aria-hidden="true">↗</span></a></div>
+      <div class="featured-grid">
+        <a class="lab-card panel" href="writeups/moneybox/index.html"><span class="lab-meta"><span class="lab-number">LAB 01</span><span class="lab-level easy">Easy</span></span><h3>Moneybox</h3><p>A Linux lab covering exposed services and unsafe permissions.</p><span class="lab-read">Linux · OffSec PG <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="writeups/amaterasu/index.html"><span class="lab-meta"><span class="lab-number">LAB 02</span><span class="lab-level medium">Medium</span></span><h3>Amaterasu</h3><p>Study a vulnerable web API and see why file handling matters.</p><span class="lab-read">Web · OffSec PG <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="writeups/ven-rsa/index.html"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>VEN RSA</h3><p>An RSA challenge with a weak prime and a lesson in key generation.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
       </div>
-      <div class="slide-dots" id="slideDots"></div>
-    </div>
-    <div style="margin-top:3rem;">
-      <div class="section-tag" style="display:block;margin-bottom:1.25rem;font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--cyan);letter-spacing:4px;">ALL CREDENTIALS</div>
-      <div class="achievements-grid">
-        <div class="ach-card reveal">
-          <div class="ach-icon">🛡️</div>
-          <div class="ach-title">Certified Ethical Hacker</div>
-          <div class="ach-sub">EC-Council · Sep 2025 – Sep 2028<br>ID: ECC1842597036<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Ethical Hacking · Pentesting</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🎓</div>
-          <div class="ach-title">B.Sc. in ICT</div>
-          <div class="ach-sub">AUPP · May 2025<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Python · C++</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🇺🇸</div>
-          <div class="ach-title">U.S. Embassy Appreciation</div>
-          <div class="ach-sub">Dept. of State · Apr 2025<br><span style="font-size:0.6rem;opacity:0.8;">Skills: AI Prompting · U.S. Foreign Policy</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">☁️</div>
-          <div class="ach-title">AWS Cloud Foundations</div>
-          <div class="ach-sub">Amazon Web Services · Apr 2025<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Cloud Security</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">⚙️</div>
-          <div class="ach-title">AWS Cloud Operations</div>
-          <div class="ach-sub">Amazon Web Services · Nov 2024<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Cloud Operations · AWS</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🏥</div>
-          <div class="ach-title">First Aid Training</div>
-          <div class="ach-sub">Dept. of State · Mar 2025</div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🏅</div>
-          <div class="ach-title">ISC2 Candidate</div>
-          <div class="ach-sub">ISC2 · May 2025 – May 2026</div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🌐</div>
-          <div class="ach-title">Foundations of Cybersecurity</div>
-          <div class="ach-sub">Google · Apr 2025</div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🐍</div>
-          <div class="ach-title">Automate Cybersec with Python</div>
-          <div class="ach-sub">Google · Mar 2025<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Python</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🔍</div>
-          <div class="ach-title">Digital Forensics Essentials</div>
-          <div class="ach-sub">EC-Council · Jan 2025<br>ID: GO9NIOVQWRK1<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Incident Investigation · Computer Forensics</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🏹</div>
-          <div class="ach-title">Ethical Hacking Essentials</div>
-          <div class="ach-sub">EC-Council · Jan 2025<br>ID: PVUOYPOCE5W2<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Ethical Hacking · Pentesting</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">👔</div>
-          <div class="ach-title">IBM Cybersecurity Assessment</div>
-          <div class="ach-sub">IBM · Jan 2025<br>ID: QLK718M3IVM2<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Cybersecurity · InfoSec Management</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🔐</div>
-          <div class="ach-title">ISC2 SSCP Specialization</div>
-          <div class="ach-sub">ISC2 · Jan 2025<br>ID: QTUKZWT5F54I<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Cybersecurity · Cryptography</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🏆</div>
-          <div class="ach-title">ASEAN Student CTF Merit</div>
-          <div class="ach-sub">VNISA · Oct 2022<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Digital Forensics · Cyber Defense · Team Captain</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">📚</div>
-          <div class="ach-title">CEH v12 Complete Series</div>
-          <div class="ach-sub">EC-Council · Jan 2024<br>ID: 736698<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Ethical Hacking · Pentesting</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🛠️</div>
-          <div class="ach-title">Certified Cyber Tech (CCT)</div>
-          <div class="ach-sub">EC-Council · Aug 2023<br>ID: 705131<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Cybersecurity · Risk Management</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">📊</div>
-          <div class="ach-title">UNESCO Data Science Camp</div>
-          <div class="ach-sub">HANDONG UNESCO · Aug 2023<br>ID: 2023-E0901<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Data Science · R Programming</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">💻</div>
-          <div class="ach-title">SalaCyber Ethical Hacking</div>
-          <div class="ach-sub">SalaCyber · Oct 2022 – Oct 2024<br>ID: SC301658<br><span style="font-size:0.6rem;opacity:0.8;">Skills: Ethical Hacking</span></div>
-        </div>
-        <div class="ach-card reveal">
-          <div class="ach-icon">🗣️</div>
-          <div class="ach-title">IELTS Band 7</div>
-          <div class="ach-sub">British Council · Apr 2026 – Apr 2028</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- EDUCATION -->
-<section id="education" class="section-pad">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 05 — EDUCATION</span>
-      <h2 class="section-title">Academic Background</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="edu-grid">
-      <div class="edu-card reveal">
-        <div style="font-size:2rem;margin-bottom:0.75rem;">🎓</div>
-        <div class="edu-degree">B.Sc. Information & Communications Technology</div>
-        <div class="edu-school">American University of Phnom Penh</div>
-        <div class="edu-detail">Graduated: May 30, 2025 · American Curriculum</div>
-        <div class="edu-detail" style="margin-top:0.5rem;">Skills: Python · C++ · Network Security · Backend Dev</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ROADMAP -->
-<section id="roadmap" class="section-pad" style="background:var(--bg2);">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 06 — VISION</span>
-      <h2 class="section-title">Career Roadmap</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="roadmap-grid">
-      <div class="road-card reveal">
-        <div class="road-phase">Phase 01 · 0–1 Year</div>
-        <div class="road-title">Deep Technical Mastery</div>
-        <ul class="road-goals">
-          <li>Strengthen incident response & threat detection</li>
-          <li>Master SIEM, IDS/IPS, threat hunting techniques</li>
-          <li>Practice pentesting in lab environments</li>
-          <li>Python automation for security workflows</li>
-        </ul>
-      </div>
-      <div class="road-card reveal">
-        <div class="road-phase">Phase 02 · 1–3 Years</div>
-        <div class="road-title">Security Engineer</div>
-        <ul class="road-goals">
-          <li>Advance to Cybersecurity Analyst / Security Engineer</li>
-          <li>Lead vulnerability assessments and pentesting</li>
-          <li>Specialize in malware analysis & threat intel</li>
-          <li>Build and operate a personal cyber lab</li>
-        </ul>
-      </div>
-      <div class="road-card reveal">
-        <div class="road-phase">Phase 03 · 3–5 Years</div>
-        <div class="road-title">Technical Lead</div>
-        <ul class="road-goals">
-          <li>AI security and OT/IoT security specialization</li>
-          <li>Lead major incident response operations</li>
-          <li>Design and secure enterprise systems</li>
-          <li>Establish authority as digital investigator</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WRITEUPS -->
-<section id="writeups" class="section-pad">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 07 — WRITEUPS</span>
-      <h2 class="section-title">CTF Writeups</h2>
-      <p class="section-sub">Hands-on CTF and security-lab solutions — the recon, the flaw, and the exploit, written up across several categories.</p>
-    </div>
-    <div class="reveal" style="display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-bottom:2rem;">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--magenta);border:1px solid var(--magenta);border-radius:6px;padding:5px 12px;">Cryptography</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);border:1px solid var(--cyan);border-radius:6px;padding:5px 12px;">Binary Exploitation</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);border:1px solid var(--green);border-radius:6px;padding:5px 12px;">Web</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--yellow);border:1px solid var(--yellow);border-radius:6px;padding:5px 12px;">Reverse Engineering</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:#a78bfa;border:1px solid #a78bfa;border-radius:6px;padding:5px 12px;">General Skills</span>
-    </div>
-    <div class="reveal" style="text-align:center;">
-      <a href="writeups/index.html" class="btn btn-primary" style="display:inline-block;">Browse all 10 writeups →</a>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="section-pad" style="background:var(--bg2);">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-tag">// 08 — CONTACT</span>
-      <h2 class="section-title">Get In Touch</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="contact-grid">
-      <div class="contact-info reveal">
-        <div class="contact-item">
-          <span class="contact-icon">📍</span>
-          <div class="contact-text">
-            <div class="label">Location</div>
-            <div class="value">Phnom Penh, Cambodia</div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <span class="contact-icon">🎓</span>
-          <div class="contact-text">
-            <div class="label">Education</div>
-            <div class="value">B.Sc. ICT — AUPP, Class of 2025</div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <span class="contact-icon">🛡️</span>
-          <div class="contact-text">
-            <div class="label">Certification</div>
-            <div class="value"><a href="https://aspen.eccouncil.org/VerifyBadge?&type=certification&a=9mIRiA1foMEVd3SehW6vOUki7LD0BmZ5HTBhr7vjDqY=" target="_blank" rel="noopener noreferrer">CEH · ECC1842597036 ↗</a></div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <span class="contact-icon">💼</span>
-          <div class="contact-text">
-            <div class="label">Status</div>
-            <div class="value">SOC Analyst @ Sathapana Bank</div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <span class="contact-icon">🌐</span>
-          <div class="contact-text">
-            <div class="label">LinkedIn</div>
-            <div class="value"><a href="https://www.linkedin.com/in/vathanakbotrados" target="_blank" rel="noopener noreferrer">linkedin.com/in/vathanakbotrados ↗</a></div>
-          </div>
-        </div>
-      </div>
-      <div class="contact-cta reveal">
-        <div class="cta-box">
-          <div class="cta-heading">Open to Opportunities</div>
-          <div class="cta-sub">
-            I'm actively seeking roles in cybersecurity — from SOC analysis and penetration testing to incident response and threat intelligence. Let's connect and build a more secure digital world together.
-          </div>
-          <a href="mailto:vathanakbotra.dos@gmail.com" class="btn btn-primary" style="display:inline-block;margin-bottom:0.75rem;">✉ Send a Message</a>
-          <br>
-          <a href="https://www.linkedin.com/in/vathanakbotrados" target="_blank" rel="noopener noreferrer" class="btn btn-outline">🔗 LinkedIn Profile</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-name">DOS VATHANAK BOTRA</div>
-  <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
-  <div class="footer-links">
-    <a href="#hero">Home</a>
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#experience">Experience</a>
-    <a href="#certificates">Certs</a>
-    <a href="writeups/index.html">Writeups</a>
-    <a href="#contact">Contact</a>
-  </div>
-</footer>
-
-<script src="js/theme.js"></script>
-<script src="js/nav.js"></script>
-<script src="js/hero.js"></script>
-<script src="js/fx.js"></script>
-<script src="js/charts.js"></script>
-<script src="js/slideshow.js"></script>
-<script src="js/analytics.js"></script>
+    <section class="dash-section author-strip panel" aria-labelledby="author-teaser-title">
+      <span class="author-initials" aria-hidden="true">VB</span>
+      <div><p class="eyebrow">Behind the lab</p><h2 id="author-teaser-title">Vathanak Botra Dos</h2><p>I share my lab notes here. My portfolio covers my experience, projects, and education.</p></div>
+      <div class="author-actions"><a class="dash-button secondary" href="author.html">Meet the author</a><a class="quiet-link" href="about.html">View portfolio ↗</a></div>
+    </section>
+  </main>
+  <footer class="dash-footer"><span>DVB Cyber Lab <span aria-hidden="true">/</span> Independent cybersecurity notes</span><div><a href="writeups/index.html">Writeups</a><a href="about.html#contact">Contact</a></div></footer>
+  <script src="js/theme.js?v=motion-2"></script>
+  <script src="js/dashboard.js?v=motion-2"></script>
+<script src="js/motion.js?v=1"></script>
 </body>
 </html>

@@ -17,7 +17,7 @@ function goSlide(n) {
 }
 function nextSlide() { goSlide(currentSlide + 1); }
 function prevSlide() { goSlide(currentSlide - 1); }
-setInterval(() => nextSlide(), 5000);
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => nextSlide(), 5000);
 
 // Touch swipe support
 let touchStartX = 0;

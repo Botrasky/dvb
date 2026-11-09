@@ -1,4 +1,7 @@
+@import url("polish.css?v=2");
 :root {
+  --font-ui: Arial, Helvetica, sans-serif;
+  --font-code: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
   --bg: #050810;
   --bg2: #0a0f1a;
   --bg3: #0d1520;
@@ -12,7 +15,7 @@
   --yellow: #ffcc00;
   --text: #e0f7fa;
   --text2: #90cad4;
-  --text3: #4a7a85;
+  --text3: #8da9b7;
   --border: rgba(0,229,255,0.18);
   --border2: rgba(0,229,255,0.06);
   --nav-bg: rgba(5,8,16,0.88);
@@ -32,7 +35,7 @@
   --cyan3: #3a6aaa;
   --green: #0d6e3f;
   --magenta: #b5213a;
-  --yellow: #9a6e00;
+  --yellow: #805800;
   --text: #1a2f4a;
   --text2: #1e3a5f;
   --text3: #4a6a8a;
@@ -41,8 +44,6 @@
   --nav-bg: rgba(255,255,255,0.97);
   --glow: 0 4px 24px rgba(30,74,122,0.13), 0 1px 4px rgba(30,74,122,0.08);
   --glow-sm: 0 2px 10px rgba(30,74,122,0.15);
-  font-size: 17px;
-  font-weight: 500;
 }
 
 /* ---- light-mode nav: floating pill (desktop) ---- */
@@ -164,7 +165,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:16px}
 body{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:var(--font-ui);
   background:var(--bg);
   color:var(--text);
   line-height:1.7;
@@ -172,40 +173,7 @@ body{
   overflow-x:hidden;
 }
 
-/* ---- theme-switch view transition (MacBook-style) ---- */
-nav { view-transition-name: main-nav; }
-
-html.theme-changing::view-transition-old(root) {
-  animation: theme-out 0.22s ease-in forwards;
-}
-html.theme-changing::view-transition-new(root) {
-  animation: theme-in 0.38s ease-out 0.12s both;
-}
-@keyframes theme-out {
-  to { opacity: 0; }
-}
-@keyframes theme-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-html.theme-changing::view-transition-group(main-nav) {
-  animation-duration: 0.52s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-html.theme-changing::view-transition-old(main-nav) {
-  animation: nav-fade-out 0.15s ease-in forwards;
-}
-html.theme-changing::view-transition-new(main-nav) {
-  animation: nav-fade-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
-}
-@keyframes nav-fade-out {
-  to { opacity: 0; }
-}
-@keyframes nav-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+pre,code,kbd,samp{font-family:var(--font-code);}
 
 /* GRID BG */
 .grid-bg{
