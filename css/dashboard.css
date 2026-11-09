@@ -175,7 +175,7 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}body.dashboard-page{transition:none;}}
 
 /* Keep motion brief, with the same page fade across the site. */
-@view-transition{navigation:auto;}
+@view-transition{navigation:none;}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:180ms;}
 .brief-state{white-space:normal;text-align:center;max-width:145px;}
 .dash-nav a,.dash-theme,.brief-controls button{transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease;}

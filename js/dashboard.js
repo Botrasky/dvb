@@ -59,7 +59,8 @@
   let interacted = false;
   let timer = null;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  let playing = !reducedMotion.matches && !document.hidden;
+  const motionEnabled = () => window.siteMotion?.enabled() ?? !reducedMotion.matches;
+  let playing = motionEnabled() && !document.hidden;
   let typingVersion = 0;
 
   function renderThumbnail(story) {
@@ -180,13 +181,13 @@
     interacted = true;
     if (playing) return pause();
     playing = true;
-    if (reducedMotion.matches) {
+    if (!motionEnabled()) {
       // Explicit playback is allowed, but avoid the character animation.
       updatePlayback();
       timer = setTimeout(() => { pause(); advance(1); }, 8000);
     } else render();
   });
-  reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) pause(); });
+  reducedMotion.addEventListener('change', () => { if (!motionEnabled()) pause(); });
   slide.addEventListener('focusin', pause);
   document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
   document.getElementById('brief-prev').addEventListener('click', () => { pause(); advance(-1); });

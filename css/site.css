@@ -77,7 +77,7 @@ footer{margin-top:24px;border-top:1px solid var(--border);background:var(--bg2);
  .wu-table{display:block;overflow-x:auto;}
 }
 /* A short entrance for each page and small feedback on links. */
-@view-transition{navigation:auto;}
+@view-transition{navigation:none;}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:180ms;}
 .hero-glow,.scroll-indicator{display:none;}
 .hero-content>*{animation-duration:260ms;animation-delay:0ms;}
