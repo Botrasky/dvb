@@ -209,6 +209,11 @@
 }
 .ach-card:hover{box-shadow:var(--glow);border-color:var(--cyan);transform:translateY(-4px);}
 .ach-icon{font-size:2rem;margin-bottom:0.75rem;}
+/* Frame the eagle from the original embassy certificate. */
+.ach-icon-embassy{
+  width:3.2rem;height:3.2rem;margin-inline:auto;border-radius:8px;
+  background:#fff url("../assets/certificates/us-embassy-appreciation.jpg") 56% 14.2% / 542% auto no-repeat;
+}
 .ach-title{font-family:var(--font-ui);font-weight:600;font-size:0.9rem;color:var(--text);}
 .ach-sub{font-size:0.72rem;color:var(--text3);margin-top:0.25rem;}
 
