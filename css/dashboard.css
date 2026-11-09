@@ -160,13 +160,10 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
   .author-strip .author-actions{margin-left:0;}
 }
 @media(prefers-reduced-motion:no-preference){
-  .mission,.brief{animation:dash-enter 420ms cubic-bezier(.2,.7,.3,1) both;}
-  .brief{animation-delay:70ms;}
   .brief-slide.is-changing{animation:brief-enter 250ms ease-out;}
   .signal-trace{stroke-dasharray:100;animation:draw-signal 920ms cubic-bezier(.22,.7,.4,1) both;}
   @keyframes draw-signal{from{stroke-dashoffset:100;}to{stroke-dashoffset:0;}}
   .topic-card,.lab-card,.dash-button{transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;}
-  @keyframes dash-enter{from{opacity:.55;translate:0 10px;}to{opacity:1;translate:0 0;}}
   @keyframes brief-enter{from{opacity:.55;translate:5px 0;}to{opacity:1;translate:0 0;}}
 }
 @media(hover:hover){

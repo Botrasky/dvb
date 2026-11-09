@@ -86,20 +86,12 @@ footer{margin-top:24px;border-top:1px solid var(--border);background:var(--bg2);
 .wu-card:focus-visible,.wu-card:hover{border-color:var(--cyan);box-shadow:var(--glow-sm);}
 
 @media(prefers-reduced-motion:no-preference){
- .wu-sidebar,.collection-toolbar,.wu-article,.wu-grid .wu-card:nth-child(-n+6){
-  animation:content-arrive 300ms cubic-bezier(.2,.7,.3,1);
- }
- .wu-grid .wu-card:nth-child(2n):nth-child(-n+6){animation-duration:360ms;}
  .wu-card-meta .arrow{transition:transform 180ms ease;}
  .wu-card:focus-visible .arrow{transform:translateX(4px);}
 }
 @media(prefers-reduced-motion:no-preference) and (hover:hover){
  .wu-card:hover{transform:translateY(-3px);}
  .wu-card:hover .arrow{transform:translateX(4px);}
-}
-@keyframes content-arrive{
- from{opacity:.7;translate:0 8px;}
- to{opacity:1;translate:0 0;}
 }
 @media(prefers-reduced-motion:reduce){
  @view-transition{navigation:none;}
