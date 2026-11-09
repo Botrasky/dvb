@@ -5,49 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moneybox — Writeup — Dos Vathanak Botra</title>
 <meta name="description" content="Full compromise of the Moneybox Linux box: anonymous FTP + steghide foothold, SSH key reuse for lateral movement, and a sudo NOPASSWD Perl privilege escalation to root. An OffSec Proving Grounds writeup.">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../css/base.css">
-<link rel="stylesheet" href="../../css/nav.css">
-<link rel="stylesheet" href="../../css/footer.css">
-<link rel="stylesheet" href="../../css/animations.css">
-<link rel="stylesheet" href="../../css/responsive.css">
-<link rel="stylesheet" href="../writeups.css">
-<link rel="stylesheet" href="../../css/fx.css">
-<script src="../../js/fx-head.js"></script>
+<link rel="stylesheet" href="../../css/base.css?v=20261109-readable-type">
+<link rel="stylesheet" href="../../css/nav.css?v=20261109-readable-type">
+<link rel="stylesheet" href="../../css/footer.css?v=20261109-readable-type">
+<link rel="stylesheet" href="../../css/animations.css?v=20261109-cyber-layout">
+<link rel="stylesheet" href="../../css/responsive.css?v=20261109-cyber-layout">
+<link rel="stylesheet" href="../writeups.css?v=20261109-readable-type">
+<script src="../../js/fx-head.js?v=20261109-cyber-layout"></script>
+<link rel="stylesheet" href="../../css/site.css?v=20261109-readable-type">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 </head>
-<body>
+<body class="page-article">
+<a class="skip-link" href="#main-content">Skip to content</a>
 <div class="fx-cube-cap" aria-hidden="true"></div>
 
 <div class="grid-bg"></div>
 <div class="scanlines"></div>
 
-<nav id="navbar">
-  <a href="../../index.html" class="nav-logo" aria-label="Status: Junior">
-    <span class="nav-logo-dot" aria-hidden="true"></span>
-    <span class="nav-logo-key">STATUS:</span>
-    <span class="nav-logo-val">JUNIOR</span>
-  </a>
+<nav id="navbar" aria-label="Main navigation">
+  <a href="../../index.html" class="nav-logo" aria-label="DVB Learning home"><span class="brand-mark">DVB</span><span class="brand-caption">Learning notes</span></a>
   <ul class="nav-links" id="navLinks">
-    <li><a href="../../index.html#about">About</a></li>
-    <li><a href="../../index.html#skills">Skills</a></li>
-    <li><a href="../../index.html#experience">Experience</a></li>
-    <li><a href="../../index.html#certificates">Certs</a></li>
-    <li><a href="../index.html">Writeups</a></li>
-    <li><a href="../../index.html#contact">Contact</a></li>
+    <li><a href="../../index.html" >Explore</a></li>
+    <li><a href="../../about.html" >About the author</a></li>
+    <li><a href="../../about.html#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
-      <span class="theme-toggle-label" id="themeLabel">Dark</span>
-      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
-    </button>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><span id="themeLabel">Dark</span><span aria-hidden="true">◐</span></button>
+    <button type="button" class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open navigation" aria-controls="navLinks" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
-<main class="wu-main">
-  <a href="../index.html" class="wu-back">← All writeups</a>
+<main id="main-content" class="wu-main wu-article">
+  <a href="../../index.html" class="wu-back">← All writeups</a>
 
   <div class="wu-report-head">
     <span class="badge cat-general">General</span>
@@ -363,17 +352,14 @@ uid=0(root) ...
 <footer>
   <div class="footer-name">DOS VATHANAK BOTRA</div>
   <div class="footer-copy">© 2025 Dos Vathanak Botra. All rights reserved. · Phnom Penh, Cambodia</div>
-  <div class="footer-links">
-    <a href="../../index.html#hero">Home</a>
-    <a href="../index.html">Writeups</a>
-    <a href="../../index.html#contact">Contact</a>
-  </div>
+  <div class="footer-links"><a href="../../index.html">Explore writeups</a><a href="../../about.html">About the author</a><a href="../../about.html#contact">Contact</a></div>
 </footer>
 
-<script src="../../js/theme.js"></script>
-<script src="../../js/nav.js"></script>
-<script src="../../js/fx.js"></script>
-<script src="../writeups.js"></script>
-<script src="../../js/analytics.js"></script>
+<script src="../../js/theme.js?v=20261109-readable-type"></script>
+<script src="../../js/nav.js?v=20261109-cyber-layout"></script>
+<script src="../../js/fx.js?v=20261109-cyber-layout"></script>
+<script src="../writeups.js?v=20261109-cyber-layout"></script>
+<script src="../../js/analytics.js?v=20261109-cyber-layout"></script>
+<script src="../../js/site.js?v=20261109-cyber-layout"></script>
 </body>
 </html>

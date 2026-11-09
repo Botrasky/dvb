@@ -20,16 +20,74 @@ function applyTheme(dark) {
 let isDark = getStoredTheme() === 'dark';
 applyTheme(isDark);
 
+let themeTransition;
 function toggleTheme() {
   isDark = !isDark;
   setStoredTheme(isDark ? 'dark' : 'light');
-  const html = document.documentElement;
-  if (!document.startViewTransition) {
-    applyTheme(isDark);
+  const dark = isDark;
+  themeTransition?.skipTransition();
+  const renderTheme = () => {
+    applyTheme(dark);
+    if (typeof updateCharts === 'function') updateCharts();
+  };
+  if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add("theme-changing");
+    themeTransition = document.startViewTransition(renderTheme);
+    const currentTransition = themeTransition;
+    currentTransition.finished.finally(() => {
+      if (themeTransition === currentTransition) document.body.classList.remove("theme-changing");
+    });
   } else {
-    html.classList.add('theme-changing');
-    const vt = document.startViewTransition(() => applyTheme(isDark));
-    vt.finished.finally(() => html.classList.remove('theme-changing'));
+    renderTheme();
   }
-  if (typeof updateCharts === 'function') updateCharts();
 }
+
+
+// Visible card entrances on every page, including Safari without page transitions.
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const requested = new URLSearchParams(location.search).get('motion');
+  let mode = requested;
+  try {
+    if (['on', 'off', 'system'].includes(requested)) sessionStorage.setItem('fxMotion', requested);
+    mode = sessionStorage.getItem('fxMotion');
+  } catch (_) { /* The URL still works without storage. */ }
+  const enabled = () => mode === 'on' || (mode !== 'off' && !reduced.matches);
+  window.siteMotion = { enabled };
+  if (mode === 'on') document.documentElement.classList.add('site-motion-on');
+
+  const selectors = document.querySelector('.wu-article')
+    ? '.wu-page-title, .wu-meta-line, .wu-glance, .wu-body > h2, .wu-body > p, .article-contents'
+    : document.body.classList.contains('page-library')
+      ? '.wu-sidebar, .collection-toolbar, .wu-card'
+      : document.body.classList.contains('page-about')
+        ? '.hero-content, .section-header, .about-card, .chart-wrap, .exp-card, .ach-card, .edu-card, .road-card, .cta-box'
+        : '.dash-masthead, .mission, .brief, .topic-card, .lab-card, .author-strip, .author-intro, .author-detail > section';
+  const targets = [...document.querySelectorAll(selectors)];
+  let observer;
+
+  function reveal(elements) {
+    if (!enabled()) return;
+    elements.forEach((element, index) => {
+      observer?.unobserve(element);
+      element.style.setProperty('--entrance-x', index % 2 ? '64px' : '-64px');
+      element.style.setProperty('--entrance-delay', Math.min(index, 5) * 85 + 'ms');
+      element.classList.add('site-arrive');
+    });
+  }
+
+  function start() {
+    observer?.disconnect();
+    targets.forEach(element => element.classList.remove('site-arrive'));
+    if (!enabled()) return;
+    observer = 'IntersectionObserver' in window
+      ? new IntersectionObserver(entries => reveal(entries.filter(entry => entry.isIntersecting).map(entry => entry.target)))
+      : null;
+    if (observer) targets.forEach(element => observer.observe(element));
+    else reveal(targets);
+  }
+
+  start();
+  window.addEventListener('pageshow', event => { if (event.persisted) start(); });
+  reduced.addEventListener('change', start);
+})();

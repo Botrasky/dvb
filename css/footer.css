@@ -5,7 +5,7 @@ footer{
   position:relative;z-index:2;
   background:var(--bg2);
 }
-.footer-name{font-family:'Orbitron',monospace;font-size:0.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:0.4rem;}
+.footer-name{font-family:var(--font-ui);font-size:0.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:0.4rem;}
 .footer-copy{font-size:0.7rem;color:var(--text3);}
 .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:0.4rem 1rem;margin-top:0.75rem;}
 .footer-links a{font-size:0.7rem;color:var(--text3);text-decoration:none;letter-spacing:1px;transition:color var(--transition);}

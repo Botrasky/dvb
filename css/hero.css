@@ -27,11 +27,11 @@
   font-size:0.7rem;letter-spacing:3px;
   padding:5px 16px;border-radius:20px;
   margin-bottom:1.5rem;
-  font-family:'Orbitron',monospace;
+  font-family:var(--font-ui);
   animation:fade-in-up 0.6s ease forwards;
 }
 .hero-name{
-  font-family:'Orbitron',monospace;
+  font-family:var(--font-ui);
   font-weight:900;
   font-size:clamp(2.2rem,6vw,4.2rem);
   line-height:1.1;
@@ -41,7 +41,7 @@
 }
 .hero-name .accent{color:var(--cyan);text-shadow:var(--glow);}
 .hero-subtitle{
-  font-family:'Rajdhani',sans-serif;
+  font-family:var(--font-ui);
   font-size:clamp(1rem,2.5vw,1.4rem);
   font-weight:500;
   color:var(--text2);
@@ -51,7 +51,7 @@
 }
 .hero-typing{
   font-size:0.85rem;color:var(--cyan);
-  font-family:'IBM Plex Mono',monospace;
+  font-family:var(--font-ui);
   margin-bottom:2rem;
   min-height:1.5em;
   animation:fade-in-up 0.7s 0.3s ease both;
@@ -70,7 +70,7 @@
 .hero-btns .btn:nth-child(3){animation-delay:0.64s;}
 .hero-btns .btn:nth-child(4){animation-delay:0.76s;}
 .btn{
-  font-family:'Rajdhani',sans-serif;font-weight:600;
+  font-family:var(--font-ui);font-weight:600;
   font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;
   padding:11px 28px;border-radius:8px;
   text-decoration:none;cursor:pointer;
@@ -93,7 +93,7 @@
 }
 .stat{text-align:center;}
 .stat-num{
-  font-family:'Orbitron',monospace;font-weight:700;
+  font-family:var(--font-ui);font-weight:700;
   font-size:1.8rem;color:var(--cyan);
   text-shadow:var(--glow-sm);
 }
