@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 
 const root = process.cwd();
 
-function routeLinks(html: string) {
+export function routeLegacyLinks(html: string) {
   return html
     .replaceAll('href="index.html"', 'href="/"')
     .replaceAll('href="writeups/index.html"', 'href="/writeups/"')
@@ -21,7 +21,7 @@ function routeLinks(html: string) {
 }
 
 export function readLegacyPage(relativePath: string) {
-  return routeLinks(readFileSync(`${root}/${relativePath}`, "utf8"));
+  return routeLegacyLinks(readFileSync(`${root}/${relativePath}`, "utf8"));
 }
 
 export function writeupSlugs() {

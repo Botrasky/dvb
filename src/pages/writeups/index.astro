@@ -1,10 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
-import { readLegacyPage } from '../../lib/legacy-page';
+import legacyPage from '../../../writeups/index.html?raw';
+import { routeLegacyLinks } from '../../lib/legacy-page';
 
 const reports = await getCollection('writeups');
 if (!reports.length) throw new Error('The writeup content collection is empty.');
-const page = readLegacyPage('writeups/index.html').replace('<body', `<body data-writeup-reports="${reports.length}"`);
+const page = routeLegacyLinks(legacyPage).replace('<body', `<body data-writeup-reports="${reports.length}"`);
 ---
 
 <Fragment set:html={page} />
