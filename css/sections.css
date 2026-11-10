@@ -199,6 +199,7 @@
 .edu-degree{font-family:var(--font-ui);font-weight:700;font-size:1rem;color:var(--text);margin-bottom:0.3rem;}
 .edu-school{color:var(--cyan);font-size:0.8rem;margin-bottom:0.5rem;font-family:var(--font-ui);}
 .edu-detail{font-size:0.75rem;color:var(--text3);}
+.edu-logo{display:block;width:75px;height:75px;object-fit:cover;border-radius:12px;margin-bottom:0.75rem;}
 
 /* ACHIEVEMENTS */
 .achievements-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;}

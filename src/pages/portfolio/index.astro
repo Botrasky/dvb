@@ -15,7 +15,8 @@ const experience = [
 ];
 
 const certificates = [
-  { name: 'Certified Ethical Hacker', issuer: 'EC-Council · 2025', image: 'ceh.jpg', alt: 'Certified Ethical Hacker certificate', verify: 'https://aspen.eccouncil.org/VerifyBadge?&type=certification&a=9mIRiA1foMEVd3SehW6vOUki7LD0BmZ5HTBhr7vjDqY=' },
+  { name: 'Certified Ethical Hacker · original', issuer: 'EC-Council · 2025', image: 'ceh.jpg', alt: 'Original Certified Ethical Hacker certificate', verify: 'https://aspen.eccouncil.org/VerifyBadge?&type=certification&a=9mIRiA1foMEVd3SehW6vOUki7LD0BmZ5HTBhr7vjDqY=' },
+  { name: 'Certified Ethical Hacker · updated', issuer: 'EC-Council · 2025', image: 'ceh-updated.jpg', alt: 'Updated Certified Ethical Hacker certificate', verify: 'https://aspen.eccouncil.org/VerifyBadge?&type=certification&a=9mIRiA1foMEVd3SehW6vOUki7LD0BmZ5HTBhr7vjDqY=' },
   { name: 'B.Sc. in ICT', issuer: 'American University of Phnom Penh · 2025', image: 'aupp-bsc-degree.jpg', alt: 'Bachelor of Science degree certificate' },
   { name: 'Certificate of Appreciation', issuer: 'U.S. Embassy Phnom Penh · 2025', image: 'us-embassy-appreciation.jpg', alt: 'U.S. Embassy certificate of appreciation' },
   { name: 'ASEAN Student CTF Merit', issuer: 'VNISA · 2022', image: 'vnisa-ctf-2022.jpg', alt: 'ASEAN Student CTF merit certificate' },
@@ -52,7 +53,7 @@ const certificates = [
       <div class="section-top"><span>01 / THE PERSON</span><h2 id="about-title">Curious by nature.<br /><em>Practical by design.</em></h2></div>
       <div class="about-layout">
         <p>I’m a SOC analyst who learns by doing. I investigate signals, build tools, and document what each security lab teaches me.</p>
-        <div class="about-facts"><span><strong>Current role</strong>SOC Analyst · Sathapana Bank</span><span><strong>Education</strong>B.Sc. ICT · AUPP, 2025</span><span><strong>Focus</strong>Detection · Research · Labs</span></div>
+        <div class="about-facts"><span><strong>Current role</strong>SOC Analyst · Sathapana Bank</span><span><strong>Education</strong><span class="education-summary">M.Sc. Computer Science · Flinders, expected 2028<br />B.Sc. ICT · AUPP, 2025</span></span><span><strong>Focus</strong>Detection · Research · Labs</span></div>
       </div>
     </section>
 
@@ -81,7 +82,7 @@ const certificates = [
       <p class="credential-note">Also trained in cloud security, digital forensics, and incident investigation.</p>
     </section>
 
-    <section id="education" class="portfolio-section education-section" aria-labelledby="education-title"><div class="section-top"><span>05 / EDUCATION</span><h2 id="education-title">A foundation<br /><em>for the next question.</em></h2></div><div class="education-card"><span class="education-seal">AUPP</span><div><h3>B.Sc. Information &amp; Communications Technology</h3><p>American University of Phnom Penh · Graduated May 2025</p></div></div></section>
+    <section id="education" class="portfolio-section education-section" aria-labelledby="education-title"><div class="section-top"><span>05 / EDUCATION</span><h2 id="education-title">A foundation<br /><em>for the next question.</em></h2></div><div class="education-list"><div class="education-card"><img class="education-logo" src="/assets/flinders-university-logo.jpg" alt="Flinders University logo" width="75" height="75" loading="lazy" /><div><h3>Master's Degree, Computer Science</h3><p><a href="https://www.linkedin.com/school/16164/" target="_blank" rel="noopener noreferrer">Flinders University ↗</a> · Australia · Expected Dec 2028</p></div></div><div class="education-card"><span class="education-seal">AUPP</span><div><h3>B.Sc. Information &amp; Communications Technology</h3><p>American University of Phnom Penh · Graduated May 2025</p></div></div></div></section>
 
     <section id="contact" class="portfolio-contact" aria-labelledby="contact-title"><span>06 / SAY HELLO</span><h2 id="contact-title">Let’s build something<br /><em>worth exploring.</em></h2><div class="contact-links"><a href="https://www.linkedin.com/in/vathanakbotrados" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/Botrasky" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></section>
   </main>
@@ -120,7 +121,7 @@ const certificates = [
     dots.forEach((dot, i) => { dot.classList.toggle('is-active', i === active); if (i === active) dot.setAttribute('aria-current', 'true'); else dot.removeAttribute('aria-current'); });
   }
   function pauseSlides() { clearInterval(interval); }
-  function playSlides() { pauseSlides(); if (motionEnabled() && !document.hidden) interval = setInterval(() => showSlide(active + 1), 7000); }
+  function playSlides() { pauseSlides(); if (motionEnabled() && !document.hidden) interval = setInterval(() => showSlide(active + 1), 4000); }
   document.getElementById('certificate-prev')?.addEventListener('click', () => { showSlide(active - 1); playSlides(); });
   document.getElementById('certificate-next')?.addEventListener('click', () => { showSlide(active + 1); playSlides(); });
   dots.forEach((dot, index) => dot.addEventListener('click', () => { showSlide(index); playSlides(); }));
@@ -168,7 +169,7 @@ const certificates = [
   .portfolio-section h2,.portfolio-contact h2{font-size:clamp(2rem,4vw,4rem);line-height:1.07;letter-spacing:-.055em}
   .about-layout{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding:34px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
   .about-layout>p{max-width:32ch;font-size:clamp(1.2rem,2vw,1.8rem);line-height:1.35;letter-spacing:-.025em}
-  .about-facts{display:grid;gap:10px}.about-facts span{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid var(--border2);padding:8px 0;color:var(--text2);font-size:.85rem}.about-facts strong{color:var(--text3);font-weight:600}
+  .about-facts{display:grid;gap:10px}.about-facts>span{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid var(--border2);padding:8px 0;color:var(--text2);font-size:.85rem}.about-facts strong{color:var(--text3);font-weight:600}.education-summary{text-align:right}
   .strength-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.strength-card{min-height:195px;padding:25px;border:1px solid var(--border);border-radius:16px;background:var(--surface);transition:transform .25s,border-color .25s}.strength-card:hover{transform:translateY(-4px);border-color:var(--dash-accent)}
   .strength-icon{display:block;margin-bottom:25px;color:var(--dash-accent);font-size:2rem}.strength-card h3{font-size:1.18rem}.strength-card p{margin-top:6px;color:var(--text3);font-size:.84rem}
   .text-link{display:inline-flex;gap:12px;margin-top:22px;color:var(--dash-accent)!important;font-weight:700}
@@ -182,11 +183,11 @@ const certificates = [
   .certificate-controls{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:15px}.certificate-controls>button{width:43px;height:43px;border:1px solid var(--border);border-radius:50%;background:var(--surface2);color:var(--text);font-size:1.2rem;cursor:pointer}
   .certificate-dots{display:flex;gap:9px}.certificate-dots button{width:9px;height:9px;border:0;border-radius:50%;background:var(--border);cursor:pointer}.certificate-dots button.is-active{width:27px;border-radius:8px;background:var(--dash-accent)}
   .credential-note{margin-top:13px;color:var(--text3);font-size:.84rem}
-  .education-card{display:flex;align-items:center;gap:22px;padding:28px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}.education-seal{display:grid;place-items:center;flex:none;width:75px;height:75px;border-radius:17px;background:var(--surface2);color:var(--dash-accent);font-weight:800}.education-card h3{font-size:1.15rem}.education-card p{margin-top:6px;color:var(--text3);font-size:.86rem}
+  .education-list{display:grid;gap:16px}.education-card{display:flex;align-items:center;gap:22px;padding:28px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}.education-logo{display:block;flex:none;width:75px;height:75px;border-radius:17px;object-fit:cover}.education-seal{display:grid;place-items:center;flex:none;width:75px;height:75px;border-radius:17px;background:var(--surface2);color:var(--dash-accent);font-weight:800}.education-card h3{font-size:1.15rem}.education-card p{margin-top:6px;color:var(--text3);font-size:.86rem}.education-card a{color:var(--dash-accent)!important}
   .portfolio-contact{padding:clamp(30px,6vw,75px);border-radius:22px;background:linear-gradient(145deg,#153e42,#102937);color:#f2fcfa}.portfolio-contact>span{color:#a4ffcf}.portfolio-contact h2{margin-top:24px}.portfolio-contact em{color:#a4ffcf}.contact-links{display:flex;flex-wrap:wrap;gap:22px;margin-top:40px}.contact-links a{color:#a4ffcf!important;font-weight:700}
   @keyframes marquee{to{transform:translateX(-50%)}}@keyframes orbit{to{transform:rotate(340deg)}}@keyframes caret{50%{opacity:0}}@keyframes certificate-in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
   @media(max-width:850px){.portfolio-hero{min-height:500px}.hero-art{opacity:.5;position:absolute;right:-60px;width:50%}.hero-copy{max-width:620px}.section-top{grid-template-columns:1fr;gap:12px}.experience-row{grid-template-columns:130px 1fr}.experience-detail{grid-column:2}.certificate-slide{grid-template-columns:1fr 1fr}}
-  @media(max-width:600px){.portfolio-shell{padding:14px 15px 40px}.portfolio-hero{display:block;min-height:560px;padding:35px 24px}.portfolio-hero h1{font-size:clamp(3.4rem,14vw,5.2rem)}.hero-art{width:70%;right:-32px;bottom:-75px;opacity:.27}.hero-scroll{left:24px}.portfolio-ticker{margin-bottom:48px}.portfolio-section{padding-bottom:55px}.about-layout,.strength-grid,.certificate-slide{grid-template-columns:1fr}.about-layout{padding:22px}.about-facts span{flex-direction:column;gap:2px}.strength-card{min-height:0}.experience-row{grid-template-columns:1fr;gap:7px}.experience-detail{grid-column:1}.certificate-slide{gap:0}.certificate-image{min-height:220px}.certificate-image img{max-height:240px}.certificate-copy{padding:24px 4px 8px}.education-card{align-items:flex-start;flex-direction:column}}
+  @media(max-width:600px){.portfolio-shell{padding:14px 15px 40px}.portfolio-hero{display:block;min-height:560px;padding:35px 24px}.portfolio-hero h1{font-size:clamp(3.4rem,14vw,5.2rem)}.hero-art{width:70%;right:-32px;bottom:-75px;opacity:.27}.hero-scroll{left:24px}.portfolio-ticker{margin-bottom:48px}.portfolio-section{padding-bottom:55px}.about-layout,.strength-grid,.certificate-slide{grid-template-columns:1fr}.about-layout{padding:22px}.about-facts>span{flex-direction:column;gap:2px}.education-summary{text-align:left}.strength-card{min-height:0}.experience-row{grid-template-columns:1fr;gap:7px}.experience-detail{grid-column:1}.certificate-slide{gap:0}.certificate-image{min-height:220px}.certificate-image img{max-height:240px}.certificate-copy{padding:24px 4px 8px}.education-card{align-items:flex-start;flex-direction:column}}
   html.site-motion-off .ticker-track,html.site-motion-off .orbit,html.site-motion-off .type-caret,html.site-motion-off .certificate-slide{animation:none!important}
   @media(prefers-reduced-motion:reduce){html:not(.site-motion-on) .ticker-track,html:not(.site-motion-on) .orbit,html:not(.site-motion-on) .type-caret,html:not(.site-motion-on) .certificate-slide{animation:none!important}html.site-motion-on .ticker-track{animation:marquee 34s linear infinite!important}html.site-motion-on .orbit-one{animation:orbit 38s linear infinite!important}html.site-motion-on .orbit-two{animation:orbit 28s linear infinite reverse!important}html.site-motion-on .type-caret{animation:caret 850ms steps(1) infinite!important}html.site-motion-on .certificate-slide:not([hidden]){animation:certificate-in .55s ease-out both!important}.strength-card{transition:none}}
 </style>
