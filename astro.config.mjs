@@ -5,7 +5,7 @@ export default defineConfig({
   output: "server",
   adapter: vercel(),
   trailingSlash: "always",
-  site: "https://botrasky.github.io",
+  site: "https://vathanakbotra.vercel.app",
   vite: {
     server: {
       fs: { deny: ["api"] },
