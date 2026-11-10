@@ -49,10 +49,10 @@ if (themeButton && !themeButton.hasAttribute('onclick')) themeButton.addEventLis
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const requested = new URLSearchParams(location.search).get('motion');
-  let mode = requested;
+  let mode = requested || 'on';
   try {
     if (['on', 'off', 'system'].includes(requested)) sessionStorage.setItem('fxMotion', requested);
-    mode = sessionStorage.getItem('fxMotion');
+    mode = sessionStorage.getItem('fxMotion') || 'on';
   } catch (_) { /* The URL still works without storage. */ }
   const enabled = () => mode === 'on' || (mode !== 'off' && !reduced.matches);
   window.siteMotion = { enabled };
