@@ -59,6 +59,9 @@
   const thumbLabel = document.getElementById('brief-thumb-label');
   const thumbImage = document.getElementById('brief-thumb-image');
   const source = document.getElementById('brief-source');
+  const sourceMark = document.getElementById('brief-source-mark');
+  const sourceLogo = sourceMark?.querySelector('img');
+  const briefDate = document.getElementById('brief-date');
   const headline = document.getElementById('brief-headline');
   const summary = document.getElementById('brief-summary');
   const original = document.getElementById('brief-link');
@@ -82,6 +85,11 @@
     thumbLabel.textContent = label;
     thumbLabel.hidden = false;
     thumbImage.replaceChildren();
+    if (sourceLogo) {
+      sourceLogo.src = logo;
+      sourceLogo.alt = `${label} logo`;
+      sourceLogo.hidden = !logo;
+    }
 
     function addImage(url, type, fallback) {
       if (!url) return fallback?.();
@@ -112,8 +120,12 @@
     stopTyping();
     const story = stories[active];
     const date = Date.parse(story.date);
-    const byline = Number.isFinite(date) ? [story.source, story.kind, dateFormat.format(date)] : [story.source, story.kind];
-    source.textContent = byline.join(' · ');
+    source.textContent = [story.source, story.kind].filter(Boolean).join(' · ');
+    if (briefDate) {
+      briefDate.dateTime = Number.isFinite(date) ? new Date(date).toISOString() : '';
+      briefDate.textContent = Number.isFinite(date) ? dateFormat.format(date) : '';
+      briefDate.hidden = !Number.isFinite(date);
+    }
     headline.textContent = story.title;
     summary.textContent = story.summary || 'Open the original story for the full update.';
     original.href = story.url;
@@ -218,7 +230,16 @@
   });
   reducedMotion.addEventListener('change', () => { if (!motionEnabled()) pause(); });
   slide.addEventListener('focusin', pause);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pause();
+      return;
+    }
+    if (!interacted && !playing && motionEnabled()) {
+      playing = true;
+      render();
+    }
+  });
   document.getElementById('brief-prev').addEventListener('click', () => { pause(); advance(-1); });
   document.getElementById('brief-next').addEventListener('click', () => { pause(); advance(1); });
   document.getElementById('brief-controls').hidden = false;
