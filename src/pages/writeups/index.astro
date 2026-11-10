@@ -6,6 +6,7 @@ const reports = await getCollection('writeups');
 if (!reports.length) throw new Error('The writeup content collection is empty.');
 const page = legacyPage
   .replace('<head>', '<head><base href="/writeups/">')
+  .replaceAll('href="../index.html"', 'href="/"')
   .replaceAll('href="index.html"', 'href="/writeups/"')
   .replaceAll('href="../author.html"', 'href="/author/"')
   .replaceAll('href="../about.html#contact"', 'href="/portfolio/#contact"')

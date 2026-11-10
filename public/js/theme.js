@@ -41,6 +41,7 @@ function toggleTheme() {
     renderTheme();
   }
 }
+document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
 
 
 // Visible card entrances on every page, including Safari without page transitions.

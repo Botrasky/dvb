@@ -16,32 +16,32 @@
  }
  if (document.querySelector('.wu-article')) {
    const back = document.querySelector('.wu-back');
-   if (back) back.href = '../index.html';
+   if (back) back.href = '/writeups/';
    const navLinks = document.getElementById('navLinks');
-   const explore = navLinks?.querySelector('a[href="../../index.html"]');
+   const explore = navLinks?.querySelector('a[href="/"], a[href="../../index.html"]');
    if (explore) {
      explore.textContent = 'Dashboard';
      const libraryItem = document.createElement('li');
      const libraryLink = document.createElement('a');
-     libraryLink.href = '../index.html';
+     libraryLink.href = '/writeups/';
      libraryLink.textContent = 'Writeups';
      libraryLink.addEventListener('click', closeMenu);
      libraryItem.append(libraryLink);
      explore.parentElement.after(libraryItem);
    }
-   const author = navLinks?.querySelector('a[href="../../about.html"]');
+   const author = navLinks?.querySelector('a[href="/portfolio/"], a[href="../../about.html"]');
    if (author) {
-     author.href = '../../author.html';
+     author.href = '/author/';
      author.textContent = 'Author';
    }
-   const portfolio = navLinks?.querySelector('a[href="../../about.html#contact"]');
+   const portfolio = navLinks?.querySelector('a[href="/portfolio/#contact"], a[href="../../about.html#contact"]');
    if (portfolio) {
-     portfolio.href = '../../about.html';
+     portfolio.href = '/portfolio/';
      portfolio.textContent = 'Portfolio';
    }
-   const footerLibrary = document.querySelector('.footer-links a[href="../../index.html"]');
-   if (footerLibrary) footerLibrary.href = '../index.html';
-   const footerAuthor = document.querySelector('.footer-links a[href="../../about.html"]');
-   if (footerAuthor) footerAuthor.href = '../../author.html';
+   const footerLibrary = document.querySelector('.footer-links a[href="/"], .footer-links a[href="../../index.html"]');
+   if (footerLibrary) footerLibrary.href = '/writeups/';
+   const footerAuthor = document.querySelector('.footer-links a[href="/portfolio/"], .footer-links a[href="../../about.html"]');
+   if (footerAuthor) footerAuthor.href = '/author/';
  }
 })();

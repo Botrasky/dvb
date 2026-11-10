@@ -4,6 +4,10 @@ const root = process.cwd();
 
 export function routeLegacyLinks(html: string) {
   return html
+    .replaceAll(
+      'href="../../index.html" class="wu-back"',
+      'href="/writeups/" class="wu-back"',
+    )
     .replaceAll('href="index.html"', 'href="/"')
     .replaceAll('href="writeups/index.html"', 'href="/writeups/"')
     .replaceAll('href="author.html"', 'href="/author/"')

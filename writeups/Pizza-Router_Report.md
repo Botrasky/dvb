@@ -84,7 +84,7 @@ Impact: redirection of control flow within the process, here to read the flag.
 
 ## 8. Risk Assessment
 
-Severity uses the single grid defined in [REPORT_TEMPLATE.md](REPORT_TEMPLATE.md) — Critical / High / Medium / Low / Informational — rated on prerequisites, attacker gain, and scope beyond the lab. CVSS is applied per the template's policy.
+Severity uses the single grid defined in `REPORT_TEMPLATE.md` — Critical / High / Medium / Low / Informational — rated on prerequisites, attacker gain, and scope beyond the lab. CVSS is applied per the template's policy.
 
 | # | Finding | Severity | Basis (prerequisites · gain · scope) |
 |---|---|---|---|

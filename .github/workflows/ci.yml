@@ -26,5 +26,7 @@ jobs:
         run: npm run check
       - name: Build Astro site
         run: npm run build
+      - name: Check built routes and links
+        run: npm run check:routes
       - name: Run repo checks
         run: bash scripts/ci-check.sh

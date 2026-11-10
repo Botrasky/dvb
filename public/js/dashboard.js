@@ -1,5 +1,4 @@
 (() => {
-  document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
   const slide = document.getElementById('brief-slide');
   if (!slide) return;
 
@@ -245,7 +244,7 @@
   document.getElementById('brief-controls').hidden = false;
   render();
 
-  fetch('/api/security-brief', { signal: AbortSignal.timeout(7000) })
+  fetch('/api/security-brief/', { signal: AbortSignal.timeout(7000) })
     .then(response => response.ok ? response.json() : null)
     .then(data => {
       if (!data) return;
