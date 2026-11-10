@@ -1,4 +1,4 @@
-import handler from '../../../api/security-brief-legacy.mjs';
+import handler from '../../lib/security-brief-legacy.mjs';
 
 export const prerender = false;
 

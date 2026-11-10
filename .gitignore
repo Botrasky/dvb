@@ -24,3 +24,4 @@ things-to-add/
 node_modules
 .astro/
 dist/
+.env*
