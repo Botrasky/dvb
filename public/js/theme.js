@@ -56,6 +56,7 @@ document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
   const enabled = () => mode === 'on' || (mode !== 'off' && !reduced.matches);
   window.siteMotion = { enabled };
   if (mode === 'on') document.documentElement.classList.add('site-motion-on');
+  if (mode === 'off') document.documentElement.classList.add('site-motion-off');
 
   const selectors = document.querySelector('.wu-article')
     ? '.wu-page-title, .wu-meta-line, .wu-glance, .wu-body > h2, .wu-body > p, .article-contents'

@@ -91,10 +91,11 @@ const certificates = [
   const words = ['security operations', 'hands-on research', 'building useful tools'];
   const typed = document.getElementById('portfolio-typed');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  if (typed && !reduce.matches) {
+  const motionEnabled = () => (window as Window & { siteMotion?: { enabled: () => boolean } }).siteMotion?.enabled() ?? !reduce.matches;
+  if (typed) {
     let word = 0, character = words[0].length, deleting = false, timer: ReturnType<typeof setTimeout>;
     const tick = () => {
-      if (document.hidden || reduce.matches) return;
+      if (document.hidden || !motionEnabled()) return;
       const text = words[word];
       typed.textContent = text.slice(0, character);
       if (!deleting && character === text.length) { deleting = true; timer = setTimeout(tick, 2000); return; }
@@ -102,9 +103,10 @@ const certificates = [
       character += deleting ? -1 : 1;
       timer = setTimeout(tick, deleting ? 45 : 80);
     };
-    timer = setTimeout(tick, 1600);
-    document.addEventListener('visibilitychange', () => { clearTimeout(timer); if (!document.hidden) { typed.textContent = words[word]; character = words[word].length; deleting = true; timer = setTimeout(tick, 1800); } });
-    reduce.addEventListener('change', () => { clearTimeout(timer); typed.textContent = words[0]; });
+    const resetTyping = () => { clearTimeout(timer); word = 0; character = words[0].length; deleting = false; typed.textContent = words[0]; if (motionEnabled() && !document.hidden) timer = setTimeout(tick, 1600); };
+    resetTyping();
+    document.addEventListener('visibilitychange', () => { clearTimeout(timer); if (!document.hidden && motionEnabled()) { typed.textContent = words[word]; character = words[word].length; deleting = true; timer = setTimeout(tick, 1800); } });
+    reduce.addEventListener('change', resetTyping);
   }
 
   const slides = [...document.querySelectorAll<HTMLElement>('.certificate-slide')];
@@ -118,7 +120,7 @@ const certificates = [
     dots.forEach((dot, i) => { dot.classList.toggle('is-active', i === active); if (i === active) dot.setAttribute('aria-current', 'true'); else dot.removeAttribute('aria-current'); });
   }
   function pauseSlides() { clearInterval(interval); }
-  function playSlides() { pauseSlides(); if (!reduce.matches && !document.hidden) interval = setInterval(() => showSlide(active + 1), 7000); }
+  function playSlides() { pauseSlides(); if (motionEnabled() && !document.hidden) interval = setInterval(() => showSlide(active + 1), 7000); }
   document.getElementById('certificate-prev')?.addEventListener('click', () => { showSlide(active - 1); playSlides(); });
   document.getElementById('certificate-next')?.addEventListener('click', () => { showSlide(active + 1); playSlides(); });
   dots.forEach((dot, index) => dot.addEventListener('click', () => { showSlide(index); playSlides(); }));
@@ -173,7 +175,7 @@ const certificates = [
   .experience-list{border-top:1px solid var(--border)}.experience-row{display:grid;grid-template-columns:185px minmax(0,1fr) minmax(130px,.65fr);gap:24px;align-items:center;padding:23px 4px;border-bottom:1px solid var(--border)}
   .experience-period{color:var(--dash-accent);font:.78rem var(--font-code)}.experience-row h3{font-size:1.06rem}.experience-row p,.experience-detail{color:var(--text3);font-size:.85rem}.experience-row p{margin-top:4px}
   .certificate-viewer{padding:20px;border:1px solid var(--border);border-radius:20px;background:var(--surface)}
-  .certificate-slide{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;min-height:340px}.certificate-slide[hidden]{display:none}
+  .certificate-slide{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;min-height:340px;animation:certificate-in .55s ease-out both}.certificate-slide[hidden]{display:none}
   .certificate-image{display:grid;place-items:center;min-height:320px;border-radius:12px;background:#f3f6f8;overflow:hidden}.certificate-image img{display:block;width:100%;max-height:320px;object-fit:contain}
   .certificate-copy{padding:25px}.certificate-count{font:.75rem var(--font-code);color:var(--dash-accent)}.certificate-copy h3{margin-top:24px;font-size:clamp(1.7rem,3vw,3rem);line-height:1.1;letter-spacing:-.04em}.certificate-copy p{margin-top:9px;color:var(--text2)}
   .certificate-copy a{display:inline-block;margin-top:20px;color:var(--dash-accent)!important;font-weight:700}
@@ -182,8 +184,9 @@ const certificates = [
   .credential-note{margin-top:13px;color:var(--text3);font-size:.84rem}
   .education-card{display:flex;align-items:center;gap:22px;padding:28px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}.education-seal{display:grid;place-items:center;flex:none;width:75px;height:75px;border-radius:17px;background:var(--surface2);color:var(--dash-accent);font-weight:800}.education-card h3{font-size:1.15rem}.education-card p{margin-top:6px;color:var(--text3);font-size:.86rem}
   .portfolio-contact{padding:clamp(30px,6vw,75px);border-radius:22px;background:linear-gradient(145deg,#153e42,#102937);color:#f2fcfa}.portfolio-contact>span{color:#a4ffcf}.portfolio-contact h2{margin-top:24px}.portfolio-contact em{color:#a4ffcf}.contact-links{display:flex;flex-wrap:wrap;gap:22px;margin-top:40px}.contact-links a{color:#a4ffcf!important;font-weight:700}
-  @keyframes marquee{to{transform:translateX(-50%)}}@keyframes orbit{to{transform:rotate(340deg)}}@keyframes caret{50%{opacity:0}}
+  @keyframes marquee{to{transform:translateX(-50%)}}@keyframes orbit{to{transform:rotate(340deg)}}@keyframes caret{50%{opacity:0}}@keyframes certificate-in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
   @media(max-width:850px){.portfolio-hero{min-height:500px}.hero-art{opacity:.5;position:absolute;right:-60px;width:50%}.hero-copy{max-width:620px}.section-top{grid-template-columns:1fr;gap:12px}.experience-row{grid-template-columns:130px 1fr}.experience-detail{grid-column:2}.certificate-slide{grid-template-columns:1fr 1fr}}
   @media(max-width:600px){.portfolio-shell{padding:14px 15px 40px}.portfolio-hero{display:block;min-height:560px;padding:35px 24px}.portfolio-hero h1{font-size:clamp(3.4rem,14vw,5.2rem)}.hero-art{width:70%;right:-32px;bottom:-75px;opacity:.27}.hero-scroll{left:24px}.portfolio-ticker{margin-bottom:48px}.portfolio-section{padding-bottom:55px}.about-layout,.strength-grid,.certificate-slide{grid-template-columns:1fr}.about-layout{padding:22px}.about-facts span{flex-direction:column;gap:2px}.strength-card{min-height:0}.experience-row{grid-template-columns:1fr;gap:7px}.experience-detail{grid-column:1}.certificate-slide{gap:0}.certificate-image{min-height:220px}.certificate-image img{max-height:240px}.certificate-copy{padding:24px 4px 8px}.education-card{align-items:flex-start;flex-direction:column}}
-  @media(prefers-reduced-motion:reduce){.ticker-track,.orbit,.type-caret{animation:none!important}.strength-card{transition:none}}
+  html.site-motion-off .ticker-track,html.site-motion-off .orbit,html.site-motion-off .type-caret,html.site-motion-off .certificate-slide{animation:none!important}
+  @media(prefers-reduced-motion:reduce){html:not(.site-motion-on) .ticker-track,html:not(.site-motion-on) .orbit,html:not(.site-motion-on) .type-caret,html:not(.site-motion-on) .certificate-slide{animation:none!important}html.site-motion-on .ticker-track{animation:marquee 34s linear infinite!important}html.site-motion-on .orbit-one{animation:orbit 38s linear infinite!important}html.site-motion-on .orbit-two{animation:orbit 28s linear infinite reverse!important}html.site-motion-on .type-caret{animation:caret 850ms steps(1) infinite!important}html.site-motion-on .certificate-slide:not([hidden]){animation:certificate-in .55s ease-out both!important}.strength-card{transition:none}}
 </style>
