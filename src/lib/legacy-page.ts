@@ -8,6 +8,8 @@ export function routeLegacyLinks(html: string) {
     .replaceAll('href="writeups/index.html"', 'href="/writeups/"')
     .replaceAll('href="author.html"', 'href="/author/"')
     .replaceAll('href="about.html"', 'href="/portfolio/"')
+    .replaceAll('href="../../about.html#contact"', 'href="/portfolio/#contact"')
+    .replaceAll('href="../../about.html"', 'href="/portfolio/"')
     .replaceAll('href="../index.html"', 'href="/writeups/"')
     .replaceAll('href="../../index.html"', 'href="/"')
     .replaceAll('href="../css/', 'href="/css/')

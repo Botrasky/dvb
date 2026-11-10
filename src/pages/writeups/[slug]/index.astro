@@ -23,7 +23,9 @@ const reportIds: Record<string, string> = {
 const reports = await getCollection('writeups');
 const report = reports.find(entry => entry.id === reportIds[slug]);
 const Content = report ? (await render(report)).Content : undefined;
-const page = report ? '' : readLegacyPage(`writeups/${slug}/index.html`);
+const page = report ? '' : readLegacyPage(`writeups/${slug}/index.html`)
+  .replace('<head>', `<head><base href="/writeups/${slug}/">`)
+  .replace('src="../writeups.js?', 'src="/writeups/writeups.js?');
 ---
 
 {report && Content ? (

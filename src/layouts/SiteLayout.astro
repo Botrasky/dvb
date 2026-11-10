@@ -26,7 +26,7 @@ const {
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
   </head>
   <body class="dashboard-page">
-    <script src="../../js/theme.js"></script>
+    <script is:inline src="/js/theme.js"></script>
     <a class="dash-skip" href="#main">Skip to content</a>
     <header class="dash-header">
       <a class="dash-brand" href="/" aria-label="ZEUS home">
@@ -42,6 +42,7 @@ const {
       <button class="dash-theme" id="themeToggle" type="button" aria-label="Toggle light and dark theme"><span aria-hidden="true">◐</span> <span id="themeLabel">Light</span></button>
     </header>
     <slot />
+    <script is:inline src="/js/motion.js"></script>
     <footer class="dash-footer">
       <span>ZEUS <span aria-hidden="true">/</span> Zone for Exploration and Understanding of Security</span>
       <div><a href="/writeups/">Writeups</a><a href="/portfolio/#contact">Contact</a></div>
