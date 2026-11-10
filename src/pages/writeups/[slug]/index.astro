@@ -1,4 +1,6 @@
 ---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { readLegacyPage, writeupSlugs } from '../../../lib/legacy-page';
 
 export const prerender = true;
@@ -8,7 +10,26 @@ export function getStaticPaths() {
 }
 
 const { slug } = Astro.props;
-const page = readLegacyPage(`writeups/${slug}/index.html`);
+const reportIds: Record<string, string> = {
+  'creds-surf': 'creds-surf_report',
+  'hidden-cipher-2': 'hidden-cipher-2_report',
+  moneybox: 'moneybox_report',
+  'pizza-router': 'pizza-router_report',
+  'printer-shares-3': 'printer-shares-3_report',
+  'secure-pass-db': 'secure-pass-db_report',
+  'trust-but-verify': 'trust-but-verify_report',
+  'ven-rsa': 'ven-rsa_report',
+};
+const reports = await getCollection('writeups');
+const report = reports.find(entry => entry.id === reportIds[slug]);
+const Content = report ? (await render(report)).Content : undefined;
+const page = report ? '' : readLegacyPage(`writeups/${slug}/index.html`);
 ---
 
-<Fragment set:html={page} />
+{report && Content ? (
+  <SiteLayout title={`${slug} | ZEUS`} current="writeups">
+    <main id="main" class="dash-shell writeup-native-shell">
+      <article class="writeup-native panel"><Content /></article>
+    </main>
+  </SiteLayout>
+) : <Fragment set:html={page} />}
