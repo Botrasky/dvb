@@ -87,9 +87,15 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
 .brief-thumb[data-publisher="bc"]{--tile-ink:#c4f1b8;--tile-bg:#315631;}
 .brief-thumb[data-publisher="unit42"]{--tile-ink:#9ff3ed;--tile-bg:#124e59;}
 .brief-thumb[data-publisher="ibm"]{--tile-ink:#b9d9ff;--tile-bg:#173b78;}
-.brief-source{color:var(--text3);font-family:var(--font-code);font-size:.73rem;}
+.brief-source-row{display:flex;align-items:center;gap:7px;min-width:0;}
+.brief-source-mark{display:grid;place-items:center;flex:none;width:24px;height:24px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);overflow:hidden;}
+.brief-source-mark img{width:16px;height:16px;object-fit:contain;}
+.brief-source{color:var(--text3);font-family:var(--font-code);font-size:.73rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.brief-date{margin-left:auto;flex:none;color:var(--text3);font-size:.7rem;white-space:nowrap;}
 .brief h3{font-size:clamp(1rem,2.4vw,1.35rem);letter-spacing:-.022em;line-height:1.17;margin:5px 0 7px;}
 .brief-slide p:not(.brief-source){font-size:.86rem;color:var(--text2);margin-bottom:6px;}
+.brief-trust{display:flex;align-items:center;gap:5px;margin-top:10px;color:var(--text3);font-size:.7rem!important;}
+.brief-trust span{display:grid;place-items:center;width:15px;height:15px;border-radius:50%;background:color-mix(in srgb,var(--dash-accent) 18%,transparent);color:var(--dash-accent);font-weight:800;}
 .brief-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--font-code);font-size:.77rem;color:var(--text3);}
 .brief-controls[hidden]{display:none;}
 .brief-controls button{width:40px;font-size:1rem;padding:3px;min-height:36px;}
@@ -160,6 +166,7 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
   .topic-icon{width:27px;height:30px;font-size:.8rem;}
   .topic-card strong{font-size:.82rem;}
   .dash-section-heading>a{font-size:.76rem;}
+  .brief-date{font-size:.65rem;}
   .author-strip{flex-wrap:wrap;}
   .author-strip .author-actions{margin-left:0;}
 }

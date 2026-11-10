@@ -1,0 +1,50 @@
+---
+import '../../css/base.css';
+import '../../css/dashboard.css';
+import '../../css/polish.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: 'dashboard' | 'writeups' | 'author' | 'portfolio';
+}
+
+const {
+  title,
+  description = 'ZEUS — a cybersecurity learning dashboard with practical labs, writeups, and trusted security research.',
+  current = 'dashboard',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="dashboard-page">
+    <script src="../../js/theme.js"></script>
+    <a class="dash-skip" href="#main">Skip to content</a>
+    <header class="dash-header">
+      <a class="dash-brand" href="/" aria-label="ZEUS home">
+        <span class="zeus-emblem" aria-hidden="true"><span class="zeus-glyph">Z</span><span class="zeus-word">ZEUS</span></span>
+        <span class="zeus-expansion">Zone for Exploration and<br />Understanding of Security</span>
+      </a>
+      <nav class="dash-nav" aria-label="Main navigation">
+        <a href="/" aria-current={current === 'dashboard' ? 'page' : undefined}>Dashboard</a>
+        <a href="/writeups/" aria-current={current === 'writeups' ? 'page' : undefined}>Writeups</a>
+        <a href="/author/" aria-current={current === 'author' ? 'page' : undefined}>Author</a>
+        <a href="/portfolio/" aria-current={current === 'portfolio' ? 'page' : undefined}>Portfolio</a>
+      </nav>
+      <button class="dash-theme" id="themeToggle" type="button" aria-label="Toggle light and dark theme"><span aria-hidden="true">◐</span> <span id="themeLabel">Light</span></button>
+    </header>
+    <slot />
+    <footer class="dash-footer">
+      <span>ZEUS <span aria-hidden="true">/</span> Zone for Exploration and Understanding of Security</span>
+      <div><a href="/writeups/">Writeups</a><a href="/portfolio/#contact">Contact</a></div>
+    </footer>
+  </body>
+</html>

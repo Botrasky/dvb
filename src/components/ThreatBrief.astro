@@ -1,0 +1,58 @@
+---
+import nistLogo from '../../assets/publisher-marks/nist.svg';
+
+const picks = [
+  {
+    source: 'NIST',
+    kind: 'Standards & guidance',
+    title: 'NIST Cybersecurity Framework 2.0',
+    summary: 'Start with the framework behind many cybersecurity programs. It covers how to govern, identify, protect, detect, respond, and recover.',
+    url: 'https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20',
+  },
+  {
+    source: 'Palo Alto Unit 42',
+    kind: 'Threat intelligence',
+    title: 'Latest research from Unit 42',
+    summary: 'Threat research, incident response findings, and practical guidance from Palo Alto Networks Unit 42.',
+    url: 'https://unit42.paloaltonetworks.com/',
+  },
+];
+---
+
+<section class="brief panel" id="brief" aria-labelledby="brief-title" aria-roledescription="carousel">
+  <div class="brief-header">
+    <div><p class="eyebrow"><span></span> Security news</p><h2 id="brief-title">Threat brief</h2></div>
+    <span class="brief-state" id="brief-state">Suggested reading</span>
+  </div>
+  <div class="brief-slide" id="brief-slide" aria-live="polite" aria-atomic="true">
+    <div class="brief-thumb" id="brief-thumb" data-publisher="nist" aria-hidden="true">
+      <span class="brief-thumb-label" id="brief-thumb-label">NIST</span>
+      <span class="brief-thumb-image" id="brief-thumb-image"></span>
+    </div>
+    <div class="brief-story">
+      <div class="brief-source-row">
+        <span class="brief-source-mark" id="brief-source-mark" aria-hidden="true"><img src={nistLogo.src} alt="" /></span>
+        <p class="brief-source" id="brief-source">NIST · Standards &amp; guidance</p>
+        <time class="brief-date" id="brief-date" hidden></time>
+      </div>
+      <h3 id="brief-headline">{picks[0].title}</h3>
+      <p id="brief-summary">{picks[0].summary}</p>
+      <a class="brief-original" id="brief-link" href={picks[0].url} target="_blank" rel="noopener noreferrer">Read original source <span aria-hidden="true">↗</span></a>
+      <p class="brief-trust"><span aria-hidden="true">✓</span> Linked to the publisher’s original page</p>
+    </div>
+  </div>
+  <div class="brief-controls" id="brief-controls" hidden>
+    <span id="brief-counter">01 / 02</span>
+    <div><button type="button" id="brief-play" aria-label="Play slideshow">Play</button><button type="button" id="brief-prev" aria-label="Previous story">←</button><button type="button" id="brief-next" aria-label="Next story">→</button></div>
+  </div>
+  <div class="brief-sources" aria-label="Trusted security sources">
+    <a href="https://csrc.nist.gov/news" target="_blank" rel="noopener noreferrer">NIST</a>
+    <a href="https://cloudsecurityalliance.org/blog" target="_blank" rel="noopener noreferrer">Cloud Security Alliance</a>
+    <a href="https://blog.cloudflare.com/tag/security/" target="_blank" rel="noopener noreferrer">Cloudflare</a>
+    <a href="https://unit42.paloaltonetworks.com/" target="_blank" rel="noopener noreferrer">Palo Alto Unit 42</a>
+    <a href="https://www.ibm.com/think/x-force" target="_blank" rel="noopener noreferrer">IBM X-Force</a>
+    <a href="https://nvd.nist.gov/vuln/search" target="_blank" rel="noopener noreferrer">NVD</a>
+  </div>
+</section>
+
+<script src="../../js/dashboard.js"></script>

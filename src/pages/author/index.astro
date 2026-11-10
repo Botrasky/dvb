@@ -1,0 +1,7 @@
+---
+import { readLegacyPage } from '../../lib/legacy-page';
+
+const page = readLegacyPage('author.html');
+---
+
+<Fragment set:html={page} />

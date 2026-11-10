@@ -21,3 +21,6 @@ bin-release/
 
 # Local-only: source labs archive, never published
 things-to-add/
+node_modules
+.astro/
+dist/

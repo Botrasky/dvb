@@ -1,0 +1,14 @@
+---
+import { readLegacyPage, writeupSlugs } from '../../../lib/legacy-page';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return writeupSlugs().map(slug => ({ params: { slug }, props: { slug } }));
+}
+
+const { slug } = Astro.props;
+const page = readLegacyPage(`writeups/${slug}/index.html`);
+---
+
+<Fragment set:html={page} />

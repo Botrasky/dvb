@@ -1,0 +1,57 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ThreatBrief from '../components/ThreatBrief.astro';
+---
+
+<SiteLayout title="ZEUS | Cybersecurity Learning Dashboard">
+  <main id="main" class="dash-shell">
+    <div class="dash-masthead">
+      <div><p class="eyebrow"><span></span> Notes from my security labs</p><h1>Cybersecurity dashboard</h1><p>My lab writeups and updates from trusted security publishers.</p></div>
+      <a class="masthead-link" href="/author/"><span class="author-initials" aria-hidden="true">VB</span><span>By Vathanak Botra Dos<small>Meet the author ↗</small></span></a>
+    </div>
+
+    <div class="dash-lead">
+      <section class="mission panel" aria-labelledby="mission-title">
+        <div class="mission-copy">
+          <p class="eyebrow"><span></span> The lab</p>
+          <h2 id="mission-title">See the steps.<br />Understand the flaw.</h2>
+          <p>Read how I worked through each lab, what I found, and what I learned.</p>
+          <div class="mission-links"><a class="dash-button primary" href="/writeups/">Explore writeups <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#learning">Choose a topic <span aria-hidden="true">↓</span></a></div>
+        </div>
+        <svg class="mission-art" viewBox="0 0 320 260" fill="none" aria-hidden="true">
+          <defs><pattern id="mission-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#a7f6df" stroke-opacity=".12" /></pattern><linearGradient id="signal" x1="52" y1="208" x2="272" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#54b8e8" /><stop offset="1" stop-color="#a4ffcf" /></linearGradient></defs>
+          <path d="M30 20h260v220H30z" fill="url(#mission-grid)" />
+          <g stroke="#a7f6df" stroke-opacity=".24"><circle cx="174" cy="127" r="91" /><circle cx="174" cy="127" r="67" /><circle cx="174" cy="127" r="44" /><path d="M174 25v204M72 127h204M51 34h17m-17 0v17m244 0V34h-17M51 208v17h17m210 0h17v-17" /></g>
+          <path class="signal-trace" pathLength="100" d="M42 173h48l18-33 17 54 27-98 20 58 17-27h29l20-39h58" stroke="url(#signal)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+          <g fill="#a4ffcf"><circle cx="174" cy="127" r="3" /><circle cx="238" cy="88" r="4" /><circle cx="108" cy="140" r="3" /></g>
+        </svg>
+      </section>
+      <ThreatBrief />
+    </div>
+
+    <section id="learning" class="dash-section" aria-labelledby="learning-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">01 / Learn by topic</p><h2 id="learning-title">Find a topic to explore</h2></div><a href="/writeups/">All topics <span aria-hidden="true">↗</span></a></div>
+      <div class="topic-grid">
+        <a class="topic-card panel" href="/writeups/?topic=web"><span class="topic-icon web" aria-hidden="true">&lt;/&gt;</span><span><strong>Web security</strong><small>Authentication, APIs, and input handling</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="/writeups/?topic=crypto"><span class="topic-icon crypto" aria-hidden="true">◇</span><span><strong>Cryptography</strong><small>Explore mistakes in keys and algorithms</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="/writeups/?topic=re"><span class="topic-icon reverse" aria-hidden="true">⟲</span><span><strong>Reverse engineering</strong><small>Read program behavior from the binary</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+        <a class="topic-card panel" href="/writeups/?topic=general"><span class="topic-icon network" aria-hidden="true">⌘</span><span><strong>Systems &amp; networks</strong><small>Linux, network services, and security labs</small></span><span class="topic-arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="featured-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">02 / The writeup library</p><h2 id="featured-title">Start with a lab</h2></div><a href="/writeups/">Browse all writeups <span aria-hidden="true">↗</span></a></div>
+      <div class="featured-grid">
+        <a class="lab-card panel" href="/writeups/moneybox/"><span class="lab-meta"><span class="lab-number">LAB 01</span><span class="lab-level easy">Easy</span></span><h3>Moneybox</h3><p>A Linux lab covering exposed services and unsafe permissions.</p><span class="lab-read">Linux · OffSec PG <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="/writeups/amaterasu/"><span class="lab-meta"><span class="lab-number">LAB 02</span><span class="lab-level medium">Medium</span></span><h3>Amaterasu</h3><p>Study a vulnerable web API and see why file handling matters.</p><span class="lab-read">Web · OffSec PG <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="/writeups/ven-rsa/"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>VEN RSA</h3><p>An RSA challenge with a weak prime and a lesson in key generation.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
+      </div>
+    </section>
+
+    <section class="dash-section author-strip panel" aria-labelledby="author-teaser-title">
+      <span class="author-initials" aria-hidden="true">VB</span>
+      <div><p class="eyebrow">Behind the lab</p><h2 id="author-teaser-title">Vathanak Botra Dos</h2><p>I share my lab notes here. My portfolio covers my experience, projects, and education.</p></div>
+      <div class="author-actions"><a class="dash-button secondary" href="/author/">Meet the author</a><a class="quiet-link" href="/portfolio/">View portfolio ↗</a></div>
+    </section>
+  </main>
+</SiteLayout>

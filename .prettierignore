@@ -1,0 +1,11 @@
+# Legacy static implementation is kept as the rollback source during migration.
+*.html
+api/
+css/
+js/
+public/
+writeups/
+documentation/
+MIGRATION_PLAN.md
+CONTRIBUTING.md
+AGENTS.md
