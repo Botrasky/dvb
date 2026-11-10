@@ -1,7 +1,59 @@
 ---
-import { readLegacyPage } from '../../lib/legacy-page';
+import SiteLayout from '../../layouts/SiteLayout.astro';
 
-const page = readLegacyPage('about.html');
+const skills: [string, number][] = [
+  ['Penetration testing', 90], ['Python development', 90], ['Network security', 88],
+  ['Backend development', 80], ['Digital forensics', 78], ['SIEM & threat hunting', 75],
+  ['Reverse engineering', 74], ['Cloud security (AWS)', 70], ['Web exploitation', 66], ['Cryptography', 62],
+];
+
+const experience: [string, string, string, string[]][] = [
+  ['SOC Analyst', 'Jun 2025 · Present', 'Sathapana Bank PLC · Phnom Penh, Cambodia', ['Monitor and analyze security events across the bank’s infrastructure', 'Assist in incident response and threat containment procedures', 'Support cybersecurity operations and daily SOC workflows']],
+  ['Intern · English & Technology', 'Jan 2025 · Apr 2025', 'U.S. Embassy Phnom Penh / U.S. Department of State', ['Supported English-learning technology projects', 'Facilitated AI tool integration for mission staff', 'Received a Certificate of Appreciation from the Chargé d’Affaires']],
+  ['Software Development Intern', 'May 2024 · Sep 2024', 'DGacademy · Phnom Penh, Cambodia', ['Built backend systems with Python Flask', 'Designed relational database schemas', 'Managed project scope and delivered features on schedule']],
+  ['Project Manager & Backend Developer', '2024 · 2025', 'AUPP eCampus · Final Year Project', ['Led scope definition and team timelines', 'Managed cross-functional communication and deliverables', 'Implemented backend features and database design']],
+];
+
+const credentials = ['Certified Ethical Hacker · EC-Council · 2025–2028', 'B.Sc. ICT · American University of Phnom Penh · 2025', 'AWS Cloud Foundations · 2025', 'Digital Forensics Essentials · EC-Council · 2025', 'ASEAN Student CTF Merit · VNISA · 2022', 'IELTS Band 7 · British Council · 2026–2028'];
 ---
 
-<Fragment set:html={page} />
+<SiteLayout title="Portfolio | ZEUS" current="portfolio">
+  <main id="main" class="dash-shell author-shell">
+    <section class="author-intro panel" aria-labelledby="portfolio-title">
+      <p class="eyebrow">Cybersecurity professional</p>
+      <h1 id="portfolio-title">Security, systems, and continuous learning.</h1>
+      <p class="bio">SOC Analyst · Ethical Hacker · Security Researcher</p>
+      <div class="author-actions"><a class="dash-button primary" href="#experience">View experience</a><a class="quiet-link" href="#contact">Get in touch ↗</a></div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="about-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">01 / About</p><h2 id="about-title">Who I am</h2></div></div>
+      <div class="featured-grid">
+        <article class="panel"><p>I’m a cybersecurity professional based in Phnom Penh, Cambodia, currently working as a SOC Analyst at Sathapana Bank PLC. I hold a Bachelor of Science in Information and Communications Technology from the American University of Phnom Penh.</p><p>My interests include offensive security, digital forensics, and threat intelligence, studied through labs and practical projects.</p></article>
+        <article class="panel"><p class="eyebrow">Profile details</p><dl class="profile-list"><div><dt>Location</dt><dd>Phnom Penh, Cambodia</dd></div><div><dt>Role</dt><dd>SOC Analyst</dd></div><div><dt>Degree</dt><dd>B.Sc. in ICT · AUPP</dd></div><div><dt>Languages</dt><dd>Khmer, English</dd></div></dl></article>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="skills-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">02 / Skills</p><h2 id="skills-title">Technical skills</h2></div></div>
+      <div class="panel skill-list">{skills.map(([name, value]) => <div class="skill-row"><div><span>{name}</span><span>{value}%</span></div><progress max="100" value={value} aria-label={`${name}: ${value}%`}>{value}%</progress></div>)}</div>
+    </section>
+
+    <section id="experience" class="dash-section" aria-labelledby="experience-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">03 / Experience</p><h2 id="experience-title">Career timeline</h2></div></div>
+      <div class="featured-grid">{experience.map(([role, date, org, items]) => <article class="panel"><div class="lab-meta"><strong>{role}</strong><span>{date}</span></div><p class="eyebrow">{org}</p><ul>{items.map(item => <li>{item}</li>)}</ul></article>)}</div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="credentials-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">04 / Credentials</p><h2 id="credentials-title">Certifications and education</h2></div></div>
+      <div class="featured-grid">{credentials.map(credential => <article class="lab-card panel"><p>{credential}</p></article>)}</div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="roadmap-title">
+      <div class="dash-section-heading"><div><p class="eyebrow">05 / Vision</p><h2 id="roadmap-title">Career roadmap</h2></div></div>
+      <div class="featured-grid"><article class="panel"><p class="eyebrow">Phase 01 · 0–1 year</p><h3>Build practical skills</h3><p>Strengthen incident response, threat detection, SIEM, threat hunting, lab pentesting, and Python automation.</p></article><article class="panel"><p class="eyebrow">Phase 02 · 1–3 years</p><h3>Security engineer</h3><p>Advance into vulnerability assessment, threat intelligence, malware analysis, and a personal cyber lab.</p></article><article class="panel"><p class="eyebrow">Phase 03 · 3–5 years</p><h3>Technical lead</h3><p>Specialize in AI, OT/IoT security, major incident response, enterprise systems, and digital investigations.</p></article></div>
+    </section>
+
+    <section id="contact" class="dash-section author-strip panel" aria-labelledby="contact-title"><div><p class="eyebrow">Contact</p><h2 id="contact-title">Let’s connect</h2><p>Find me on LinkedIn or GitHub for professional and project updates.</p></div><div class="author-actions"><a class="dash-button primary" href="https://www.linkedin.com/in/vathanakbotrados" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a class="quiet-link" href="https://github.com/Botrasky" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></section>
+  </main>
+</SiteLayout>
