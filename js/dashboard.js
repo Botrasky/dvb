@@ -20,6 +20,16 @@
       url: 'https://blog.cloudflare.com/vole-mole/',
     },
     {
+      source: 'Palo Alto Unit 42', kind: 'Threat intelligence', title: 'Latest research from Unit 42',
+      summary: 'Threat research, incident response findings, and practical guidance from Palo Alto Networks Unit 42.',
+      url: 'https://unit42.paloaltonetworks.com/',
+    },
+    {
+      source: 'IBM Research', kind: 'Security research', title: 'Security research from IBM',
+      summary: 'Research and analysis covering vulnerabilities, privacy, cryptography, identity, and emerging threats.',
+      url: 'https://www.ibm.com/think/x-force',
+    },
+    {
       source: 'NVD', kind: 'Vulnerability database', title: 'Browse the National Vulnerability Database',
       summary: 'Look up published vulnerabilities, their severity scores, and links to advisories.',
       url: 'https://nvd.nist.gov/vuln/search',
@@ -36,17 +46,22 @@
     },
   ];
   const publishers = new Map([
-    ['NIST', ['nist', 'NIST']],
-    ['Cloud Security Alliance', ['csa', 'CSA']],
-    ['Cloudflare', ['cloudflare', 'CF']],
-    ['NVD', ['nvd', 'NVD']],
-    ['The Hacker News', ['thn', 'THN']],
-    ['BleepingComputer', ['bc', 'BC']],
+    ['NIST', ['nist', 'NIST', '/assets/publisher-marks/nist.svg']],
+    ['Cloud Security Alliance', ['csa', 'Cloud Security Alliance', '/assets/publisher-marks/csa.svg']],
+    ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg']],
+    ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg']],
+    ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-security.svg']],
+    ['NVD', ['nvd', 'NVD', '/assets/publisher-marks/nvd.svg']],
+    ['The Hacker News', ['thn', 'The Hacker News', '/assets/publisher-marks/thn.svg']],
+    ['BleepingComputer', ['bc', 'BleepingComputer', '/assets/publisher-marks/bleepingcomputer.svg']],
   ]);
   const thumb = document.getElementById('brief-thumb');
   const thumbLabel = document.getElementById('brief-thumb-label');
   const thumbImage = document.getElementById('brief-thumb-image');
   const source = document.getElementById('brief-source');
+  const sourceMark = document.getElementById('brief-source-mark');
+  const sourceLogo = sourceMark?.querySelector('img');
+  const briefDate = document.getElementById('brief-date');
   const headline = document.getElementById('brief-headline');
   const summary = document.getElementById('brief-summary');
   const original = document.getElementById('brief-link');
@@ -64,27 +79,53 @@
   let typingVersion = 0;
 
   function renderThumbnail(story) {
-    const [style, label] = publishers.get(story.source) || ['unknown', 'NEWS'];
+    const [style, label, logo] = publishers.get(story.source) || ['unknown', 'Security news', ''];
     thumb.dataset.publisher = style;
+    delete thumb.dataset.media;
     thumbLabel.textContent = label;
+    thumbLabel.hidden = false;
     thumbImage.replaceChildren();
-    if (typeof story.image !== 'string' || !story.image.startsWith('https://')) return;
-    const image = document.createElement('img');
-    image.alt = '';
-    image.decoding = 'async';
-    image.referrerPolicy = 'no-referrer';
-    image.addEventListener('load', () => image.classList.add('is-ready'), { once: true });
-    image.addEventListener('error', () => image.remove(), { once: true });
-    image.src = story.image;
-    thumbImage.append(image);
+    if (sourceLogo) {
+      sourceLogo.src = logo;
+      sourceLogo.alt = `${label} logo`;
+      sourceLogo.hidden = !logo;
+    }
+
+    function addImage(url, type, fallback) {
+      if (!url) return fallback?.();
+      const image = document.createElement('img');
+      image.alt = '';
+      image.decoding = 'async';
+      image.referrerPolicy = 'no-referrer';
+      image.className = type;
+      image.addEventListener('load', () => {
+        image.classList.add('is-ready');
+        thumb.dataset.media = type;
+        thumbLabel.hidden = true;
+      }, { once: true });
+      image.addEventListener('error', () => {
+        image.remove();
+        fallback?.();
+      }, { once: true });
+      image.src = url;
+      thumbImage.append(image);
+    }
+
+    const showLogo = () => addImage(logo, 'is-logo');
+    if (typeof story.image !== 'string' || !story.image.startsWith('https://')) return showLogo();
+    addImage(story.image, 'is-article', showLogo);
   }
 
   function render(animate = false) {
     stopTyping();
     const story = stories[active];
     const date = Date.parse(story.date);
-    const byline = Number.isFinite(date) ? [story.source, story.kind, dateFormat.format(date)] : [story.source, story.kind];
-    source.textContent = byline.join(' · ');
+    source.textContent = [story.source, story.kind].filter(Boolean).join(' · ');
+    if (briefDate) {
+      briefDate.dateTime = Number.isFinite(date) ? new Date(date).toISOString() : '';
+      briefDate.textContent = Number.isFinite(date) ? dateFormat.format(date) : '';
+      briefDate.hidden = !Number.isFinite(date);
+    }
     headline.textContent = story.title;
     summary.textContent = story.summary || 'Open the original story for the full update.';
     original.href = story.url;
@@ -189,7 +230,16 @@
   });
   reducedMotion.addEventListener('change', () => { if (!motionEnabled()) pause(); });
   slide.addEventListener('focusin', pause);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pause();
+      return;
+    }
+    if (!interacted && !playing && motionEnabled()) {
+      playing = true;
+      render();
+    }
+  });
   document.getElementById('brief-prev').addEventListener('click', () => { pause(); advance(-1); });
   document.getElementById('brief-next').addEventListener('click', () => { pause(); advance(1); });
   document.getElementById('brief-controls').hidden = false;

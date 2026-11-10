@@ -4,8 +4,9 @@ h1,h2,h3,.wu-card-title,.wu-page-title,.wu-sidebar-title{letter-spacing:0;}
 .fx-cube-cap,.fx-hacker,.fx-reactor{display:none!important;}
 html{scroll-padding-top:90px;scroll-behavior:smooth;}
 body #navbar{position:fixed;inset:0 0 auto;transform:none;width:100%;max-width:none;height:68px;padding:0 24px;border-radius:0;background:var(--nav-bg);border:0;border-bottom:1px solid var(--border);box-shadow:none;gap:20px;}
-#navbar .nav-logo{border:0;padding:0;background:none;gap:12px;box-shadow:none;}
+#navbar .nav-logo{border:0;padding:0;background:none;gap:10px;box-shadow:none;}
 .brand-mark{display:grid;place-items:center;background:var(--cyan);color:var(--bg);height:34px;padding:0 8px;border-radius:8px;font:700 13px var(--font-ui);letter-spacing:.02em;}
+.brand-mark.zeus-emblem{display:grid;height:46px;padding:0;background:none;border:0;border-radius:0;box-shadow:none;}
 .brand-caption{font:600 16px var(--font-ui);color:var(--text);letter-spacing:0;}
 #navbar .nav-links a{font:500 14px var(--font-ui);letter-spacing:0;text-transform:none;color:var(--text2);padding:10px 14px;}
 #navbar .nav-links a:hover,#navbar .nav-links a[aria-current]{color:var(--cyan);background:var(--surface2);}
@@ -63,7 +64,7 @@ footer{margin-top:24px;border-top:1px solid var(--border);background:var(--bg2);
  .wu-main.wu-hub{grid-template-columns:195px minmax(0,1fr);gap:18px;}
 }
 @media(max-width:640px){
- .brand-caption{display:none;}
+ .brand-caption,.nav-logo .zeus-expansion{display:none;}
  .wu-main.wu-hub{display:block;padding:88px 12px 32px;}
  .wu-sidebar-title{font-size:1.15rem;}
  .wu-author-link{margin-bottom:12px;}
@@ -103,7 +104,7 @@ footer{margin-top:24px;border-top:1px solid var(--border);background:var(--bg2);
 .chart-fallback{padding:24px;color:var(--text2);font-size:.9rem;}
 
 /* Shared theme accents. */
-.brand-mark{font-family:var(--font-ui);background:var(--surface);color:var(--cyan);border:1px solid var(--border);box-shadow:var(--glow-sm);}
+.brand-mark:not(.zeus-emblem){font-family:var(--font-ui);background:var(--surface);color:var(--cyan);border:1px solid var(--border);box-shadow:var(--glow-sm);}
 .wu-sidebar .wu-filter.active{background:var(--cyan);color:var(--bg);}
 .wu-card{border-radius:var(--radius);}
 .grid-bg,.scanlines{pointer-events:none;}

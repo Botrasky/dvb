@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="280" viewBox="0 0 480 280" style="--ink:#a7cbff">
+  <defs>
+    <radialGradient id="ground" cx=".62" cy=".38" r=".82"><stop stop-color="#2a5187"/><stop offset="1" stop-color="#12223f"/></radialGradient>
+    <linearGradient id="glass" x2="1" y2="1"><stop stop-color="#a7cbff" stop-opacity=".31"/><stop offset="1" stop-color="#12223f" stop-opacity=".74"/></linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0v24" fill="none" stroke="#a7cbff" stroke-opacity=".095"/></pattern>
+  </defs>
+  <path fill="url(#ground)" d="M0 0h480v280H0z"/>
+  <path fill="url(#grid)" d="M0 0h480v280H0z"/>
+  <g fill="none" stroke="#a7cbff" stroke-opacity=".24" stroke-width="1.4">
+    <path d="M20 82V24h58m324 0h58v58M20 198v58h58m324 0h58v-58"/>
+    <path d="M0 138h50m380 0h50M240 0v20m0 240v20" stroke-dasharray="4 5"/>
+  </g>
+  <g fill="none" stroke="#a7cbff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<g fill="url(#glass)"><ellipse cx="240" cy="139" rx="115" ry="35"/><ellipse cx="240" cy="139" rx="115" ry="35" transform="rotate(60 240 139)"/><ellipse cx="240" cy="139" rx="115" ry="35" transform="rotate(-60 240 139)"/></g>
+<circle cx="240" cy="139" r="19" fill="#e0ebff" stroke="none"/>
+<circle cx="149" cy="119" r="7" fill="#f0f7ff" stroke="none"/><circle cx="295" cy="71" r="7" fill="#f0f7ff" stroke="none"/><circle cx="299" cy="208" r="7" fill="#f0f7ff" stroke="none"/>
+<path d="M88 106V72h28m247 136h28v-34M104 200h51m171-119h51" opacity=".58"/>
+  </g>
+  <g fill="#a7cbff" fill-opacity=".44"><circle cx="30" cy="248" r="2.5"/><circle cx="39" cy="248" r="2.5"/><circle cx="48" cy="248" r="2.5"/><path d="M424 245h22v3h-22z"/></g>
+</svg>

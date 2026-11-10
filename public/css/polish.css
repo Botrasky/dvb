@@ -1,0 +1,63 @@
+/* Shared scale, soft light surfaces and context-specific navigation motion. */
+@media(min-width:1100px){
+  html:root{font-size:18px;}
+  body .dash-shell{max-width:1440px;padding:38px 42px 52px;}
+  body .dash-header{max-width:1520px;padding:20px 42px;}
+  body .dash-nav a{font-size:1rem;}
+  body .dash-brand{font-size:1.05rem;}
+  body .mission{min-height:360px;}
+  body .topic-card{padding:18px;}
+  body .lab-card{padding:22px;}
+  body .author-shell{max-width:1120px;}
+  body .wu-main.wu-hub{max-width:1440px;}
+}
+html.light-mode body{
+  --cloud-card:radial-gradient(ellipse at 8% 0%,#fafbfc 0%,transparent 58%),radial-gradient(ellipse at 96% 100%,#cbd1d9 0%,transparent 65%),linear-gradient(135deg,#eef0f3,#dce1e7 55%,#edf0f3);
+}
+html.light-mode body :is(.panel:not(.mission),.wu-card,.about-card,.exp-card,.ach-card,.edu-card,.road-card,.cta-box,.chart-wrap,.article-contents,.wu-insight,.wu-glance>div){
+  background:var(--cloud-card)!important;
+  border-color:#bec8d3!important;
+  box-shadow:inset 0 1px 0 #ffffffb3,0 9px 24px #26364d0c!important;
+}
+html.light-mode body .wu-card-content{background:var(--cloud-card);}
+/* The hero retains its own identity, with a misty grey surface in light mode. */
+html.light-mode body .mission{background:radial-gradient(ellipse at 90% 30%,#c1cdd2,transparent 65%),linear-gradient(130deg,#edf0f2,#cbd5da)!important;color:#152c36;border-color:#b2c1ca;}
+html.light-mode body .mission :is(.eyebrow,.quiet-link){color:#145c4c;}
+html.light-mode body .mission-copy>p:not(.eyebrow){color:#324e5b;}
+html.light-mode body .mission-art{filter:brightness(.45);opacity:.45;}
+html.light-mode body .mission .primary{background:#175f50;color:#fff;}
+html.light-mode body .mission :focus-visible{outline-color:#145c4c;}
+@view-transition{navigation:none;}
+@media(prefers-reduced-motion:no-preference){
+  html::view-transition-old(root){animation:page-away 180ms ease both!important;}
+  html::view-transition-new(root){animation:page-dashboard 480ms cubic-bezier(.16,1,.3,1) both!important;}
+  html:has(.page-library)::view-transition-new(root){animation-name:page-library!important;}
+  html:has(.author-shell)::view-transition-new(root){animation-name:page-author!important;}
+  html:has(.page-about)::view-transition-new(root){animation-name:page-portfolio!important;}
+  html:has(.wu-article)::view-transition-new(root){animation-name:page-article!important;}
+  html:has(.theme-changing)::view-transition-old(root){animation:theme-fade 200ms ease reverse both!important;}
+  html:has(.theme-changing)::view-transition-new(root){animation:theme-fade 200ms ease both!important;}
+  .dash-header,#navbar{view-transition-name:site-header;}
+  ::view-transition-group(site-header){animation-duration:380ms;}
+}
+@keyframes page-away{to{opacity:0;transform:translateY(-8px);}}
+@keyframes page-dashboard{from{opacity:0;transform:scale(.975) translateY(16px);}to{opacity:1;transform:none;}}
+@keyframes page-library{from{opacity:0;transform:translateX(32px);}to{opacity:1;transform:none;}}
+@keyframes page-author{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:none;}}
+@keyframes page-portfolio{from{opacity:0;transform:scale(.98);}to{opacity:1;transform:none;}}
+@keyframes page-article{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+@keyframes theme-fade{from{opacity:0;}to{opacity:1;}}
+@media(prefers-reduced-motion:reduce){
+  @view-transition{navigation:none;}
+  html::view-transition-old(root),html::view-transition-new(root){animation:none!important;}
+}
+
+/* Match the older site: the observer adds a class and CSS stages the arrival. */
+@keyframes site-arrival{
+  from{opacity:0;transform:translateX(var(--entrance-x));}
+  to{opacity:1;transform:translateX(0);}
+}
+@media(prefers-reduced-motion:no-preference){
+  html body .site-arrive{animation:site-arrival 880ms cubic-bezier(.2,.76,.26,1) var(--entrance-delay) backwards;}
+}
+html.site-motion-on body .site-arrive{animation:site-arrival 880ms cubic-bezier(.2,.76,.26,1) var(--entrance-delay) backwards!important;}

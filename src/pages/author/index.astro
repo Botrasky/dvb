@@ -1,0 +1,19 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+---
+
+<SiteLayout title="Author | ZEUS" current="author">
+  <main id="main" class="dash-shell author-shell">
+    <section class="author-intro panel" aria-labelledby="author-title">
+      <span class="author-initials" aria-hidden="true">VB</span>
+      <p class="eyebrow">The person behind ZEUS</p>
+      <h1 id="author-title">Vathanak Botra Dos</h1>
+      <p class="bio">I’m a SOC analyst in Phnom Penh. I use this site to share what I learn from cybersecurity labs and capture-the-flag challenges, including the mistakes and lessons along the way.</p>
+      <div class="author-actions"><a class="dash-button primary" href="/portfolio/">View my portfolio <span aria-hidden="true">↗</span></a><a class="quiet-link" href="/portfolio/#contact">Get in touch ↗</a></div>
+    </section>
+    <div class="dash-section author-detail">
+      <section class="panel"><p class="eyebrow">The writeups</p><h2>How I solved each lab</h2><p>Each writeup explains what I tried, what worked, and what the lab taught me.</p><a class="quiet-link" href="/writeups/">Explore the library ↗</a></section>
+      <section class="panel"><p class="eyebrow">The portfolio</p><h2>Experience and projects</h2><p>My portfolio covers my SOC work, technical projects, certifications, and education.</p><a class="quiet-link" href="/portfolio/#experience">View experience ↗</a></section>
+    </div>
+  </main>
+</SiteLayout>

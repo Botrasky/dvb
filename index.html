@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="An independent cybersecurity learning dashboard with hands-on labs, CTF writeups, and updates from trusted security publishers.">
-  <title>DVB Cyber Lab | Cybersecurity Learning Dashboard</title>
+  <title>ZEUS | Cybersecurity Learning Dashboard</title>
   <script src="js/fx-head.js?v=20261109-cyber-layout"></script>
   <link rel="stylesheet" href="css/base.css?v=motion-2">
-  <link rel="stylesheet" href="css/dashboard.css?v=motion-2">
+  <link rel="stylesheet" href="css/dashboard.css?v=threat-sources-1">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="dashboard-page">
   <a class="dash-skip" href="#main">Skip to content</a>
   <header class="dash-header">
-    <a class="dash-brand" href="index.html"><span class="dash-logo" aria-hidden="true">D</span><span>DVB <strong>Cyber Lab</strong></span></a>
+    <a class="dash-brand" href="index.html" aria-label="ZEUS home"><span class="zeus-emblem" aria-hidden="true"><span class="zeus-glyph">Z</span><span class="zeus-word">ZEUS</span></span><span class="zeus-expansion">Zone for Exploration and<br>Understanding of Security</span></a>
     <nav class="dash-nav" aria-label="Main navigation">
       <a href="index.html" aria-current="page">Dashboard</a>
       <a href="writeups/index.html">Writeups</a>
@@ -54,17 +54,22 @@
             <span class="brief-thumb-image" id="brief-thumb-image"></span>
           </div>
           <div class="brief-story">
-            <p class="brief-source" id="brief-source">NIST · Standards</p>
+            <div class="brief-source-row">
+              <span class="brief-source-mark" id="brief-source-mark" aria-hidden="true"><img alt="" /></span>
+              <p class="brief-source" id="brief-source">NIST · Standards</p>
+              <time class="brief-date" id="brief-date"></time>
+            </div>
             <h3 id="brief-headline">NIST Cybersecurity Framework 2.0</h3>
             <p id="brief-summary">Start with the framework behind many cybersecurity programs. It covers how to govern, identify, protect, detect, respond, and recover.</p>
-            <a class="brief-original" id="brief-link" href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20">Read original <span aria-hidden="true">↗</span></a>
+            <a class="brief-original" id="brief-link" href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20" target="_blank" rel="noopener noreferrer">Read original source <span aria-hidden="true">↗</span></a>
+            <p class="brief-trust"><span aria-hidden="true">✓</span> Linked to the publisher’s original page</p>
           </div>
         </div>
         <div class="brief-controls" id="brief-controls" hidden>
-          <span id="brief-counter">01 / 06</span>
+          <span id="brief-counter">01 / 08</span>
           <div><button type="button" id="brief-play" aria-label="Play slideshow">Play</button><button type="button" id="brief-prev" aria-label="Previous story">←</button><button type="button" id="brief-next" aria-label="Next story">→</button></div>
         </div>
-        <div class="brief-sources" aria-label="News sources"><a href="https://csrc.nist.gov/news">NIST</a><a href="https://cloudsecurityalliance.org/blog">Cloud Security Alliance</a><a href="https://blog.cloudflare.com/tag/security/">Cloudflare</a><a href="https://nvd.nist.gov/vuln/search">NVD</a><a href="https://thehackernews.com/">The Hacker News</a><a href="https://www.bleepingcomputer.com/news/security/">BleepingComputer</a></div>
+        <div class="brief-sources" aria-label="News sources"><a href="https://csrc.nist.gov/news">NIST</a><a href="https://cloudsecurityalliance.org/blog">Cloud Security Alliance</a><a href="https://blog.cloudflare.com/tag/security/">Cloudflare</a><a href="https://unit42.paloaltonetworks.com/">Palo Alto Unit 42</a><a href="https://www.ibm.com/think/x-force">IBM X-Force</a><a href="https://nvd.nist.gov/vuln/search">NVD</a><a href="https://thehackernews.com/">The Hacker News</a><a href="https://www.bleepingcomputer.com/news/security/">BleepingComputer</a></div>
       </section>
     </div>
 
@@ -93,9 +98,9 @@
       <div class="author-actions"><a class="dash-button secondary" href="author.html">Meet the author</a><a class="quiet-link" href="about.html">View portfolio ↗</a></div>
     </section>
   </main>
-  <footer class="dash-footer"><span>DVB Cyber Lab <span aria-hidden="true">/</span> Independent cybersecurity notes</span><div><a href="writeups/index.html">Writeups</a><a href="about.html#contact">Contact</a></div></footer>
+  <footer class="dash-footer"><span>ZEUS <span aria-hidden="true">/</span> Zone for Exploration and Understanding of Security</span><div><a href="writeups/index.html">Writeups</a><a href="about.html#contact">Contact</a></div></footer>
   <script src="js/theme.js?v=motion-2"></script>
-  <script src="js/dashboard.js?v=motion-2"></script>
+  <script src="js/dashboard.js?v=threat-sources-2"></script>
 <script src="js/motion.js?v=1"></script>
 </body>
 </html>

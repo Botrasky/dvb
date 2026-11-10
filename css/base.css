@@ -163,6 +163,45 @@
   color: #ffffff;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ZEUS brand mark: a quiet wordmark with a soft, living signal glow. */
+.zeus-emblem{
+  position:relative;isolation:isolate;display:grid;place-items:center;
+  grid-template-rows:26px 8px;width:48px;height:46px;flex:0 0 48px;
+  color:var(--cyan);line-height:1;
+}
+.zeus-emblem::before{
+  content:"";position:absolute;inset:-9px;z-index:-1;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,241,208,.34) 0%,rgba(139,241,208,.12) 38%,transparent 72%);
+  filter:blur(5px);opacity:.68;transform:scale(.88);
+}
+.zeus-glyph{
+  align-self:end;font:800 25px/.9 var(--font-ui);letter-spacing:-.09em;
+  margin-left:-.08em;color:var(--cyan);
+  text-shadow:0 0 5px rgba(139,241,208,.9),0 0 15px rgba(139,241,208,.55),0 0 30px rgba(139,241,208,.25);
+}
+.zeus-word{
+  align-self:start;font:800 7px/1 var(--font-ui);letter-spacing:.24em;
+  margin-top:2px;margin-left:.24em;color:var(--text);
+}
+.zeus-expansion{
+  color:var(--text2);font:600 10px/1.25 var(--font-ui);letter-spacing:.015em;
+  white-space:normal;max-width:190px;
+}
+.light-mode .zeus-emblem::before{opacity:.38;}
+.light-mode .zeus-glyph{text-shadow:0 0 5px rgba(20,102,84,.42),0 0 14px rgba(20,102,84,.18);}
+@media(prefers-reduced-motion:no-preference){
+  .zeus-emblem::before{animation:zeus-radiance 3.6s ease-in-out infinite;}
+  .zeus-glyph{animation:zeus-signal 3.6s ease-in-out infinite;}
+}
+@keyframes zeus-radiance{
+  0%,100%{opacity:.42;transform:scale(.82);}
+  50%{opacity:.9;transform:scale(1.08);}
+}
+@keyframes zeus-signal{
+  0%,100%{filter:brightness(.92);}
+  50%{filter:brightness(1.28);}
+}
 html{scroll-behavior:smooth;font-size:16px}
 body{
   font-family:var(--font-ui);
