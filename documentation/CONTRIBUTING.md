@@ -1,19 +1,18 @@
-# CI/CD policy
+# CI/CD & Contribution Policy
 
-This applies to everyone who changes this repo: the owner (@Botrasky), Claude Code, and any other AI agent or person. AI agents must also follow [AGENTS.md](AGENTS.md).
+This applies to everyone who changes this repo: the owner (@Botrasky), Claude Code, Codex, and any other AI agent or contributor. AI agents must also follow [AGENTS.md](../AGENTS.md) and [documentation/ai-agent-role-manager.md](ai-agent-role-manager.md).
 
-## Layout
+## Project Architecture & Layout
 
-The site is plain static files with no build step.
+The project is an **Astro + TypeScript** application targeting static deployment on Vercel.
 
 | Path | Contents |
 | --- | --- |
-| `index.html` | Page markup only. |
-| `css/` | Styles, one file per area. They are loaded in the order listed in `index.html`, and that order matters. |
-| `js/` | Scripts, one file per feature, also loaded in the order listed in `index.html`. |
-| `assets/certificates/` | Certificate images used by the slideshow. |
-| `writeups/` | CTF / lab writeups: `index.html` is the hub, each lab is `writeups/<slug>/index.html`. Shared `writeups.css` + `writeups.js`. |
-| `scripts/ci-check.sh` | The checks CI runs. |
+| `src/` | Astro routes, components (`ThreatBrief.astro`), layouts (`SiteLayout.astro`), and typed content configurations. |
+| `public/` | Static assets served directly (favicons, images, certificates). |
+| `documentation/` | Authoritative architecture, charter, migration plans, and agent guides. |
+| `writeups/` | Writeup source content, lab walkthroughs, and challenge reports. |
+| `scripts/ci-check.sh` | Local security and integrity checks run before pushing. |
 
 ## Branches
 

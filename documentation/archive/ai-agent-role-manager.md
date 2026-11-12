@@ -37,6 +37,27 @@ All co-leads must:
 - Run or verify the relevant checks.
 - Report incomplete work, blockers, regressions, and deployment status honestly.
 
+### Universal owner-control protocol
+
+This protocol applies equally to ChatGPT, Codex, Claude, AGY, and any future AI
+agent used on the project:
+
+1. Before editing code, the agent states the objective, exact files, intended
+   behavior, tests, assumptions, and explicit out-of-scope boundaries.
+2. The agent waits for the author's approval before editing.
+3. After approval, the agent implements and tests autonomously within the
+   approved boundaries and does not ask about routine internal coding choices.
+4. The agent stops and requests fresh approval if implementation would affect a
+   new file, behavior, dependency, or area outside the approved scope.
+5. After editing and testing, the agent shows the complete diff and explains
+   material lines, assumptions, results, and limitations.
+6. The agent does not commit until the author approves the reviewed diff.
+7. Commit, push, pull request, merge, deployment, and production change are
+   separate actions; approval for one does not authorize the next.
+
+Notification alone is not approval. The author must remain able to understand,
+tune, reject, or stop every code change before it is committed.
+
 Additional coordination rules:
 
 - ChatGPT, Claude, and Codex should not edit the same files simultaneously.
@@ -83,6 +104,9 @@ AGY must not:
 - Override Codex’s implementation decisions
 - Be treated as authoritative without verification
 
+AGY remains read-only by default. The universal protocol does not grant AGY
+write or commit authority.
+
 ## Single source of truth
 
 The repository is the shared source of truth. Conversation context is not automatically shared between agents.
@@ -108,15 +132,19 @@ git log -5 --oneline --decorate
 ```text
 Request
   ↓
-Codex clarifies scope and reads project instructions
+Assigned agent proposes exact scope and reads project instructions
   ↓
-Codex updates or follows MIGRATION_PLAN.md
+Author approves files, behavior, tests, and exclusions
   ↓
-Codex implements on a feature branch
+Assigned agent updates or follows MIGRATION_PLAN.md
+  ↓
+Assigned agent implements the approved scope on a feature branch
   ↓
 Claude and/or AGY perform independent review when useful
   ↓
-Codex verifies findings and applies fixes
+Implementer shows the complete diff; author approves before commit
+  ↓
+Codex verifies findings and integration
   ↓
 Checks, build, and preview review
   ↓

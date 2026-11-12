@@ -147,20 +147,36 @@ Acceptance criteria:
 
 ### Phase 2.5 — Migrate the portfolio and author pages
 
-Goal: replace placeholder routes with the full existing portfolio content.
+Goal: replace the legacy portfolio bridge with a native Astro page that matches or improves the existing public portfolio.
 
 Tasks:
 
-1. Convert the current author page into Astro components.
-2. Convert the current portfolio/about page into Astro sections.
-3. Preserve experience, education, credentials, projects, charts, and contact anchors.
-4. Move repeated timeline/card structures into data objects or typed collections.
-5. Add metadata and social preview information for each route.
+1. Treat `about.html` as the parity reference until the native route is approved.
+2. Convert the current author page into native Astro components.
+3. Convert the current portfolio/about page into these native sections:
+   - Hero identity, role, typing line, calls to action, and summary stats
+   - About and profile details
+   - Skills charts, domain distribution, proficiency levels, and tech stack
+   - Career timeline
+   - Full certification and achievement grid
+   - Academic background
+   - Career roadmap
+   - Writeup showcase
+   - Contact details and external profile links
+4. Move repeated experience, skill, credential, education, and project data into typed data modules.
+5. Reuse the existing certificate assets with deliberate alt text and safe external links.
+6. Reconnect the typing animation, charts, theme behavior, and reduced-motion handling as small client-side scripts.
+7. Create portfolio-specific styles instead of relying on accidental legacy selectors.
+8. Add metadata, canonical URL, and social preview information for each route.
+9. Keep the legacy portfolio available until the native route passes the parity checklist.
 
 Acceptance criteria:
 
-- `/author/` and `/portfolio/` contain the same or improved content as the legacy pages.
-- All internal navigation and contact anchors work.
+- `/author/` and `/portfolio/` are native Astro pages with no `set:html` legacy bridge.
+- Every meaningful section from the legacy portfolio is present or intentionally replaced with documented approval.
+- The typing line, charts, theme switcher, and reduced-motion behavior work in a real browser.
+- All certificate images, internal links, contact anchors, and external profile links work.
+- Desktop and mobile layouts are visually reviewed against the legacy reference.
 - No personal information is unintentionally exposed beyond the existing public site.
 
 ### Phase 2.6 — Migrate the threat-feed API
@@ -215,7 +231,7 @@ Acceptance criteria:
 
 ### Phase 2.8 — Visual and functional parity review
 
-Goal: prove the Astro version is at least as good as the legacy site before cutover.
+Goal: prove the Astro version is at least as good as the legacy site before cutover. A passing build is not enough; this phase requires browser evidence.
 
 Review matrix:
 
@@ -225,7 +241,7 @@ Review matrix:
 | Threat feed | Live feeds, fallback picks, slideshow | API, fallback, logos, dates, animation |
 | Writeups | Index, filters, detail pages | Collection index, filters, dynamic routes |
 | Author | Bio and credentials | Migrated content and metadata |
-| Portfolio | Experience and contact | Migrated sections and anchors |
+| Portfolio | Hero, charts, experience, credentials, education, roadmap, writeups, contact | Native sections, assets, charts, animations, anchors |
 | Theme | Dark/light persistence | Shared layout behavior on every route |
 | Responsive | Mobile/tablet/desktop | Visual checks at defined breakpoints |
 | Accessibility | Keyboard and reduced motion | Focus, labels, landmarks, motion preference |
@@ -234,8 +250,42 @@ Review matrix:
 Acceptance criteria:
 
 - No critical route, asset, or API regressions remain.
-- Desktop and mobile screenshots are reviewed for each major route.
+- Desktop screenshots are reviewed at 1440px and 1280px widths.
+- Mobile screenshots are reviewed at approximately 390px and 768px widths.
+- Theme switching persists after reload on homepage, writeups, author, and portfolio routes.
+- Threat-feed typing, play/pause, next/previous, image fallback, and live API refresh are tested.
+- Writeup filters, search, native report rendering, and legacy fallback rendering are tested.
+- Keyboard navigation reaches every interactive control with visible focus.
+- Reduced motion leaves content visible and disables non-essential motion.
+- No horizontal overflow or clipped content appears at mobile widths.
 - Lighthouse and accessibility checks meet the agreed baseline.
+
+### Agent-assisted review protocol
+
+Use agents to accelerate review without creating conflicting edits:
+
+1. Codex or Claude owns implementation and browser-test preparation.
+2. AGY may perform a read-only parity audit against this plan and the legacy pages.
+3. AGY must run in sandbox plan mode and must not edit, commit, push, or deploy.
+4. Codex verifies every AGY finding against the current branch before changing code.
+5. The author approves the final parity result before release.
+
+Recommended AGY audit prompt:
+
+```text
+Read AGENTS.md, MIGRATION_PLAN.md, about.html, author.html, and the native Astro routes.
+Perform a read-only parity audit. List missing sections, assets, interactions, accessibility risks,
+and exact browser acceptance tests. Do not modify files, commit, push, or deploy.
+```
+
+Required review record:
+
+- Browser and preview URL tested
+- Viewports tested
+- Routes tested
+- Interactions tested
+- Accessibility observations
+- Remaining differences approved by the author
 
 ### Phase 2.9 — Cutover and cleanup
 
