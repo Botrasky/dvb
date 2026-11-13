@@ -522,6 +522,17 @@ small owner-approved slices:
 - Blockers or risks: The local branch is 59 commits ahead of the cached `origin/main`; remote synchronization must be confirmed before pushing. The existing PR #83 targets `test`, not `main`.
 - Owner decision needed: Confirm whether to push local `main` to `origin/main`, or review the local merge first.
 
+### 2026-11-13 — Refine light-mode writeup card colors
+
+- Agent: Codex, visual accessibility refinement.
+- Approved scope: Replace the bright blue writeup-card body in light mode with a restrained navy treatment and improve the low-contrast “read →” action; leave dark mode, card content, routes, and layout unchanged.
+- Files changed: `css/base.css`, `css/polish.css`, their served `public/css/` mirrors, and this progress record.
+- Completed: Applied a navy gradient (`#102f4b` → `#173f63` → `#1d5270`), white and pale-blue text, and a high-contrast mint action pill (`#9df0d0` with `#0b2e42` text). Bumped the served polish stylesheet cache key.
+- Planned next: Commit, push, and merge the owner-approved color refinement into `main`.
+- Tests/evidence: `npm run format:check`, `npm run check`, `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` passed.
+- Blockers or risks: The Codex shell cannot keep the Astro development server running; the owner must start the local preview from the VS Code terminal.
+- Owner decision needed: Approved in the local preview on 2026-11-13; authorized for push and merge.
+
 ## Operating rules
 
 ## Scheduled implementation roadmap

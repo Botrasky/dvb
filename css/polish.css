@@ -22,13 +22,35 @@ html.light-mode body :is(.panel:not(.mission),.wu-card,.about-card,.exp-card,.ac
 html.light-mode body .wu-card-content{background:var(--cloud-card);}
 html.light-mode body .wu-card,
 html.light-mode body .wu-card-content{
-  background:#2f6f95!important;
-  border-color:#2f6678!important;
-  color:#f4fffd!important;
-  box-shadow:0 10px 26px #07152224!important;
+  background:#173f63!important;
+  border-color:#2e6683!important;
+  color:#f7fbff!important;
+  box-shadow:0 10px 26px #07152220!important;
 }
-html.light-mode body .wu-card :is(.wu-card-title,.wu-card-hook,.wu-card-meta){color:#f4fffd!important;}
-html.light-mode body .wu-card .wu-card-meta{border-color:#31566a!important;}
+html.light-mode body .wu-card-content{
+  background:linear-gradient(145deg,#102f4b 0%,#173f63 62%,#1d5270 120%)!important;
+}
+html.light-mode body .wu-card :is(.wu-card-title,.wu-card-hook,.wu-card-meta){color:#f7fbff!important;}
+html.light-mode body .wu-card .wu-card-hook{color:#d9e8f2!important;}
+html.light-mode body .wu-card .wu-card-meta{border-color:#ffffff30!important;color:#d5e5ef!important;}
+html.light-mode body .wu-card .wu-card-meta .arrow{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:28px;
+  padding:4px 10px;
+  border:1px solid #c8ffec;
+  border-radius:999px;
+  background:#9df0d0!important;
+  color:#0b2e42!important;
+  box-shadow:0 3px 10px #051b2826;
+  font-weight:700;
+  letter-spacing:.02em;
+}
+html.light-mode body .wu-card:is(:hover,:focus-visible) .wu-card-meta .arrow{
+  background:#f7fffc!important;
+  color:#0d4360!important;
+}
 /* Dashboard featured surfaces use a deliberate navy treatment in light mode. */
 html.light-mode body.dashboard-page :is(.brief,.featured-grid .lab-card){
   background:#173f63!important;
