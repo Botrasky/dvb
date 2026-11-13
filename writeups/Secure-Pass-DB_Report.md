@@ -1,3 +1,15 @@
+---
+title: Secure Password Database
+slug: secure-pass-db
+summary: A buffer overread exposes data that should stay private.
+topic: re
+difficulty: Medium
+platform: CyLab Security Academy
+cover: /assets/writeup-covers/secure-pass-db.svg
+date: 2026-07-19
+status: published
+---
+
 # Security Assessment Report — Secure Password Database
 
 | Field | Value |

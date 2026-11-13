@@ -5,6 +5,50 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 <SiteLayout title="Author | ZEUS" current="author">
   <main id="main" class="dash-shell author-shell">
     <section class="author-intro panel" aria-labelledby="author-title">
+      <div class="author-hacker-scene" data-hacker-scene>
+        <svg viewBox="0 0 440 510" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="hood-fabric" x2="1" y2="1"><stop stop-color="#314c60" /><stop offset="1" stop-color="#111b2b" /></linearGradient>
+            <linearGradient id="face-light" x2="1" y2="1"><stop stop-color="#d7a485" /><stop offset="1" stop-color="#6fa899" /></linearGradient>
+            <radialGradient id="scene-halo"><stop stop-color="#45dcc3" stop-opacity=".24" /><stop offset="1" stop-color="#45dcc3" stop-opacity="0" /></radialGradient>
+          </defs>
+          <ellipse cx="220" cy="195" rx="190" ry="175" fill="url(#scene-halo)" />
+          <g fill="none" stroke="#57cbbd" opacity=".2"><path d="M35 145h42v-32h35M330 113h42v32h32M40 300h34M366 300h34" /><circle cx="112" cy="113" r="3" /><circle cx="328" cy="113" r="3" /></g>
+          <!-- Front-facing, centered torso. -->
+          <path class="hacker-torso" d="M96 318q10-76 65-91l59-17 59 17q55 15 65 91Z" fill="url(#hood-fabric)" stroke="#547684" stroke-width="2" />
+          <path d="M160 228l60 54 60-54M220 282v38" fill="none" stroke="#6b8c98" stroke-width="2" />
+          <g class="hacker-head">
+            <path class="hacker-hood" d="M132 190q-18-55 7-116 24-44 81-44t81 44q25 61 7 116l-36 40h-104Z" fill="url(#hood-fabric)" stroke="#76c9bf" stroke-width="2" />
+            <path class="hacker-shadow" d="M154 133q2-65 66-73 64 8 66 73l-20 71-46 30-46-30Z" fill="#050c16" />
+            <path d="M178 190l42 31 42-31-9 30-33 25-33-25Z" fill="#091321" />
+            <text class="hood-mark" x="220" y="158" text-anchor="middle" fill="#9affdd" font-family="system-ui,sans-serif" font-size="48" font-weight="850">Z</text>
+          </g>
+          <!-- Straight rectangular laptop, centered on the same axis. -->
+          <rect x="72" y="286" width="296" height="166" rx="10" fill="#1a2937" stroke="#4d7e86" stroke-width="2" />
+          <rect x="84" y="298" width="272" height="142" rx="4" fill="#071a20" stroke="#58b5aa" stroke-width="1.5" />
+          <path d="M207 298h26v5h-26Z" fill="#1a2937" />
+          <circle cx="220" cy="301" r="1.5" fill="#6d8793" />
+          <path d="M85 330h270" stroke="#24434c" />
+          <g fill="#6bada5"><circle cx="98" cy="317" r="3" /><circle cx="110" cy="317" r="3" /><circle cx="122" cy="317" r="3" /></g>
+          <g class="terminal-copy" font-family="monospace" font-size="17" fill="#a5ffe0">
+            <text x="136" y="320" fill="#8ab4b1" font-size="10">ZEUS / LOCAL LAB · DEMO</text>
+            <text x="104" y="365" data-terminal-command>$ whoami</text>
+            <text x="104" y="396" data-terminal-result fill="#97d6c6" font-size="12">zeus — security researcher</text>
+            <text x="104" y="426" fill="#608a89" font-size="10">~/zeus · main</text>
+          </g>
+          <!-- Hands are drawn before the front edge so they sit behind it. -->
+          <g class="hacker-hand hand-left" fill="url(#face-light)" stroke="#477f79" stroke-width="1.4"><path d="M143 423q15-12 30-2l35 16q6 5 0 11l-29-7 25 14q1 7-6 7l-31-14 18 13q-1 6-8 3l-37-20q-5-7 3-21Z" /></g>
+          <g class="hacker-hand hand-right" fill="url(#face-light)" stroke="#477f79" stroke-width="1.4"><path d="M297 423q-15-12-30-2l-35 16q-6 5 0 11l29-7-25 14q-1 7 6 7l31-14-18 13q1 6 8 3l37-20q5-7-3-21Z" /></g>
+          <path d="M50 452h340l20 25H30Z" fill="#1c2d3a" stroke="#4d7e86" stroke-width="1.5" />
+          <path d="M194 456h52l8 8h-68Z" fill="#294858" />
+          <g class="hacker-hand hand-left" fill="url(#face-light)" stroke="#477f79" stroke-width="1.4">
+            <path d="M139 423q13-12 27-5l35 20q7 5 1 11l-28-10 25 17q2 7-5 8l-31-17 18 16q-2 6-8 3l-37-23q-6-6 3-20Z" />
+          </g>
+          <g class="hacker-hand hand-right" fill="url(#face-light)" stroke="#477f79" stroke-width="1.4">
+            <path d="M301 420q-13-12-27-5l-35 20q-7 5-1 11l28-10-25 17q-2 7 5 8l31-17-18 16q2 6 8 3l37-23q6-6-3-20Z" />
+          </g>
+        </svg>
+      </div>
       <span class="author-initials" aria-hidden="true">VB</span>
       <p class="eyebrow">The person behind ZEUS</p>
       <h1 id="author-title">Vathanak Botra Dos</h1>
@@ -17,3 +61,84 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
     </div>
   </main>
 </SiteLayout>
+
+<style>
+  .author-intro{position:relative;isolation:isolate;overflow:hidden;min-height:540px;padding-right:44%;}
+  .author-intro>*:not(.author-hacker-scene){position:relative;z-index:1;}
+  .author-hacker-scene{position:absolute;right:10px;bottom:12px;width:43%;max-width:440px;}
+  .author-hacker-scene svg{display:block;width:100%;height:auto;}
+  .hood-mark{filter:drop-shadow(0 0 5px #68ffd1) drop-shadow(0 0 15px #30bdac);}
+  .hacker-hand{opacity:.46;transform:translateY(14px);}
+  html.light-mode .author-hacker-scene .hacker-torso,
+  html.light-mode .author-hacker-scene .hacker-hood{fill:#1b2b3a!important;stroke:#397c80;}
+  html.light-mode .author-hacker-scene .hacker-shadow{fill:#050c16!important;}
+  html.light-mode .author-hacker-scene .hood-mark{fill:#9affdd!important;}
+  .author-hacker-scene[data-running="true"] .hand-left{animation:hand-tap .213s ease-in-out infinite alternate!important;}
+  .author-hacker-scene[data-running="true"] .hand-right{animation:hand-tap .247s .08s ease-in-out infinite alternate-reverse!important;}
+  .author-hacker-scene[data-running="true"] .hacker-head{animation:head-nod 2.133s ease-in-out infinite!important;transform-origin:210px 200px;}
+  @keyframes hand-tap{from{transform:translateY(14px);}to{transform:translateY(10px) rotate(.7deg);}}
+  @keyframes head-nod{50%{transform:rotate(1.5deg) translateY(2px);}}
+  @media(prefers-reduced-motion:reduce){
+    :global(html:not(.site-motion-on)) .author-hacker-scene[data-running="true"] .hacker-hand,
+    :global(html:not(.site-motion-on)) .author-hacker-scene[data-running="true"] .hacker-head{animation:none!important;}
+  }
+  @media(max-width:800px){
+    .author-intro{padding-right:24px;padding-bottom:460px;}
+    .author-hacker-scene{width:min(100% - 24px,380px);right:50%;transform:translateX(50%);bottom:10px;}
+  }
+</style>
+
+<script>
+  const scene = document.querySelector<HTMLElement>('[data-hacker-scene]');
+  if (scene) {
+    const command = scene.querySelector('[data-terminal-command]')!;
+    const result = scene.querySelector('[data-terminal-result]')!;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const samples = [
+      ['whoami', 'zeus — security researcher'],
+      ['git diff --check', 'No whitespace errors.'],
+      ['npm run check', '0 errors · 0 warnings'],
+    ];
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let selected = 0;
+    let letter = 0;
+    let holding = false;
+    const tick = () => {
+      if (holding) {
+        selected = (selected + 1) % samples.length;
+        letter = 0;
+        holding = false;
+        result.textContent = '';
+      }
+      const current = samples[selected];
+      if (letter === 0) result.textContent = '';
+      letter = Math.min(letter + 1, current[0].length);
+      command.textContent = '$ ' + current[0].slice(0, letter) + '▌';
+      if (letter === current[0].length) {
+        result.textContent = current[1];
+        holding = true;
+      }
+      timer = setTimeout(tick, holding ? (reduced.matches && !document.documentElement.classList.contains('site-motion-on') ? 2667 : 1067) : 67);
+    };
+    const sync = () => {
+      clearTimeout(timer);
+      const running = !document.hidden && !document.documentElement.classList.contains('site-motion-off');
+      scene.dataset.running = String(running);
+      if (running) tick();
+    };
+    const motionObserver = new MutationObserver(sync);
+    motionObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    reduced.addEventListener('change', sync);
+    document.addEventListener('visibilitychange', sync);
+    const cleanup = () => {
+      clearTimeout(timer);
+      motionObserver.disconnect();
+      reduced.removeEventListener('change', sync);
+      document.removeEventListener('visibilitychange', sync);
+    };
+    document.addEventListener('astro:before-swap', cleanup, { once: true });
+    window.addEventListener('pagehide', cleanup, { once: true });
+    window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });
+    sync();
+  }
+</script>

@@ -1,3 +1,15 @@
+---
+title: Moneybox
+slug: moneybox
+summary: A Linux lab covering hidden clues, reused SSH keys, and unsafe sudo permissions.
+topic: general
+difficulty: Easy
+platform: OffSec Proving Grounds
+cover: /assets/writeup-covers/moneybox.svg
+date: 2026-10-11
+status: published
+---
+
 # Security Assessment Report — Moneybox
 
 | Field | Value |

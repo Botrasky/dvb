@@ -1,4 +1,16 @@
-# Security Assessment Report — VEN RSA Can Be Broken???
+---
+title: Even RSA Can Be Broken??
+slug: ven-rsa
+summary: A weak prime makes an RSA key easier to break.
+topic: crypto
+difficulty: Medium
+platform: CyLab Security Academy
+cover: /assets/writeup-covers/ven-rsa.svg
+date: 2026-05-02
+status: published
+---
+
+# Security Assessment Report — Even RSA Can Be Broken??
 
 | Field | Value |
 |---|---|

@@ -1,3 +1,15 @@
+---
+title: Trust But Verify
+slug: trust-but-verify
+summary: An interactive fiction challenge solved with a small script.
+topic: misc
+difficulty: Easy
+platform: CyLab Security Academy
+cover: /assets/writeup-covers/trust-but-verify.svg
+date: 2026-10-10
+status: published
+---
+
 # Activity Report — Trust But Verify
 
 > **Note on framing.** Trust But Verify is an interactive-fiction *game*, not a
