@@ -9,11 +9,7 @@
   body .topic-card{padding:18px;}
   body .lab-card{padding:22px;}
   body .author-shell{max-width:1120px;}
-<<<<<<< HEAD
-  body .wu-main.wu-hub{max-width:1440px;}
-=======
   body .wu-main.wu-hub{max-width:none;width:100%;}
->>>>>>> origin/feat/astro-refactor-threat-feed
 }
 html.light-mode body{
   --cloud-card:radial-gradient(ellipse at 8% 0%,#fafbfc 0%,transparent 58%),radial-gradient(ellipse at 96% 100%,#cbd1d9 0%,transparent 65%),linear-gradient(135deg,#eef0f3,#dce1e7 55%,#edf0f3);
@@ -24,8 +20,6 @@ html.light-mode body :is(.panel:not(.mission),.wu-card,.about-card,.exp-card,.ac
   box-shadow:inset 0 1px 0 #ffffffb3,0 9px 24px #26364d0c!important;
 }
 html.light-mode body .wu-card-content{background:var(--cloud-card);}
-<<<<<<< HEAD
-=======
 html.light-mode body .wu-card,
 html.light-mode body .wu-card-content{
   background:#2f6f95!important;
@@ -50,7 +44,6 @@ html.light-mode body.dashboard-page :is(.brief,.featured-grid .lab-card) :is(h2,
 html.light-mode body.dashboard-page :is(.brief,.featured-grid .lab-card) :is(.eyebrow,.brief-original,.lab-read span,.brief-sources a:hover){color:#a8ffdf!important;}
 html.light-mode body.dashboard-page :is(.brief-state,.lab-level){background:#193c59!important;border-color:#477b8a!important;color:#f4fffd!important;}
 html.light-mode body.dashboard-page .brief :is(.brief-slide,.brief-source-mark){border-color:#31566a!important;}
->>>>>>> origin/feat/astro-refactor-threat-feed
 /* The hero retains its own identity, with a misty grey surface in light mode. */
 html.light-mode body .mission{background:radial-gradient(ellipse at 90% 30%,#c1cdd2,transparent 65%),linear-gradient(130deg,#edf0f2,#cbd5da)!important;color:#152c36;border-color:#b2c1ca;}
 html.light-mode body .mission :is(.eyebrow,.quiet-link){color:#145c4c;}

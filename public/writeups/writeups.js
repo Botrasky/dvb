@@ -53,8 +53,6 @@
   apply();
 })();
 
-<<<<<<< HEAD
-=======
 // --- Report pages: progressive disclosure and semantic code blocks ---
 (function enhanceReport() {
   const sections = [...document.querySelectorAll('.report-section')];
@@ -86,7 +84,6 @@
   });
 })();
 
->>>>>>> origin/feat/astro-refactor-threat-feed
 // --- Report page: copy buttons on code blocks ---
 document.querySelectorAll('.wu-copy').forEach(btn => {
   btn.addEventListener('click', async () => {

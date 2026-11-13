@@ -263,11 +263,7 @@
 .wu-sidebar .wu-filter{border-radius:6px;text-align:left;padding:10px 12px;}
 .wu-hub :is(a,button):focus-visible{outline:2px solid var(--cyan);outline-offset:3px;}
 .wu-results{min-width:0;}
-<<<<<<< HEAD
-.wu-hub .wu-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:14px;}
-=======
 .wu-hub .wu-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px;}
->>>>>>> origin/feat/astro-refactor-threat-feed
 .wu-hub .wu-card{padding:20px;min-width:0;}
 @media(max-width:900px){
   .wu-main.wu-hub{grid-template-columns:190px minmax(0,1fr);gap:16px;padding-left:14px;padding-right:14px;}
