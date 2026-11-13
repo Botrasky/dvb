@@ -33,7 +33,11 @@ a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,
 .collection-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px;min-height:30px;}
 .collection-toolbar h2{font-size:1rem;font-weight:600;}
 .collection-toolbar span{font-size:.85rem;color:var(--text3);white-space:nowrap;}
+<<<<<<< HEAD
 .wu-hub .wu-grid{gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));}
+=======
+.wu-hub .wu-grid{gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));}
+>>>>>>> origin/feat/astro-refactor-threat-feed
 .wu-hub .wu-card{padding:22px;border-radius:10px;gap:16px;box-shadow:0 2px 4px #00000005;transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;}
 .wu-card::before{display:block;}
 

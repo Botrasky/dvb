@@ -7,12 +7,20 @@ interface Props {
   title: string;
   description?: string;
   current?: 'dashboard' | 'writeups' | 'author' | 'portfolio';
+<<<<<<< HEAD
+=======
+  headHtml?: string;
+>>>>>>> origin/feat/astro-refactor-threat-feed
 }
 
 const {
   title,
   description = 'ZEUS — a cybersecurity learning dashboard with practical labs, writeups, and trusted security research.',
   current = 'dashboard',
+<<<<<<< HEAD
+=======
+  headHtml = '',
+>>>>>>> origin/feat/astro-refactor-threat-feed
 } = Astro.props;
 ---
 
@@ -21,9 +29,24 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+<<<<<<< HEAD
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+=======
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content={description} />
+    <script is:inline>
+      try {
+        const preference = localStorage.getItem('theme');
+        const dark = preference ? preference === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        if (!dark) document.documentElement.classList.add('light-mode');
+      } catch {}
+    </script>
+    <title>{title}</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    {headHtml && <Fragment set:html={headHtml} />}
+>>>>>>> origin/feat/astro-refactor-threat-feed
   </head>
   <body class="dashboard-page">
     <a class="dash-skip" href="#main">Skip to content</a>
@@ -44,8 +67,16 @@ const {
     <script is:inline src="/js/theme.js"></script>
     <script is:inline src="/js/motion.js"></script>
     <footer class="dash-footer">
+<<<<<<< HEAD
       <span>ZEUS <span aria-hidden="true">/</span> Zone for Exploration and Understanding of Security</span>
       <div><a href="/writeups/">Writeups</a><a href="/portfolio/#contact">Contact</a></div>
+=======
+      <div class="dash-footer-identity">
+        <strong>DOS VATHANAK BOTRA</strong>
+        <span>© 2025 Dos Vathanak Botra. All rights reserved. · Adelaide, South Australia</span>
+      </div>
+      <nav aria-label="Footer navigation"><a href="/writeups/">Explore writeups</a><a href="/author/">About the author</a><a href="/portfolio/#contact">Contact</a></nav>
+>>>>>>> origin/feat/astro-refactor-threat-feed
     </footer>
   </body>
 </html>

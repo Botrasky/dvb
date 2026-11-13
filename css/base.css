@@ -48,7 +48,7 @@
 
 /* ---- light-mode nav: floating pill (desktop) ---- */
 @media (min-width: 721px) {
-  .light-mode nav {
+  .light-mode #navbar {
     left: 50%;
     right: auto;
     top: 14px;
@@ -74,7 +74,7 @@
 
 /* mobile: floating pill (inset from edges) */
 @media (max-width: 720px) {
-  .light-mode nav {
+  .light-mode #navbar {
     left: 1rem;
     right: 1rem;
     top: 10px;

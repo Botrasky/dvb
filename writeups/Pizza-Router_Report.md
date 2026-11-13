@@ -1,3 +1,15 @@
+---
+title: Pizza Router
+slug: pizza-router
+summary: A drone routing challenge about memory corruption and callback pointers.
+topic: pwn
+difficulty: Hard
+platform: CyLab Security Academy
+cover: /assets/writeup-covers/pizza-router.svg
+date: 2026-05-03
+status: published
+---
+
 # Security Assessment Report — Pizza Router
 
 | Field | Value |

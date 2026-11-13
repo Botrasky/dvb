@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+<<<<<<< HEAD
+=======
+        with:
+          fetch-depth: 0
+>>>>>>> origin/feat/astro-refactor-threat-feed
       - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
@@ -28,5 +33,13 @@ jobs:
         run: npm run build
       - name: Check built routes and links
         run: npm run check:routes
+<<<<<<< HEAD
+=======
+      - name: Check progress record
+        env:
+          PROGRESS_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          PROGRESS_HEAD_SHA: ${{ github.sha }}
+        run: node scripts/check-progress-record.mjs
+>>>>>>> origin/feat/astro-refactor-threat-feed
       - name: Run repo checks
         run: bash scripts/ci-check.sh

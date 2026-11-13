@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 import { getCollection, render } from 'astro:content';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { readLegacyPage, writeupSlugs } from '../../../lib/legacy-page';
@@ -35,3 +36,42 @@ const page = report ? '' : readLegacyPage(`writeups/${slug}/index.html`)
     </main>
   </SiteLayout>
 ) : <Fragment set:html={page} />}
+=======
+import { getCollection } from 'astro:content';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { readLegacyPage, writeupSlugs } from '../../../lib/legacy-page';
+import '../../../../css/writeup-story.css';
+import '../../../../writeups/writeups.css';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const reports = await getCollection('writeups');
+  const slugs = new Set([
+    ...writeupSlugs(),
+    ...reports.map(report => report.data.slug),
+  ]);
+
+  return [...slugs].map(slug => ({ params: { slug }, props: { slug } }));
+}
+
+const { slug } = Astro.props;
+const reports = await getCollection('writeups');
+const report = reports.find(entry => entry.data.slug === slug);
+const page = readLegacyPage(`writeups/${slug}/index.html`)
+  .replace('<head>', `<head><base href="/writeups/${slug}/">`)
+  .replace('src="../writeups.js?', 'src="/writeups/writeups.js?');
+const legacyStyles = [...page.matchAll(/<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/gi)]
+  .map(match => `<style>${match[1]}</style>`)
+  .join('');
+const legacyMain = (page.match(/<main\b[\s\S]*?<\/main>/i)?.[0] || '')
+  .replace('<main id="main-content"', '<main id="main"')
+  .replace('href="../../index.html" class="wu-back"', 'href="/writeups/" class="wu-back"');
+---
+
+<SiteLayout title={`${report?.data.title ?? slug} — Writeup — Dos Vathanak Botra`} description={report?.data.summary} current="writeups" headHtml={legacyStyles}>
+  <Fragment set:html={legacyMain} />
+  <script is:inline src="/writeups/writeups.js"></script>
+  <script is:inline src="/js/site.js"></script>
+</SiteLayout>
+>>>>>>> origin/feat/astro-refactor-threat-feed

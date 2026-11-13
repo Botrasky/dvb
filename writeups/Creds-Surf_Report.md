@@ -1,3 +1,15 @@
+---
+title: Credential Stuffing
+slug: creds-surf
+summary: A login challenge showing why reused passwords are risky.
+topic: web
+difficulty: Medium
+platform: CyLab Security Academy
+cover: /assets/writeup-covers/creds-surf.svg
+date: 2026-07-20
+status: published
+---
+
 # Security Assessment Report — Credential Stuffing
 
 | Field | Value |

@@ -153,8 +153,11 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
 .author-strip{display:flex;align-items:center;gap:15px;padding:16px;}
 .author-strip>div:nth-child(2){flex:1;}
 .author-strip .author-actions{margin:0;}
-.dash-footer{display:flex;justify-content:space-between;gap:12px;max-width:1320px;margin:auto;border-top:1px solid var(--border);padding:16px 30px 25px;font-size:.82rem;color:var(--text3);}
-.dash-footer a{margin-left:12px;}
+.dash-footer{display:block;max-width:1320px;margin:24px auto 0;border-top:1px solid var(--border);padding:28px 24px 32px;text-align:center;font-size:.82rem;color:var(--text3);}
+.dash-footer-identity{display:grid;gap:6px;justify-items:center;}
+.dash-footer-identity strong{font-family:var(--font-ui);font-size:.85rem;color:var(--cyan);letter-spacing:.06em;}
+.dash-footer nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;margin-top:14px;}
+.dash-footer a{margin:0;color:var(--text3);text-decoration:none;}
 .dash-footer a:hover{color:var(--dash-accent);}
 .author-shell{max-width:1000px;}
 .author-intro{padding:clamp(18px,5vw,48px);}

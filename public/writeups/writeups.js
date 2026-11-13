@@ -53,6 +53,40 @@
   apply();
 })();
 
+<<<<<<< HEAD
+=======
+// --- Report pages: progressive disclosure and semantic code blocks ---
+(function enhanceReport() {
+  const sections = [...document.querySelectorAll('.report-section')];
+  if (!sections.length) return;
+
+  sections.forEach((section, index) => {
+    const title = section.querySelector('.report-section-title');
+    if (!title || section.parentElement?.tagName === 'DETAILS') return;
+    const disclosure = document.createElement('details');
+    disclosure.className = 'report-disclosure';
+    disclosure.open = index === 0;
+    const summary = document.createElement('summary');
+    summary.innerHTML = `<span>${section.querySelector('.report-section-label')?.textContent || `Section ${index + 1}`}</span><strong>${title.textContent}</strong>`;
+    disclosure.append(summary);
+    title.remove();
+    section.querySelector('.report-section-label')?.remove();
+    while (section.firstChild) disclosure.append(section.firstChild);
+    section.replaceWith(disclosure);
+  });
+
+  document.querySelectorAll('.terminal-body, .evidence').forEach(block => {
+    if (block.querySelector('pre')) return;
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = block.innerHTML;
+    pre.append(code);
+    block.replaceChildren(pre);
+    block.classList.add('report-code-block');
+  });
+})();
+
+>>>>>>> origin/feat/astro-refactor-threat-feed
 // --- Report page: copy buttons on code blocks ---
 document.querySelectorAll('.wu-copy').forEach(btn => {
   btn.addEventListener('click', async () => {

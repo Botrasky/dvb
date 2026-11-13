@@ -1,3 +1,15 @@
+---
+title: Printer Shares 3
+slug: printer-shares-3
+summary: A lab showing the risks of a writable share used by a scheduled task.
+topic: general
+difficulty: Hard
+platform: CyLab Security Academy
+cover: /assets/writeup-covers/printer-shares-3.svg
+date: 2026-05-04
+status: published
+---
+
 # Security Assessment Report — Printer Shares 3
 
 | Field | Value |

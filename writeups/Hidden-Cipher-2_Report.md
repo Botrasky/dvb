@@ -1,3 +1,15 @@
+---
+title: Hidden Cipher 2
+slug: hidden-cipher-2
+summary: A reverse engineering challenge built around a hidden text transformation.
+topic: re
+difficulty: Medium
+platform: CyLab Security Academy
+cover: /assets/writeup-covers/hidden-cipher-2.svg
+date: 2026-07-21
+status: published
+---
+
 # Security Assessment Report — Hidden Cipher 2
 
 | Field | Value |
