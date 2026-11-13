@@ -511,6 +511,17 @@ small owner-approved slices:
 - Completed: Linked the AUPP seal and university name to the official American University of Phnom Penh website: `https://www.aupp.edu.kh/`.
 - Boundaries: No other education details or portfolio content changed; no commit, push, merge, or deployment.
 
+### 2026-11-13 — Resolve feature merge into main
+
+- Agent: Codex, technical integration and verification.
+- Approved scope: Repair the interrupted merge of `feat/astro-refactor-threat-feed` into local `main`; preserve the tested Astro feature implementation; do not deploy.
+- Files changed: 11 conflicted workflow, CSS, writeup JavaScript, content configuration, layout, author, portfolio, and writeup route files; this progress record.
+- Completed: Removed all Git conflict markers and retained the feature branch implementations for the conflicted files. Local `main` now contains commits `2f3f6da` and `ef86c20` after the merge-resolution work.
+- Planned next: Push local `main` to `origin/main` only after owner confirms the final merge is intended.
+- Tests/evidence: `npm run format:check`, `npm run check` (0 errors/warnings/hints), `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` all passed. Build generated 14 writeup routes; route check passed 18 HTML pages.
+- Blockers or risks: The local branch is 59 commits ahead of the cached `origin/main`; remote synchronization must be confirmed before pushing. The existing PR #83 targets `test`, not `main`.
+- Owner decision needed: Confirm whether to push local `main` to `origin/main`, or review the local merge first.
+
 ## Operating rules
 
 ## Scheduled implementation roadmap
