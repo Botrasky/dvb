@@ -3,6 +3,17 @@ Model assignment strategy for Claude (claude.ai / API). Same goal as codex-role.
 
 **Critical difference from Codex CLI: there is no `/model` command in Claude.ai. Every model switch = a new chat. You cannot carry context automatically — you must manually paste what the next model needs. So pick the right model BEFORE you start, not mid-session.**
 
+## Required task record
+
+After every approved task, Claude must update
+[`documentation/PROGRESS.md`](PROGRESS.md) before reporting completion. Record
+the scope, files changed or inspected, completed work, tests or evidence,
+remaining work, blockers, and owner decisions. This is a status record only; it
+does not authorize commit, push, merge, or deployment actions.
+
+Before reporting completion, verify the entry against the final diff and test
+output and include the `PROGRESS.md` diff in the owner review.
+
 Lineup as of Nov 2026: Opus 5.5 (flagship), Sonnet 5.5 (default workhorse), Haiku 5.5 (bulk/boilerplate), Fable 5.2 (safety-restricted tasks).
 
 ---

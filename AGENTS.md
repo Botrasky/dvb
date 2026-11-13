@@ -22,6 +22,10 @@ This repository is the **ZEUS Cybersecurity Portfolio** (`https://vathanakbotra.
 5. **Diff Review:** Show the complete diff and explain material lines and test results.
 6. **Commit Approval:** Do NOT commit until the owner approves the diff.
 7. **Action Independence:** Approval to commit does NOT authorize push, PR, merge, or deployment.
+8. **Progress Record:** After every approved task, update [`documentation/PROGRESS.md`](documentation/PROGRESS.md) before reporting completion. Record the approved scope, files changed or inspected, completed work, tests or evidence, remaining work, blockers, and owner decisions needed. This record does not authorize any Git or release action.
+
+Before reporting completion, verify that the progress entry is present, matches
+the final diff and test output, and is included in the reviewed change set.
 
 ## Non-Negotiable Rules
 - **Never push to `main`**, force-push, or rewrite git history.

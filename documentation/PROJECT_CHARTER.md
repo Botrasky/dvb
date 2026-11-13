@@ -389,6 +389,12 @@ Automatic Vercel deployment + live smoke test
 - After scope approval, the assigned agent implements and tests autonomously
   within the approved boundaries without requesting approval for each routine
   internal coding choice.
+- After every approved planning, investigation, review, or implementation task,
+  the responsible AI agent must update `documentation/PROGRESS.md` before
+  reporting the task complete. The entry must record the approved scope, files
+  changed or inspected, completed work, tests or evidence, remaining work,
+  blockers or risks, and owner decisions needed. Progress reporting does not
+  authorize a commit, push, pull request, merge, deployment, or scope change.
 - Code changes must be small enough for meaningful review. After editing and
   testing, the implementing agent must present the complete diff and explain material lines,
   assumptions, and test evidence. The owner may tune, reject, or stop the work.

@@ -1,6 +1,17 @@
 # codex-role.md
 Model assignment strategy for Codex work across both projects (portfolio-website Astro refactor, cluster-job-hunt-system FastAPI/PWA). Goal: stop burning weekly ChatGPT Plus quota on a model tier the task doesn't need.
 
+## Required task record
+
+After every approved task, Codex must update
+[`documentation/PROGRESS.md`](PROGRESS.md) before reporting completion. Record
+the scope, files changed or inspected, completed work, tests or evidence,
+remaining work, blockers, and owner decisions. This is a status record only; it
+does not authorize commit, push, merge, or deployment actions.
+
+Before reporting completion, verify the entry against the final diff and test
+output and include the `PROGRESS.md` diff in the owner review.
+
 Lineup as of Nov 2026 (OpenAI Work/Codex surface): GPT-6 Astra (flagship, ~5x cost), GPT-6.1 Sol (near-Astra, Sol-tier price), GPT-6.1 Terra (visual reasoning / computer use), GPT-6 Luna (cheap, fast, bulk).
 
 ---
