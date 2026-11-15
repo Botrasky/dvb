@@ -4,7 +4,7 @@ import ThreatBrief from '../components/ThreatBrief.astro';
 ---
 
 <SiteLayout title="ZEUS | Cybersecurity Learning Dashboard">
-  <main id="main" class="dash-shell">
+  <main id="main" class="dash-shell page-dashboard">
     <div class="dash-masthead">
       <div><p class="eyebrow"><span></span> Notes from my security labs</p><h1>Cybersecurity dashboard</h1><p>My lab writeups and updates from trusted security publishers.</p></div>
       <a class="masthead-link" href="/author/"><span class="author-initials" aria-hidden="true">VB</span><span>By Vathanak Botra Dos<small>Meet the author ↗</small></span></a>
@@ -16,7 +16,32 @@ import ThreatBrief from '../components/ThreatBrief.astro';
           <p class="eyebrow"><span></span> The lab</p>
           <h2 id="mission-title">See the steps.<br />Understand the flaw.</h2>
           <p>Read how I worked through each lab, what I found, and what I learned.</p>
-          <div class="mission-links"><a class="dash-button primary" href="/writeups/">Explore writeups <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#learning">Choose a topic <span aria-hidden="true">↓</span></a></div>
+          <div class="mission-links"><a class="dash-button primary" href="/writeups/">Explore writeups <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <nav class="mission-topics" aria-label="Lab topics">
+          <a href="/writeups/?topic=web">Web security</a>
+          <a href="/writeups/?topic=crypto">Cryptography</a>
+          <a href="/writeups/?topic=general">Systems &amp; networks</a>
+        </nav>
+        <div class="mission-carousel carousel" aria-label="Featured labs">
+          <div class="mission-slides carousel-inner" aria-live="off">
+            {[
+              ['ven-rsa', 'CyLab · Cryptography', 'EVEN RSA CAN BE BROKEN??'],
+              ['hidden-cipher-2', 'CyLab · Reverse engineering', 'Hidden Cipher 2'],
+              ['moneybox', 'OffSec PG · Linux', 'Moneybox'],
+              ['amaterasu', 'OffSec PG · Web security', 'Amaterasu'],
+              ['trust-but-verify', 'CyLab · Interactive fiction', 'Trust But Verify'],
+            ].map(([slug, source, title], index) => (
+              <a class="mission-feature carousel-item" href={`/writeups/${slug}/`} class:list={{ 'is-current': index === 0, active: index === 0 }}>
+                <span>{source}</span>
+                <strong>{title} <span aria-hidden="true">↗</span></strong>
+              </a>
+            ))}
+          </div>
+          <div class="mission-carousel-controls" hidden>
+            <span class="mission-position"></span>
+            <button type="button" class="mission-playback">Pause</button>
+          </div>
         </div>
         <svg class="mission-art" viewBox="0 0 320 260" fill="none" aria-hidden="true">
           <defs><pattern id="mission-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#a7f6df" stroke-opacity=".12" /></pattern><linearGradient id="signal" x1="52" y1="208" x2="272" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#54b8e8" /><stop offset="1" stop-color="#a4ffcf" /></linearGradient></defs>
@@ -53,7 +78,6 @@ import ThreatBrief from '../components/ThreatBrief.astro';
       <div class="featured-grid">
         <a class="lab-card panel" href="/writeups/moneybox/"><span class="lab-meta"><span class="lab-number">LAB 01</span><span class="lab-level easy">Easy</span></span><h3>Moneybox</h3><p>A Linux lab covering exposed services and unsafe permissions.</p><span class="lab-read">Linux · OffSec PG <span aria-hidden="true">↗</span></span></a>
         <a class="lab-card panel" href="/writeups/amaterasu/"><span class="lab-meta"><span class="lab-number">LAB 02</span><span class="lab-level medium">Medium</span></span><h3>Amaterasu</h3><p>Study a vulnerable web API and see why file handling matters.</p><span class="lab-read">Web · OffSec PG <span aria-hidden="true">↗</span></span></a>
-        <a class="lab-card panel" href="/writeups/ven-rsa/"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>EVEN RSA CAN BE BROKEN??</h3><p>An RSA challenge with a lesson in key generation.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
       </div>
     </section>
 

@@ -606,6 +606,14 @@ These dates are planning targets, not authorization to edit, commit, push, merge
 - [x] Keep the isolated VMware writeup's practice guidance local.
 - [ ] Verify build and route checks, then release through the PR.
 
+### 2026-11-15 — Threat brief visual redesign
+
+- [x] Replace the small side thumbnail with a full-width 3:2 image area.
+- [x] Overlay the current headline and publisher on the image with a readable gradient.
+- [x] Use the official NIST CSF 2.0 image where available and publisher logos as fallbacks.
+- [x] Keep the summary and original source link below the image.
+- [x] Verify Astro diagnostics, production build, and whitespace checks.
+
 ### Repository organization cleanup
 
 - [x] Audit tracked paths and Astro import dependencies before moving files.

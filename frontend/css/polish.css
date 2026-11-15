@@ -73,6 +73,65 @@ html.light-mode body .mission-copy>p:not(.eyebrow){color:#324e5b;}
 html.light-mode body .mission-art{filter:brightness(.45);opacity:.45;}
 html.light-mode body .mission .primary{background:#175f50;color:#fff;}
 html.light-mode body .mission :focus-visible{outline-color:#145c4c;}
+
+/* Light-mode redesign: keep the learning dashboard and writeups as clean paper surfaces. */
+html.light-mode .page-dashboard :is(.panel,.mission,.brief,.mission-feature,.mission-topics a),
+html.light-mode body.page-library :is(.wu-card,.wu-card-content,.wu-sidebar,.wu-filter-panel),
+html.light-mode .page-article :is(.wu-glance>div,.wu-insight,.wu-kill-chain,.wu-chain-box,.wu-vuln-analysis,.wu-references,.wu-details summary,.wu-code,.wu-code-head,.article-contents,.writeup-story-overview>div,.writeup-story-viewport,.writeup-story-slide,.writeup-dashboard-card,.writeup-native){
+  background:#fff!important;
+  border-color:#d8e0ea!important;
+  box-shadow:0 12px 30px rgba(31,54,82,.12),0 2px 7px rgba(31,54,82,.06)!important;
+  color:#142238!important;
+}
+html.light-mode .page-dashboard :is(.mission,.brief,.featured-grid .lab-card) :is(h2,h3,p,.lab-number,.lab-read,.brief-source,.brief-date,.brief-trust,.brief-sources a),
+html.light-mode .page-dashboard .mission-feature,
+html.light-mode .page-dashboard .mission-feature>span,
+html.light-mode body.page-library :is(.wu-card-title,.wu-card-hook,.wu-card-meta),
+html.light-mode .page-article :is(.writeup-story-slide p,.writeup-story-slide li,.writeup-dashboard-card p,.writeup-dashboard-card li){
+  color:#142238!important;
+}
+html.light-mode .page-dashboard .mission-copy>p:not(.eyebrow),
+html.light-mode .page-dashboard .brief-slide p:not(.brief-source),
+html.light-mode .page-dashboard .lab-card p,
+html.light-mode body.page-library .wu-card-hook,
+html.light-mode .page-article :is(.writeup-story-slide p,.writeup-story-slide li,.writeup-dashboard-card p,.writeup-dashboard-card li){
+  color:#46566d!important;
+}
+html.light-mode .page-dashboard :is(.mission-feature,.mission-topics a,.brief-state,.lab-level,.brief-source-mark){
+  background:#f6f8fb!important;
+  border-color:#d8e0ea!important;
+}
+html.light-mode .page-dashboard :is(.brief-original,.lab-read span,.brief-sources a:hover){color:#146654!important;}
+html.light-mode body.dashboard-page .page-dashboard .brief{
+  background:#fff!important;
+  border-color:#d8e0ea!important;
+  box-shadow:0 12px 30px rgba(31,54,82,.12),0 2px 7px rgba(31,54,82,.06)!important;
+  color:#142238!important;
+}
+html.light-mode body.dashboard-page .page-dashboard .brief :is(h2,h3,p,.brief-source,.brief-date,.brief-trust,.brief-sources a){color:#142238!important;}
+html.light-mode body.dashboard-page .page-dashboard .brief .eyebrow{color:#142238!important;}
+html.light-mode body.dashboard-page .page-dashboard .brief :is(.brief-state,.brief-source-mark){background:#f6f8fb!important;border-color:#d8e0ea!important;color:#146654!important;}
+html.light-mode body.dashboard-page .page-dashboard .brief .brief-source-mark[data-publisher="nvd"]{background:#1a4c80!important;border-color:#1a4c80!important;}
+html.light-mode body.dashboard-page .page-dashboard .brief :is(.brief-original,.brief-sources a:hover){color:#146654!important;}
+html.light-mode body.dashboard-page .page-dashboard .featured-grid .lab-card{
+  background:#fff!important;
+  border-color:#d8e0ea!important;
+  box-shadow:0 12px 30px rgba(31,54,82,.12),0 2px 7px rgba(31,54,82,.06)!important;
+  color:#142238!important;
+}
+html.light-mode body.dashboard-page .page-dashboard .featured-grid .lab-card :is(h3,p,.lab-number,.lab-read){color:#142238!important;}
+html.light-mode body.dashboard-page .page-dashboard .featured-grid .lab-card p{color:#46566d!important;}
+html.light-mode body.dashboard-page .page-dashboard .featured-grid .lab-card :is(.lab-level,.lab-read span){background:#f6f8fb!important;color:#146654!important;border-color:#d8e0ea!important;}
+html.light-mode body.page-library .wu-grid .wu-card,
+html.light-mode body.page-library .wu-grid .wu-card .wu-card-content{
+  background:#fff!important;
+  border-color:#d8e0ea!important;
+  box-shadow:0 12px 30px rgba(31,54,82,.12),0 2px 7px rgba(31,54,82,.06)!important;
+  color:#142238!important;
+}
+html.light-mode body.page-library .wu-grid .wu-card :is(.wu-card-title,.wu-card-meta){color:#142238!important;}
+html.light-mode body.page-library .wu-grid .wu-card .wu-card-hook{color:#46566d!important;}
+html.light-mode body.page-library .wu-grid .wu-card .wu-card-meta{border-color:#d8e0ea!important;}
 @view-transition{navigation:none;}
 @media(prefers-reduced-motion:no-preference){
   html::view-transition-old(root){animation:page-away 180ms ease both!important;}

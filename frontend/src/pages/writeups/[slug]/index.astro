@@ -41,7 +41,9 @@ const legacyMain = (page.match(/<main\b[\s\S]*?<\/main>/i)?.[0] || '')
 ---
 
 <SiteLayout title={`${report?.data.title ?? slug} — Writeup — Dos Vathanak Botra`} description={report?.data.summary} current="writeups" headHtml={legacyStyles}>
-  <Fragment set:html={legacyMain} />
+  <div class="page-article">
+    <Fragment set:html={legacyMain} />
+  </div>
   {practiceSource && (
     <section class="dash-shell writeup-native-shell" aria-labelledby="practice-next">
       <div class="panel writeup-native">
