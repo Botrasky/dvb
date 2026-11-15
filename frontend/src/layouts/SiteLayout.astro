@@ -28,7 +28,8 @@ const {
     <script is:inline>
       try {
         const preference = localStorage.getItem('theme');
-        const dark = preference ? preference === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        // ZEUS starts in dark mode unless the visitor has explicitly chosen light.
+        const dark = preference ? preference === 'dark' : true;
         if (!dark) document.documentElement.classList.add('light-mode');
       } catch {}
     </script>
@@ -49,7 +50,7 @@ const {
         <a href="/author/" aria-current={current === 'author' ? 'page' : undefined}>Author</a>
         <a href="/portfolio/" aria-current={current === 'portfolio' ? 'page' : undefined}>Portfolio</a>
       </nav>
-      <button class="dash-theme" id="themeToggle" type="button" aria-label="Toggle light and dark theme"><span aria-hidden="true">◐</span> <span id="themeLabel">Light</span></button>
+      <button class="dash-theme" id="themeToggle" type="button" aria-label="Toggle light and dark theme"><span aria-hidden="true">◐</span> <span id="themeLabel">Dark</span></button>
     </header>
     <slot />
     <script is:inline src="/js/theme.js"></script>

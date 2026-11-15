@@ -17,7 +17,8 @@ function applyTheme(dark) {
   if (btn) btn.setAttribute('aria-pressed', String(!dark));
 }
 
-let isDark = getStoredTheme() === 'dark';
+// Dark is the default; light mode is opt-in and persisted after toggling.
+let isDark = getStoredTheme() !== 'light';
 applyTheme(isDark);
 
 let themeTransition;
