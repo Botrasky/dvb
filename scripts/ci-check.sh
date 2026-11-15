@@ -9,11 +9,12 @@ err() { echo "FAIL: $*"; fail=1; }
 ok() { echo "ok:   $*"; }
 
 # 1. The site entry point exists and looks like a real page.
-if [ ! -s index.html ]; then
+entry=frontend/index.html
+if [ ! -s "$entry" ]; then
   err "index.html is missing or empty"
-elif ! head -c 2000 index.html | grep -qi '<!doctype html'; then
+elif ! head -c 2000 "$entry" | grep -qi '<!doctype html'; then
   err "index.html does not start with <!DOCTYPE html>"
-elif ! grep -qi '<title>[^<]\{1,\}</title>' index.html; then
+elif ! grep -qi '<title>[^<]\{1,\}</title>' "$entry"; then
   err "index.html has no <title>"
 else
   ok "index.html present with doctype and title"

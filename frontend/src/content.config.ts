@@ -3,7 +3,7 @@ import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 
 const writeups = defineCollection({
-  loader: glob({ pattern: "*_Report.md", base: "./writeups" }),
+  loader: glob({ pattern: "*_Report.md", base: "./frontend/writeups" }),
   schema: z.object({
     title: z.string().min(1),
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),

@@ -119,6 +119,20 @@ new release candidate rather than treated as permanent proof.
 
 ## Agent activity log
 
+### 2026-11-15 — Learning paths and practice pilot
+
+- [x] Add the Practice next card to the RSA and Hidden Cipher 2 writeups, with CyLab links and click labels for each writeup and topic.
+- [x] Add Dashboard learning paths for CyLab, web security, and cryptography.
+- [ ] Verify routes, mobile layout, and click events in preview.
+- [ ] Release through the repository's staging and production workflow.
+- [ ] Collect 30 days of page views and practice clicks by writeup and review click rates.
+- [ ] Review partner eligibility and commercial clearance before activating any commission link. Place the disclosure beside any activated link.
+
+2026-11-15 — Codex added the 90-day reform targets to the charter and renamed
+the featured dashboard card “EVEN RSA CAN BE BROKEN??”. The route remains
+`/writeups/ven-rsa/`. Prior title work is recorded below. The implementation
+plan is proposed for review and the audience experiment awaits preview testing.
+
 | Date | Agent | Activity | Result |
 | --- | --- | --- | --- |
 | 2026-11-13 | Codex | Audited Git state and documentation history | Confirmed clean tree and one local commit ahead of cached upstream |
@@ -163,6 +177,31 @@ small owner-approved slices:
 4. Verify canonical routes and legacy redirects in a real preview.
 5. Complete browser, responsive, motion, and accessibility evidence.
 6. Run the full release candidate checks before any push or pull request.
+
+### 2026-11-15 — CTF affiliate audience test surface
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Reform the dashboard around the existing CTF audience, add a
+  disclosure-safe affiliate test surface, and add click tracking for audience
+  validation. Do not invent or activate an affiliate commission link before
+  partner approval; do not push or deploy.
+- Files changed: `src/pages/index.astro`, `src/layouts/SiteLayout.astro`,
+  `public/js/analytics.js`, `css/dashboard.css`, and this progress record.
+- Completed: Added a CTF-focused practice pathway block pointing to the HTB
+  affiliate information page, explicit pre-approval disclosure, 30-day CTR test
+  language, Vercel custom-event hooks for the CTA and outbound links, and sitewide
+  analytics script loading in the Astro layout.
+- Tests/evidence: `node --check public/js/analytics.js`, `git diff --check`, and
+  `bash scripts/ci-check.sh` passed. `npm run check` and `npm run build` were
+  attempted but could not write Astro's generated `.astro` cache because that
+  directory is outside the writable workspace in this session.
+- Remaining work: Apply for the HTB affiliate program, replace the pathway URL
+  with the approved tracked link if accepted, enable Vercel Analytics in the
+  project dashboard, and review the 30-day click data.
+- Blocker or risk: No commission link is active yet; production deployment is
+  intentionally held pending the repository release process and owner approval.
+- Owner decision needed: Review the page change before any commit, push, or
+  production deployment.
 
 ### 2026-11-13 — Strict metadata for report-backed writeups
 
@@ -558,6 +597,22 @@ These dates are planning targets, not authorization to edit, commit, push, merge
    read-only adviser whose output must be independently checked.
 
 ## Update template
+
+### Repository organization cleanup
+
+- [x] Audit tracked paths and Astro import dependencies before moving files.
+- [x] Move the stale duplicate root migration plan to
+      `documentation/archive/MIGRATION_PLAN.legacy.md`.
+- [x] Keep `src/` as the canonical Astro application source.
+- [x] Keep root `css/`, `js/`, `assets/`, and `writeups/` in place for now;
+      native routes and the legacy-page bridge still import them directly.
+- [x] Move Astro source, legacy pages, writeups, and site assets into
+      `frontend/`. Move the Security Brief implementation into `backend/`
+      and keep its public route in Astro.
+- [x] Verify the split locally with Astro diagnostics, production build,
+      built-route validation (18 HTML pages), and repository checks.
+- [ ] Run the full check, build, route, and repository validation suite after
+      the current working-tree changes are reviewed.
 
 Add a new dated entry after each material task:
 

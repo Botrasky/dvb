@@ -60,7 +60,7 @@ Claude’s engineering responsibilities include:
 
 AGY is an optional, temporary helper. Use it for bulky, self-contained, read-only work such as:
 
-- Auditing the repository against `MIGRATION_PLAN.md`
+- Auditing the repository against `documentation/MIGRATION_PLAN.md`
 - Summarizing many files
 - Finding route, asset, or test coverage gaps
 - Producing an independent checklist
@@ -90,7 +90,7 @@ The repository is the shared source of truth. Conversation context is not automa
 Agents must use these files as the project handoff layer:
 
 - `AGENTS.md` — operating rules and safety constraints
-- `MIGRATION_PLAN.md` — implementation phases and end goal
+- `documentation/MIGRATION_PLAN.md` — implementation phases and end goal
 - `documentation/architecture.md` — current system and CI/CD architecture
 - `documentation/ai-agent-role-manager.md` — agent responsibilities and workflow
 - Git branch, status, diff, and commit history — actual change state
@@ -110,7 +110,7 @@ Request
   ↓
 Codex clarifies scope and reads project instructions
   ↓
-Codex updates or follows MIGRATION_PLAN.md
+Codex updates or follows documentation/MIGRATION_PLAN.md
   ↓
 Codex implements on a feature branch
   ↓
@@ -152,7 +152,7 @@ When handing work to another agent, provide:
 Recommended handoff prompt:
 
 ```text
-Read AGENTS.md, MIGRATION_PLAN.md, and documentation/ai-agent-role-manager.md.
+Read AGENTS.md, documentation/MIGRATION_PLAN.md, and documentation/ai-agent-role-manager.md.
 Inspect the current branch and Git diff before acting.
 Continue only from the documented remaining steps.
 Do not modify main, delete legacy files, or overwrite another agent’s work.
