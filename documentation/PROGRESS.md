@@ -598,6 +598,14 @@ These dates are planning targets, not authorization to edit, commit, push, merge
 
 ## Update template
 
+### 2026-11-15 — Dashboard balance and practice links
+
+- [x] Narrow The Lab and widen Threat Brief on desktop.
+- [x] Add Practice next to every writeup using its recorded platform and topic.
+- [x] Link CyLab writeups to CyLab and OffSec writeups to the OffSec portal.
+- [x] Keep the isolated VMware writeup's practice guidance local.
+- [ ] Verify build and route checks, then release through the PR.
+
 ### Repository organization cleanup
 
 - [x] Audit tracked paths and Astro import dependencies before moving files.
