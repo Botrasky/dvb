@@ -18,6 +18,11 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.props;
+const practiceTopics = new Map([
+  ['ven-rsa', 'cryptography'],
+  ['hidden-cipher-2', 'reverse engineering'],
+]);
+const practiceTopic = practiceTopics.get(slug);
 const reports = await getCollection('writeups');
 const report = reports.find(entry => entry.data.slug === slug);
 const page = readLegacyPage(`writeups/${slug}/index.html`)
@@ -33,6 +38,15 @@ const legacyMain = (page.match(/<main\b[\s\S]*?<\/main>/i)?.[0] || '')
 
 <SiteLayout title={`${report?.data.title ?? slug} — Writeup — Dos Vathanak Botra`} description={report?.data.summary} current="writeups" headHtml={legacyStyles}>
   <Fragment set:html={legacyMain} />
+  {practiceTopic && (
+    <section class="dash-shell writeup-native-shell" aria-labelledby="practice-next">
+      <div class="panel writeup-native">
+        <h2 id="practice-next">Practice next</h2>
+        <p>Explore more {practiceTopic} challenges on CyLab Security Academy.</p>
+        <a class="dash-button secondary" href="https://learn.cylabacademy.org/" data-analytics-event="practice_next_click" data-analytics-label={slug} data-analytics-topic={practiceTopic}>Practice more on CyLab Security Academy</a>
+      </div>
+    </section>
+  )}
   <script is:inline src="/writeups/writeups.js"></script>
   <script is:inline src="/js/site.js"></script>
 </SiteLayout>

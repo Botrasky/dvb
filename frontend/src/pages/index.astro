@@ -39,12 +39,21 @@ import ThreatBrief from '../components/ThreatBrief.astro';
       </div>
     </section>
 
+    <section class="dash-section" aria-labelledby="paths-title">
+      <div class="dash-section-heading"><h2 id="paths-title">Learning paths</h2></div>
+      <div class="featured-grid">
+        <a class="lab-card panel" href="https://learn.cylabacademy.org/" data-analytics-event="learning_path_click" data-analytics-label="cylab"><h3>Start with CyLab</h3><p>Choose a challenge by topic and difficulty.</p></a>
+        <a class="lab-card panel" href="/writeups/?topic=web" data-analytics-event="learning_path_click" data-analytics-label="web"><h3>Web security</h3><p>Explore writeups about authentication and input handling.</p></a>
+        <a class="lab-card panel" href="/writeups/ven-rsa/#practice-next" data-analytics-event="learning_path_click" data-analytics-label="crypto"><h3>Cryptography</h3><p>Find a follow-up to the RSA writeup.</p></a>
+      </div>
+    </section>
+
     <section class="dash-section" aria-labelledby="featured-title">
       <div class="dash-section-heading"><div><p class="eyebrow">02 / The writeup library</p><h2 id="featured-title">Start with a lab</h2></div><a href="/writeups/">Browse all writeups <span aria-hidden="true">↗</span></a></div>
       <div class="featured-grid">
         <a class="lab-card panel" href="/writeups/moneybox/"><span class="lab-meta"><span class="lab-number">LAB 01</span><span class="lab-level easy">Easy</span></span><h3>Moneybox</h3><p>A Linux lab covering exposed services and unsafe permissions.</p><span class="lab-read">Linux · OffSec PG <span aria-hidden="true">↗</span></span></a>
         <a class="lab-card panel" href="/writeups/amaterasu/"><span class="lab-meta"><span class="lab-number">LAB 02</span><span class="lab-level medium">Medium</span></span><h3>Amaterasu</h3><p>Study a vulnerable web API and see why file handling matters.</p><span class="lab-read">Web · OffSec PG <span aria-hidden="true">↗</span></span></a>
-        <a class="lab-card panel" href="/writeups/ven-rsa/"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>VEN RSA</h3><p>An RSA challenge with a weak prime and a lesson in key generation.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
+        <a class="lab-card panel" href="/writeups/ven-rsa/"><span class="lab-meta"><span class="lab-number">LAB 03</span><span class="lab-level medium">Medium</span></span><h3>EVEN RSA CAN BE BROKEN??</h3><p>An RSA challenge with a lesson in key generation.</p><span class="lab-read">Cryptography · CyLab <span aria-hidden="true">↗</span></span></a>
       </div>
     </section>
 

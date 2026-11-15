@@ -17,4 +17,22 @@
   s.defer = true;
   s.src = '/_vercel/insights/script.js';
   document.head.appendChild(s);
+
+  function track(name, label, topic) {
+    if (typeof window.va === 'function') {
+      window.va('event', { name: name, data: { label: label || '', ...(topic ? { topic: topic } : {}) } });
+    }
+  }
+
+  document.addEventListener('click', function (event) {
+    var target = event.target.closest('[data-analytics-event]');
+    if (!target) return;
+    track(target.dataset.analyticsEvent, target.dataset.analyticsLabel, target.dataset.analyticsTopic);
+  });
+
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest('a[href]');
+    if (!link || !link.href || link.origin === location.origin) return;
+    track('outbound_click', link.href);
+  });
 })();

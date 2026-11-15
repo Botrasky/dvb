@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 
-const root = process.cwd();
+const root = `${process.cwd()}/frontend`;
 
 export function routeLegacyLinks(html: string) {
   return html

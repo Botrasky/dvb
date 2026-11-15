@@ -1,6 +1,44 @@
 # PROJECT CHARTER: ZEUS Cybersecurity Portfolio
 
-Companion documents: `MIGRATION_PLAN.md`, `documentation/architecture.md`,
+## Key Reform Targets — November 2026 update
+
+The 90-day reform runs from 15 November 2026 through 12 February 2027.
+ZEUS puts cybersecurity education first. Keep the Dashboard, Writeups, and
+About/portfolio experience and preserve the existing public URLs. The founder
+operates solo. The long-term vision remains open.
+
+| Area | Target by close |
+| --- | --- |
+| Platform identity | Guide readers from the Dashboard to the writeup library. |
+| Educational content | Publish 12 new or substantially improved articles. A title change alone does not count. |
+| Audience growth | Reach 500 unique visitors over the final 30 days and test practice-resource clicks. |
+| Revenue | Target A$100 received over the final 30 days, subject to commercial clearance. |
+| Services | Define web development, automation/AI, and basic defensive security offerings. Target one paying client during the project, subject to clearance. |
+| AI and automation | Test one approved routine workflow, such as reporting broken resource links, with logs and founder review. |
+
+### Delivery and constraints
+
+Mandatory work covers basic SEO, analytics, a working contact path, an affiliate
+application and audience experiment, and a documented external invoicing or
+payment option. Hosted checkout integration, additional partners, and paid ads
+are optional. Under time pressure, prioritize the lawful path to revenue and
+defer optional features. Plan for about four hours per week, roughly 52 hours
+total, and cap spending at US$25 per month.
+
+Keep resource links non-commercial during the audience test. Before activating
+commission links, accepting paid work, or enabling payouts in Australia,
+check the visa grant and [VEVO](https://immi.homeaffairs.gov.au/visas/already-have-a-visa/check-visa-details-and-conditions).
+If condition 8105 applies, confirm the course start date, the 48-hour limit per
+fortnight during study, and whether ZEUS activities and any unpaid experience
+count. Get qualified advice where classification or tax treatment is unclear.
+
+The founder approves publishing, access changes, spending, partner terms, and
+payment actions. AI autonomy is limited to approved routine tasks with limited
+permissions, activity logs, and a way to stop the workflow. At close, review
+the deliverable evidence, analytics, hours and spending, and record any target
+that was missed or deferred. Existing release gates apply.
+
+Companion documents: `documentation/MIGRATION_PLAN.md`, `documentation/architecture.md`,
 `documentation/ai-agent-role-manager.md`, `AGENTS.md`, and `CONTRIBUTING.md`.
 
 ## Document control
@@ -17,7 +55,7 @@ Companion documents: `MIGRATION_PLAN.md`, `documentation/architecture.md`,
 | Production URL                   | `https://vathanakbotra.vercel.app`                        |
 
 This charter defines purpose, scope, outcomes, architecture decisions,
-governance, quality standards, and release authority. `MIGRATION_PLAN.md`
+governance, quality standards, and release authority. `documentation/MIGRATION_PLAN.md`
 defines implementation phases. `AGENTS.md` and `CONTRIBUTING.md` define
 operating constraints. When documents conflict, the owner's current written
 decision and `AGENTS.md` take precedence until the documentation is corrected.
@@ -448,7 +486,7 @@ A production candidate is acceptable only when all applicable evidence exists:
 
 ## 14. Milestones
 
-The authoritative task detail remains in `MIGRATION_PLAN.md`. Charter-level
+The authoritative task detail remains in `documentation/MIGRATION_PLAN.md`. Charter-level
 milestones are:
 
 1. **Foundation stabilization** — reproducible Astro/Vercel build and routing.
