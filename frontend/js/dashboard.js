@@ -1,4 +1,80 @@
+import Carousel from 'bootstrap/js/dist/carousel';
+
 (() => {
+  const labs = document.querySelector('.mission-carousel');
+  if (labs) {
+    const cards = [...labs.querySelectorAll('.mission-feature')];
+    const stack = labs.querySelector('.mission-slides');
+    const controls = labs.querySelector('.mission-carousel-controls');
+    const position = labs.querySelector('.mission-position');
+    const bootstrapCarousel = new Carousel(labs, {
+      interval: false,
+      keyboard: false,
+      pause: false,
+      ride: false,
+      touch: false,
+      wrap: true,
+    });
+    let activeLab = 0;
+    controls.hidden = false;
+    position.textContent = `1 / ${cards.length}`;
+    const playback = controls.querySelector('.mission-playback');
+    let paused = false;
+    let rotationTimer;
+    function scheduleRotation() {
+      clearTimeout(rotationTimer);
+      rotationTimer = setTimeout(() => {
+        bootstrapCarousel.next();
+        scheduleRotation();
+      }, 10000);
+    }
+    function rotateLabs() {
+        if (paused) return;
+        const outgoing = cards[activeLab];
+        const step = 1;
+        const before = new Map(cards.map(card => {
+          card.getAnimations().forEach(animation => animation.cancel());
+          return [card, card.getBoundingClientRect().top];
+        }));
+        cards[activeLab].classList.remove('is-current');
+        activeLab = (activeLab + step + cards.length) % cards.length;
+        cards[activeLab].classList.add('is-current');
+        cards.forEach((_, offset) => {
+          stack.append(cards[(activeLab + offset) % cards.length]);
+        });
+        cards.forEach(card => {
+          const distance = before.get(card) - card.getBoundingClientRect().top;
+          const frames = card === outgoing
+            ? [
+                { transform: `translateY(${distance}px) scale(1)`, opacity: 1 },
+                { transform: `translateX(-46%) translateY(${distance * .72}px) scale(.98)`, opacity: .56, offset: .24 },
+                { transform: 'translateX(-115%) translateY(0) scale(.96)', opacity: 0, offset: .42 },
+                { transform: 'translateX(12%) translateY(0) scale(.97)', opacity: 0, offset: .72 },
+                { transform: 'translateX(0) translateY(0) scale(1)', opacity: 1 },
+              ]
+            : [
+                { transform: `translateY(${distance}px) scale(.985)`, opacity: .86 },
+                { transform: `translateY(${distance}px) scale(.985)`, opacity: .86, offset: .42 },
+                { transform: 'translateY(-4px) scale(1.01)', opacity: 1, offset: .88 },
+                { transform: 'translateY(0) scale(1)', opacity: 1 },
+              ];
+          card.animate(frames, { duration: 960, easing: 'cubic-bezier(.22,.8,.26,1)', fill: 'both' });
+        });
+        position.textContent = `${activeLab + 1} / ${cards.length}`;
+    }
+    labs.addEventListener('slide.bs.carousel', rotateLabs);
+    playback.addEventListener('click', () => {
+      paused = !paused;
+      playback.textContent = paused ? 'Resume' : 'Pause';
+      if (paused) bootstrapCarousel.pause();
+      if (!paused) scheduleRotation();
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && !paused) scheduleRotation();
+    });
+    scheduleRotation();
+  }
+
   document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
   const slide = document.getElementById('brief-slide');
   if (!slide) return;
@@ -8,6 +84,7 @@
       source: 'NIST', kind: 'Standards', title: 'NIST Cybersecurity Framework 2.0',
       summary: 'Start with the framework behind many cybersecurity programs. It covers how to govern, identify, protect, detect, respond, and recover.',
       url: 'https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20',
+      image: 'https://www.nist.gov/sites/default/files/images/2024/04/15/CSF-wheel-revamp-v5-transparent_Op%203.png',
     },
     {
       source: 'Cloud Security Alliance', kind: 'Cloud security', title: 'AI governance as an architecture problem',
@@ -31,7 +108,7 @@
     },
     {
       source: 'NVD', kind: 'Vulnerability database', title: 'Browse the National Vulnerability Database',
-      summary: 'Look up published vulnerabilities, their severity scores, and links to advisories.',
+      summary: 'Search CVE records, CVSS severity scores, affected software, exploit references, and vendor advisories. Use it to verify a vulnerability before patching a system or documenting a finding in a lab writeup.',
       url: 'https://nvd.nist.gov/vuln/search',
     },
     {
@@ -58,6 +135,8 @@
   const thumb = document.getElementById('brief-thumb');
   const thumbLabel = document.getElementById('brief-thumb-label');
   const thumbImage = document.getElementById('brief-thumb-image');
+  const thumbMeta = document.getElementById('brief-thumb-meta');
+  const thumbHeadline = document.getElementById('brief-thumb-headline');
   const source = document.getElementById('brief-source');
   const sourceMark = document.getElementById('brief-source-mark');
   const sourceLogo = sourceMark?.querySelector('img');
@@ -81,6 +160,7 @@
   function renderThumbnail(story) {
     const [style, label, logo] = publishers.get(story.source) || ['unknown', 'Security news', ''];
     thumb.dataset.publisher = style;
+    sourceMark.dataset.publisher = style;
     delete thumb.dataset.media;
     thumbLabel.textContent = label;
     thumbLabel.hidden = false;
@@ -127,6 +207,8 @@
       briefDate.hidden = !Number.isFinite(date);
     }
     headline.textContent = story.title;
+    if (thumbMeta) thumbMeta.textContent = [story.source, story.kind].filter(Boolean).join(' · ');
+    if (thumbHeadline) thumbHeadline.textContent = story.title;
     summary.textContent = story.summary || 'Open the original story for the full update.';
     original.href = story.url;
     renderThumbnail(story);

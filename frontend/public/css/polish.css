@@ -73,6 +73,18 @@ html.light-mode body .mission-copy>p:not(.eyebrow){color:#324e5b;}
 html.light-mode body .mission-art{filter:brightness(.45);opacity:.45;}
 html.light-mode body .mission .primary{background:#175f50;color:#fff;}
 html.light-mode body .mission :focus-visible{outline-color:#145c4c;}
+
+/* Light-mode writeup library: white card bodies, with artwork retained above. */
+html.light-mode body.page-library .wu-grid .wu-card,
+html.light-mode body.page-library .wu-grid .wu-card .wu-card-content{
+  background:#fff!important;
+  border-color:#d8e0ea!important;
+  box-shadow:0 12px 30px rgba(31,54,82,.12),0 2px 7px rgba(31,54,82,.06)!important;
+  color:#142238!important;
+}
+html.light-mode body.page-library .wu-grid .wu-card :is(.wu-card-title,.wu-card-meta){color:#142238!important;}
+html.light-mode body.page-library .wu-grid .wu-card .wu-card-hook{color:#46566d!important;}
+html.light-mode body.page-library .wu-grid .wu-card .wu-card-meta{border-color:#d8e0ea!important;}
 @view-transition{navigation:none;}
 @media(prefers-reduced-motion:no-preference){
   html::view-transition-old(root){animation:page-away 180ms ease both!important;}
