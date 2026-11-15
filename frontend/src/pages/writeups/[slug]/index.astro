@@ -18,13 +18,17 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.props;
-const practiceTopics = new Map([
-  ['ven-rsa', 'cryptography'],
-  ['hidden-cipher-2', 'reverse engineering'],
-]);
-const practiceTopic = practiceTopics.get(slug);
 const reports = await getCollection('writeups');
 const report = reports.find(entry => entry.data.slug === slug);
+const practiceSources = {
+  'CyLab Security Academy': { name: 'CyLab Security Academy', url: 'https://learn.cylabacademy.org/' },
+  'OffSec Proving Grounds': { name: 'OffSec Proving Grounds', url: 'https://portal.offsec.com/' },
+};
+const practiceSource = report?.data.platform === 'VMware Local Lab'
+  ? { name: 'your local VMware lab', url: null }
+  : practiceSources[report?.data.platform as keyof typeof practiceSources];
+const topicNames = { crypto: 'cryptography', pwn: 'binary exploitation', web: 'web security', re: 'reverse engineering', general: 'security', misc: 'security' };
+const practiceTopic = report ? topicNames[report.data.topic] : 'security';
 const page = readLegacyPage(`writeups/${slug}/index.html`)
   .replace('<head>', `<head><base href="/writeups/${slug}/">`)
   .replace('src="../writeups.js?', 'src="/writeups/writeups.js?');
@@ -38,12 +42,12 @@ const legacyMain = (page.match(/<main\b[\s\S]*?<\/main>/i)?.[0] || '')
 
 <SiteLayout title={`${report?.data.title ?? slug} — Writeup — Dos Vathanak Botra`} description={report?.data.summary} current="writeups" headHtml={legacyStyles}>
   <Fragment set:html={legacyMain} />
-  {practiceTopic && (
+  {practiceSource && (
     <section class="dash-shell writeup-native-shell" aria-labelledby="practice-next">
       <div class="panel writeup-native">
         <h2 id="practice-next">Practice next</h2>
-        <p>Explore more {practiceTopic} challenges on CyLab Security Academy.</p>
-        <a class="dash-button secondary" href="https://learn.cylabacademy.org/" data-analytics-event="practice_next_click" data-analytics-label={slug} data-analytics-topic={practiceTopic}>Practice more on CyLab Security Academy</a>
+        <p>Explore more {practiceTopic} challenges {practiceSource.url ? 'on' : 'in'} {practiceSource.name}.</p>
+        {practiceSource.url && <a class="dash-button secondary" href={practiceSource.url} target="_blank" rel="noopener noreferrer" data-analytics-event="practice_next_click" data-analytics-label={slug} data-analytics-topic={practiceTopic}>Explore {practiceSource.name} ↗</a>}
       </div>
     </section>
   )}
