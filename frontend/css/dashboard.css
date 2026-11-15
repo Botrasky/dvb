@@ -38,7 +38,7 @@ body.dashboard-page{font-family:var(--font-ui);font-size:16px;line-height:1.5;}
 .masthead-link{display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:700;padding:5px 0 5px 8px;}
 .masthead-link small{display:block;font-weight:400;color:var(--dash-accent);}
 .author-initials{display:grid;place-items:center;flex:none;width:42px;height:42px;border:1px solid var(--border);border-radius:13px;background:var(--surface2);color:var(--dash-accent);font-family:var(--font-code);font-size:.875rem;font-weight:700;}
-.dash-lead{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(0,1fr);gap:16px;}
+.dash-lead{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.3fr);gap:16px;}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;min-width:0;}
 .mission{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;padding:clamp(20px,3.5vw,40px);min-height:300px;color:#effcf9;background:radial-gradient(ellipse at 85% 40%,#215566 0%,#102f3c 45%,#0c2531 78%);border-color:#366474;box-shadow:var(--dash-shadow);}
 .mission-copy{position:relative;z-index:1;width:min(100%,425px);}
