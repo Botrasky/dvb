@@ -30,7 +30,8 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | Push Phase 1 | Pending owner | Push only after separate push approval |
 | Complete UTS#39/confusable coverage | Future | Requires a separate approved phase |
 | Calibrate scoring and reviewed brand data | Future | Requires labeled examples and owner approval |
-| Enable feature-branch CI triggers | Future | Separate CI change requiring approval |
+| Enable feature-branch CI triggers | Complete | Commit 0708b01 runs checks on every branch push |
+| Document the scoring contract | In progress | Add a scanner module note before calibration work |
 
 ## Verified evidence
 
@@ -53,6 +54,7 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | 2026-11-16 | Hostname and script handling added | Raw hostname preservation and non-scoring mixed-script analysis |
 | 2026-11-16 | Phase 1 verification completed | 23 tests and the full local quality suite passed |
 | 2026-11-16 | Review state recorded | Changes remain local and await owner review before commit |
+| 2026-11-16 | Feature-branch CI enabled | Commit 0708b01 runs the existing checks on every branch push |
 
 ## Decisions
 
