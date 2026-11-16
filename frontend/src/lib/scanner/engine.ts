@@ -1,5 +1,6 @@
 import { pslDomainParser } from "./domainParser.ts";
 import { analyzeScripts } from "./homograph.ts";
+import { confusableSkeleton } from "./unicode.ts";
 import { parseInput } from "./parse.ts";
 import { redactUrl } from "./redact.ts";
 import { DEMO_RULES, validateRules } from "./rules.ts";
@@ -28,23 +29,6 @@ const LIMITATIONS = [
   "A low score does not establish that a site is safe.",
   "Scores and labels are provisional and require calibration before release.",
 ];
-const CONFUSABLE: Record<string, string> = {
-  а: "a",
-  е: "e",
-  о: "o",
-  р: "p",
-  с: "c",
-  х: "x",
-  у: "y",
-  і: "i",
-  ӏ: "l",
-  α: "a",
-  ο: "o",
-  ρ: "p",
-};
-function unicodeSkeleton(s: string): string {
-  return [...s].map((c) => CONFUSABLE[c] ?? c).join("");
-}
 function editDistanceAtMostOne(a: string, b: string): boolean {
   if (Math.abs(a.length - b.length) > 1) return false;
   let i = 0,
@@ -227,7 +211,7 @@ export function scanUrl(
 
   if (registrableDomain) {
     const firstLabel = registrableDomain.split(".")[0];
-    const skel = unicodeSkeleton(firstLabel);
+    const skel = confusableSkeleton(firstLabel);
     for (const brand of rules.brands) {
       const official = brand.domains.map((d) => d.toLowerCase());
       if (official.includes(registrableDomain)) continue;
@@ -235,7 +219,9 @@ export function scanUrl(
       const officialLabels = official.map((d) => d.split(".")[0]);
       if (
         officialLabels.some(
-          (name) => editDistanceAtMostOne(skel, name) && skel !== name,
+          (name) =>
+            (firstLabel !== name && skel === confusableSkeleton(name)) ||
+            (editDistanceAtMostOne(firstLabel, name) && firstLabel !== name),
         )
       ) {
         add(

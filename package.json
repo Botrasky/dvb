@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
-    "psl": "^1.15.0"
+    "psl": "^1.15.0",
+    "punycode": "2.3.1"
   }
 }

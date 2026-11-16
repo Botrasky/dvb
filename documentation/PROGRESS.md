@@ -38,7 +38,7 @@ This file records the current work ledger, verified evidence, decisions, and tim
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| npm run test:scanner | Passed | 25 scanner tests in the canonical checkout |
+| npm run test:scanner | Passed | 28 scanner tests in the canonical checkout |
 | npm run format:check | Passed | All files match Prettier style |
 | npm run check | Passed | 0 diagnostics |
 | npm run build | Passed | Vercel adapter build completed |
@@ -59,6 +59,7 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | 2026-11-16 | Scoring regression tests added | Partial-score and category-cap invariants are covered |
 | 2026-11-16 | Canonical checkout synchronization corrected | Copied the previously missed typed PSL shim, IPv4 octet validation and default-parser integration test; 25 tests, Astro check, build and routes passed |
 | 2026-11-16 | Unicode source acquired | Official version 16.0.0 confusables downloaded; SHA-256 95bd0aad6dced5ebc63436f459c06ab21a8d107cd842fb57f5c3a1e91bca8611 |
+| 2026-11-16 | Unicode brand matching integrated | 6,355 licensed Unicode 16 mappings, Punycode decoding and NFD skeleton comparison replace the small manual map; full script restrictions and scoring calibration remain pending |
 
 ## Decisions
 
