@@ -8,10 +8,10 @@ This file records the current work ledger, verified evidence, decisions, and tim
 
 | Area | Status | Evidence |
 | --- | --- | --- |
-| Active branch | feat/phishing-scanner-v1-core | Scanner Phase 1 work is in the review checkout |
+| Active branch | feat/phishing-scanner-v1-core | Scanner Phase 1 work is in the canonical checkout |
 | Phase | Phase 1 complete and pushed | PSL parser, raw hostname preservation, mixed-script analysis, Unicode skeleton matching, and tests are present |
 | Scanner score | Partial results only | score remains null while suspicious-character coverage and calibration are incomplete |
-| Verification | Passed | 23 scanner tests, Astro checks, formatting, build, route, and repository checks |
+| Verification | Passed | 28 scanner tests, Astro checks, formatting, build, route, and repository checks |
 | Commit and push | Complete | Phase 1 and follow-up increments are pushed to feat/phishing-scanner-v1-core |
 | Merge and deployment | Not authorized | Requires separate owner approval |
 
@@ -23,7 +23,7 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | Preserve the original hostname before URL normalization | Complete | ParsedInput.rawHostname is covered by tests |
 | Add mixed-script analysis | Complete for Phase 1 | Analysis is non-scoring and does not complete Unicode coverage |
 | Keep partial scores as null | Complete | Covered by scanner tests and default-parser integration test |
-| Add parser and script-analysis regression tests | Complete | 23 scanner tests pass |
+| Add parser and script-analysis regression tests | Complete | 28 scanner tests pass |
 | Validate the final Phase 1 diff | Complete | Formatting, Astro checks, build, route, and repository checks pass |
 | Review and approve the Phase 1 diff | Complete | Owner authorized implementation, synchronization, commit and push |
 | Commit Phase 1 | Complete | e945979, 53ad7f1, and 9f26191 |
@@ -53,8 +53,8 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | 2026-11-15 | ZEUS scanner prototype prepared | Browser-only parser, redaction, rule validation, typed results, and 11 tests |
 | 2026-11-16 | PSL parser integrated | Registrable-domain parsing uses the maintained psl dependency |
 | 2026-11-16 | Hostname and script handling added | Raw hostname preservation and non-scoring mixed-script analysis |
-| 2026-11-16 | Phase 1 verification completed | 23 tests and the full local quality suite passed |
-| 2026-11-16 | Review state recorded | Changes remain local and await owner review before commit |
+| 2026-11-16 | Phase 1 verification completed | 28 tests and the full local quality suite passed |
+| 2026-11-16 | Review state recorded | Owner-approved changes were committed and pushed to the feature branch |
 | 2026-11-16 | Feature-branch CI enabled | Commit 0708b01 runs the existing checks on every branch push |
 | 2026-11-16 | Scoring regression tests added | Partial-score and category-cap invariants are covered |
 | 2026-11-16 | Canonical checkout synchronization corrected | Copied the previously missed typed PSL shim, IPv4 octet validation and default-parser integration test; 25 tests, Astro check, build and routes passed |
