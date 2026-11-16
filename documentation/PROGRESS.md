@@ -9,10 +9,10 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | Area | Status | Evidence |
 | --- | --- | --- |
 | Active branch | feat/phishing-scanner-v1-core | Scanner Phase 1 work is in the review checkout |
-| Phase | Phase 1 complete locally | PSL parser, raw hostname preservation, mixed-script analysis, and tests are present |
-| Scanner score | Partial results only | score remains null while suspicious-character coverage is unavailable |
+| Phase | Phase 1 complete and pushed | PSL parser, raw hostname preservation, mixed-script analysis, Unicode skeleton matching, and tests are present |
+| Scanner score | Partial results only | score remains null while suspicious-character coverage and calibration are incomplete |
 | Verification | Passed | 23 scanner tests, Astro checks, formatting, build, route, and repository checks |
-| Commit and push | Pending owner review | Phase 1 changes are present locally and await review |
+| Commit and push | Complete | Phase 1 and follow-up increments are pushed to feat/phishing-scanner-v1-core |
 | Merge and deployment | Not authorized | Requires separate owner approval |
 
 ## Work ledger
@@ -25,10 +25,10 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | Keep partial scores as null | Complete | Covered by scanner tests and default-parser integration test |
 | Add parser and script-analysis regression tests | Complete | 23 scanner tests pass |
 | Validate the final Phase 1 diff | Complete | Formatting, Astro checks, build, route, and repository checks pass |
-| Review and approve the Phase 1 diff | Approved | Owner authorized implementation, synchronization, commit and push |
-| Commit Phase 1 | Complete | e945979, followed by synchronization corrections |
+| Review and approve the Phase 1 diff | Complete | Owner authorized implementation, synchronization, commit and push |
+| Commit Phase 1 | Complete | e945979, 53ad7f1, and 9f26191 |
 | Push Phase 1 | Complete | Feature branch published |
-| Complete UTS#39/confusable coverage | In progress | Official Unicode 16.0.0 data downloaded successfully; integration pending |
+| Complete UTS#39/confusable coverage | In progress | Unicode 16.0.0 skeleton matching is integrated; coverage remains unavailable pending broader calibration |
 | Calibrate scoring and reviewed brand data | Future | Requires labeled examples and owner approval |
 | Add scoring regression coverage | Complete | Partial-score and cap invariants are covered in scoring.test.mjs |
 | Enable feature-branch CI triggers | Complete | Commit 0708b01 runs checks on every branch push |
