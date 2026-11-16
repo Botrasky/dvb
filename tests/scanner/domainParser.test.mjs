@@ -1,6 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { pslDomainParser } from "../../frontend/src/lib/scanner/domainParser.ts";
+import { scanUrl } from "../../frontend/src/lib/scanner/engine.ts";
+
+test("scanUrl uses the Public Suffix List by default and withholds a partial score", () => {
+  const result = scanUrl("https://sub.example.co.uk/");
+  assert.equal(result.registrableDomain, "example.co.uk");
+  assert.equal(
+    result.coverage.find(({ id }) => id === "suspicious-characters")?.status,
+    "unavailable",
+  );
+  assert.equal(result.score, null);
+});
 
 test("pslDomainParser correctly identifies standard ASCII domains", () => {
   const result = pslDomainParser("sub.example.com");
@@ -31,6 +42,11 @@ test("pslDomainParser recognizes IPv4 addresses and marks isIp without domain", 
   assert.equal(result.isIp, true);
   assert.equal(result.domain, null);
   assert.equal(result.publicSuffix, null);
+});
+
+test("pslDomainParser rejects IPv4 octets outside the valid range", () => {
+  assert.equal(pslDomainParser("999.999.999.999").isIp, false);
+  assert.equal(pslDomainParser("255.255.255.255").isIp, true);
 });
 
 test("pslDomainParser recognizes IPv6 addresses and marks isIp without domain", () => {

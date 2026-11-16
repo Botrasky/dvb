@@ -25,10 +25,10 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | Keep partial scores as null | Complete | Covered by scanner tests and default-parser integration test |
 | Add parser and script-analysis regression tests | Complete | 23 scanner tests pass |
 | Validate the final Phase 1 diff | Complete | Formatting, Astro checks, build, route, and repository checks pass |
-| Review and approve the Phase 1 diff | Pending owner | Review the working-tree diff |
-| Commit Phase 1 | Pending owner | Commit only after diff approval |
-| Push Phase 1 | Pending owner | Push only after separate push approval |
-| Complete UTS#39/confusable coverage | Future | Requires a separate approved phase |
+| Review and approve the Phase 1 diff | Approved | Owner authorized implementation, synchronization, commit and push |
+| Commit Phase 1 | Complete | e945979, followed by synchronization corrections |
+| Push Phase 1 | Complete | Feature branch published |
+| Complete UTS#39/confusable coverage | In progress | Official Unicode 16.0.0 data downloaded successfully; integration pending |
 | Calibrate scoring and reviewed brand data | Future | Requires labeled examples and owner approval |
 | Add scoring regression coverage | Complete | Partial-score and cap invariants are covered in scoring.test.mjs |
 | Enable feature-branch CI triggers | Complete | Commit 0708b01 runs checks on every branch push |
@@ -38,7 +38,7 @@ This file records the current work ledger, verified evidence, decisions, and tim
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| npm run test:scanner | Passed | 23 scanner tests |
+| npm run test:scanner | Passed | 25 scanner tests in the canonical checkout |
 | npm run format:check | Passed | All files match Prettier style |
 | npm run check | Passed | 0 diagnostics |
 | npm run build | Passed | Vercel adapter build completed |
@@ -57,6 +57,8 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | 2026-11-16 | Review state recorded | Changes remain local and await owner review before commit |
 | 2026-11-16 | Feature-branch CI enabled | Commit 0708b01 runs the existing checks on every branch push |
 | 2026-11-16 | Scoring regression tests added | Partial-score and category-cap invariants are covered |
+| 2026-11-16 | Canonical checkout synchronization corrected | Copied the previously missed typed PSL shim, IPv4 octet validation and default-parser integration test; 25 tests, Astro check, build and routes passed |
+| 2026-11-16 | Unicode source acquired | Official version 16.0.0 confusables downloaded; SHA-256 95bd0aad6dced5ebc63436f459c06ab21a8d107cd842fb57f5c3a1e91bca8611 |
 
 ## Decisions
 

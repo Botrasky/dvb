@@ -1,4 +1,4 @@
-import psl from "psl";
+import { parse } from "psl";
 import type { DomainInfo, DomainParser } from "./types.ts";
 
 const IPV4_PATTERN = /^(?:\d{1,3}\.){3}\d{1,3}$/;
@@ -17,7 +17,10 @@ export const pslDomainParser: DomainParser = (host: string): DomainInfo => {
   }
 
   // IPv4 check
-  if (IPV4_PATTERN.test(normalized)) {
+  if (
+    IPV4_PATTERN.test(normalized) &&
+    normalized.split(".").every((octet) => Number(octet) <= 255)
+  ) {
     return {
       domain: null,
       publicSuffix: null,
@@ -26,7 +29,7 @@ export const pslDomainParser: DomainParser = (host: string): DomainInfo => {
     };
   }
 
-  const parsed = psl.parse(normalized);
+  const parsed = parse(normalized);
   if ("error" in parsed || !parsed.listed) {
     return {
       domain: null,
