@@ -35,6 +35,7 @@ export interface ScanResult {
 export interface ParsedInput {
   inputKind: ScanResult["inputKind"];
   url: URL;
+  rawHostname: string;
   assumedScheme: boolean;
 }
 export interface DomainInfo {

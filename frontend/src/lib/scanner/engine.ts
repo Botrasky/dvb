@@ -1,6 +1,8 @@
+import { pslDomainParser } from "./domainParser.ts";
+import { analyzeScripts } from "./homograph.ts";
 import { parseInput } from "./parse.ts";
 import { redactUrl } from "./redact.ts";
-import { validateRules } from "./rules.ts";
+import { DEMO_RULES, validateRules } from "./rules.ts";
 import type {
   Category,
   DomainParser,
@@ -80,12 +82,12 @@ function label(score: number): string {
  */
 export function scanUrl(
   input: string,
-  resolveDomain: DomainParser,
-  rawRules: unknown,
+  resolveDomain: DomainParser = pslDomainParser,
+  rawRules: unknown = DEMO_RULES,
 ): ScanResult {
   const parsed = parseInput(input);
   const rules: ScannerRules = validateRules(rawRules);
-  const { url } = parsed;
+  const { url, rawHostname } = parsed;
   const hostname = url.hostname.toLowerCase();
   const hostInfo = resolveDomain(hostname);
   const registrableDomain = hostInfo.domain?.toLowerCase() ?? null;
@@ -119,8 +121,12 @@ export function scanUrl(
     coverage.find((c) => c.id === "brand-impersonation")!.status =
       "unavailable";
   }
-  // URL.hostname is IDNA/Punycode normalized; full Unicode checks need a reviewed
-  // UTS#39 confusables library and reliable decoding before claiming completion.
+  // URL.hostname is IDNA/Punycode normalized; inspect rawHostname for script analysis.
+  // Full Unicode checks need a reviewed UTS#39 confusables library and reliable decoding
+  // before claiming completion. Non-ASCII or mixed-script detection does not generate findings
+  // or add points here, keeping coverage unavailable and score null.
+  const scriptInfo = analyzeScripts(rawHostname);
+  void scriptInfo;
   coverage.find((c) => c.id === "suspicious-characters")!.status =
     "unavailable";
   if (hostIsIp)

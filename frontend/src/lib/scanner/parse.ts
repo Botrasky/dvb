@@ -27,9 +27,24 @@ export function parseInput(value: string): ParsedInput {
     throw new Error("Only HTTP(S) URLs are supported.");
   if (!url.hostname || /\s/.test(url.hostname))
     throw new Error("URL hostname is invalid.");
+
+  // Extract raw pre-normalized hostname before URL punycode normalization
+  let raw = explicit ? input.replace(/^[a-z][a-z0-9+.-]*:\/\//i, "") : input;
+  raw = raw.split(/[/?#]/)[0];
+  if (raw.includes("@")) {
+    raw = raw.split("@").pop()!;
+  }
+  let rawHostname = raw;
+  if (rawHostname.startsWith("[") && rawHostname.includes("]")) {
+    rawHostname = rawHostname.slice(1, rawHostname.indexOf("]"));
+  } else if (rawHostname.includes(":")) {
+    rawHostname = rawHostname.split(":")[0];
+  }
+
   return {
     inputKind: explicit ? "complete-url" : "domain-only",
     url,
+    rawHostname,
     assumedScheme: !explicit,
   };
 }
