@@ -13,7 +13,7 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | Scanner score | Partial results only | score remains null while suspicious-character coverage and calibration are incomplete |
 | Verification | Local checks passed for current increment | 31 scanner tests, Astro check, formatting, build, and 19-page route check passed; browser acceptance remains pending |
 | Commit and push | Complete | Phase 1 and follow-up increments are pushed to feat/phishing-scanner-v1-core |
-| Phase 2 UI publication | Owner approved | Feature branch only. Local detection engine and test changes are outside this UI publication scope. |
+| Phase 2 UI publication | Owner approved for feature branch | UI commit `2572f23`; clean snapshot passed dependency install, formatting, Astro check, 28 scanner tests, build, 19 routes, and repository checks. The 31-test result covers the local engine and test changes excluded from this push. |
 | Merge and deployment | Not authorized | Requires separate owner approval |
 
 ## Public Beta readiness checklist
