@@ -31,7 +31,7 @@ This file records the current work ledger, verified evidence, decisions, and tim
 | Complete UTS#39/confusable coverage | Future | Requires a separate approved phase |
 | Calibrate scoring and reviewed brand data | Future | Requires labeled examples and owner approval |
 | Enable feature-branch CI triggers | Complete | Commit 0708b01 runs checks on every branch push |
-| Document the scoring contract | In progress | Add a scanner module note before calibration work |
+| Document the scoring contract | Complete | frontend/src/lib/scanner/README.md records partial-score and calibration rules |
 
 ## Verified evidence
 
