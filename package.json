@@ -12,6 +12,7 @@
     "check:routes": "node scripts/check-build-routes.mjs",
     "preview": "astro preview",
     "check": "astro check",
+    "test:scanner": "node --experimental-strip-types --test tests/scanner/*.test.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

@@ -1,6 +1,6 @@
 # ZEUS Project Progress
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 
 This is the shared execution record for the ZEUS Cybersecurity Portfolio. It
 records verified state, planned work, agent activity, evidence, decisions, and
@@ -644,3 +644,14 @@ Add a new dated entry after each material task:
 - Blockers or risks:
 - Owner decision needed:
 ```
+
+### 2026-11-16 — Phishing scanner V1 core prototype
+
+- Agent: Codex (GPT-6), integrating and reviewing the ChatGPT-generated prototype.
+- Approved scope: Add the backend TypeScript scanner core and tests to `feat/phishing-scanner-v1-core`; commit and push that branch only. No merge or deployment.
+- Files changed: `.github/workflows/ci.yml`, `package.json`, `frontend/src/lib/scanner/{types,parse,redact,rules,engine}.ts`, `tests/scanner/core.test.mjs`, and this progress record.
+- Completed: Integrated the browser-only parser, redaction, typed findings, demo rules, six category contracts, capped provisional contributions, and 11 tests. Corrected the incomplete-coverage test to require a null score; added the test command to CI.
+- Planned next: Integrate a maintained Public Suffix List parser, complete Unicode analysis, review brand inventory, calibrate scoring, and design signed rules before any release use.
+- Tests/evidence: `npm ci --offline`, `npm run test:scanner` (11 passed), `npm run format:check`, `npm run check` (0 diagnostics), `npm run build`, `npm run check:routes` (18 HTML pages), `bash scripts/ci-check.sh`, and `git diff --cached --check` passed.
+- Blockers or risks: This prototype has an injected domain parser only; the tests use a fake parser. Unicode coverage is unavailable, so results are Partial Analysis with no numeric score. Rule signatures, trusted updates, full privacy review, and production integration remain pending.
+- Owner decision needed: Review proposed scoring weights and brand data before a release milestone. No merge or deployment is authorized.
