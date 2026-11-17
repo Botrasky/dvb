@@ -137,6 +137,23 @@ new release candidate rather than treated as permanent proof.
 - Remaining: wait for green required checks, merge PR #90, and verify the live
   site. The owner has authorized the merge after checks pass.
 
+### 2026-11-18 — Enlarge fallback publisher logos
+
+- Approved scope: enlarge logos only in the main story-thumbnail fallback;
+  leave the compact source badge unchanged.
+- Reduced the fallback logo padding from 18% to 6% in
+  `frontend/css/dashboard.css` and `frontend/public/css/dashboard.css`, keeping
+  `object-fit: contain` so the full logo remains visible.
+- Validation passed: `npm run check` (44 files, 0 diagnostics), `npm run build`,
+  `npm run check:routes` (18 HTML pages), `bash scripts/ci-check.sh`, and
+  `git diff --check`.
+- `npm ci` reported 18 dependency audit vulnerabilities (2 moderate, 16 high);
+  no dependency manifests were changed.
+- No commit, push, pull request, merge, or deployment was made. A visual
+  preview remains for owner review; the local development server is not
+  reachable from the built-in browser pane. Separate owner approval is needed
+  before any release action.
+
 ### 2026-11-15 — Learning paths and practice pilot
 
 - [x] Add the Practice next card to the RSA and Hidden Cipher 2 writeups, with CyLab links and click labels for each writeup and topic.
