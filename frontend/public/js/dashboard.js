@@ -46,7 +46,7 @@
   ];
   const publishers = new Map([
     ['NIST', ['nist', 'NIST', '/assets/publisher-marks/nist.svg']],
-    ['CISA', ['cisa', 'CISA', '']],
+    ['CISA', ['cisa', 'CISA', '/assets/publisher-marks/cisa.png']],
     ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg']],
     ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg']],
     ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-security.svg']],
