@@ -9,11 +9,11 @@ const publishers = [
     imageHosts: ["www.nist.gov"],
   },
   {
-    name: "Cloud Security Alliance",
-    kind: "Cloud security",
-    feed: "https://cloudsecurityalliance.org/feed/",
-    hosts: ["cloudsecurityalliance.org"],
-    imageHosts: ["cloudsecurityalliance.org"],
+    name: "CISA",
+    kind: "Cybersecurity advisories",
+    feed: "https://www.cisa.gov/cybersecurity-advisories/all.xml",
+    hosts: ["www.cisa.gov"],
+    imageHosts: ["www.cisa.gov"],
   },
   {
     name: "Cloudflare",

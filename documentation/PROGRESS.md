@@ -1,6 +1,6 @@
 # ZEUS Project Progress
 
-Last updated: 2026-11-13
+Last updated: 2026-11-18
 
 This is the shared execution record for the ZEUS Cybersecurity Portfolio. It
 records verified state, planned work, agent activity, evidence, decisions, and
@@ -118,6 +118,24 @@ new release candidate rather than treated as permanent proof.
 | 10 | Promote `test` to `main` | Owner approval required | Production merge and live smoke test | Pending |
 
 ## Agent activity log
+
+### 2026-11-18 — CISA threat-brief production hotfix
+
+- Replaced Cloud Security Alliance with CISA's official advisories feed, updated
+  the dashboard source links and fallback story, and added CISA's official logo
+  as the fallback image when a feed item has no thumbnail.
+- Changed `backend/security-brief-legacy.mjs`, `frontend/src/components/ThreatBrief.astro`,
+  `frontend/index.html`, both dashboard JS/CSS copies, both publisher-mark asset
+  copies, and this progress record.
+- Local verification passed: `bash scripts/ci-check.sh`, `npm run check`
+  (44 files, 0 diagnostics), `npm run build`, `npm run check:routes` (18 HTML
+  pages), live CISA RSS parser check (2 items, all links on `www.cisa.gov`), and
+  `git diff --check`.
+- PR #90 targets `main`; the Vercel preview is ready. The initial CI run failed
+  only because this required progress entry was missing. A fresh CI run is
+  required before merge. Production has not been merged or deployed.
+- Remaining: wait for green required checks, merge PR #90, and verify the live
+  site. The owner has authorized the merge after checks pass.
 
 ### 2026-11-15 — Learning paths and practice pilot
 

@@ -87,9 +87,9 @@ import Carousel from 'bootstrap/js/dist/carousel';
       image: 'https://www.nist.gov/sites/default/files/images/2024/04/15/CSF-wheel-revamp-v5-transparent_Op%203.png',
     },
     {
-      source: 'Cloud Security Alliance', kind: 'Cloud security', title: 'AI governance as an architecture problem',
-      summary: 'A look at how teams can build governance into the systems they use for AI.',
-      url: 'https://cloudsecurityalliance.org/articles/ai-governance-isn-t-a-chore-problem-it-s-an-architecture-problem',
+      source: 'CISA', kind: 'Cybersecurity advisories', title: 'CISA cybersecurity alerts and advisories',
+      summary: 'Official alerts on current cyber threats and vulnerabilities, plus detailed security guidance and recommended actions.',
+      url: 'https://www.cisa.gov/news-events/cybersecurity-advisories',
     },
     {
       source: 'Cloudflare', kind: 'Security research', title: 'The post-quantum future of web privacy',
@@ -124,7 +124,7 @@ import Carousel from 'bootstrap/js/dist/carousel';
   ];
   const publishers = new Map([
     ['NIST', ['nist', 'NIST', '/assets/publisher-marks/nist.svg']],
-    ['Cloud Security Alliance', ['csa', 'Cloud Security Alliance', '/assets/publisher-marks/csa.svg']],
+    ['CISA', ['cisa', 'CISA', '/assets/publisher-marks/cisa.png']],
     ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg']],
     ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg']],
     ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-security.svg']],
