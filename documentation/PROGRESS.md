@@ -154,6 +154,28 @@ new release candidate rather than treated as permanent proof.
   reachable from the built-in browser pane. Separate owner approval is needed
   before any release action.
 
+### 2026-11-18 — Replace publisher placeholder marks
+
+- Approved scope: replace custom publisher artwork with verified publisher
+  marks; continue preferring story thumbnails, use the larger publisher mark
+  only when a thumbnail is unavailable, and use text only for NVD because no
+  distinct official NVD mark was verified.
+- Updated the dashboard mappings and mirrored CSS/JS copies. Added publisher
+  assets to `frontend/assets/publisher-marks/` and
+  `frontend/public/assets/publisher-marks/`, and updated the static NIST mark
+  in `frontend/src/components/ThreatBrief.astro`. Asset pairs match; generated
+  deployment assets are present; no hotlinked logo assets were introduced.
+- Validation passed: `npm run format:check`; `npm run check` (44 files, 0
+  diagnostics); `npm run build`; `npm run check:routes` (18 HTML pages);
+  `bash scripts/ci-check.sh`; `git diff --check`; asset mirror/build checks;
+  and a stale-placeholder-reference check.
+- `npm ci` completed and reported 18 dependency audit vulnerabilities (2
+  moderate, 16 high); no dependency manifests were changed.
+- Browser preview and interaction review remain outstanding. No commit, push,
+  pull request, merge, or deployment was made. The change is on
+  `fix/official-publisher-logos`; owner review and separate release approval
+  are required before publication.
+
 ### 2026-11-15 — Learning paths and practice pilot
 
 - [x] Add the Practice next card to the RSA and Hidden Cipher 2 writeups, with CyLab links and click labels for each writeup and topic.
