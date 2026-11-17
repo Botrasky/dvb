@@ -158,8 +158,9 @@ new release candidate rather than treated as permanent proof.
 
 - Approved scope: replace custom publisher artwork with verified publisher
   marks; continue preferring story thumbnails, use the larger publisher mark
-  only when a thumbnail is unavailable, and use text only for NVD because no
-  distinct official NVD mark was verified.
+  only when a thumbnail is unavailable. The owner confirmed that NVD should use
+  the NIST official mark as its fallback because no distinct official NVD mark
+  was verified; existing NVD story thumbnails remain preferred.
 - Updated the dashboard mappings and mirrored CSS/JS copies. Added publisher
   assets to `frontend/assets/publisher-marks/` and
   `frontend/public/assets/publisher-marks/`, and updated the static NIST mark

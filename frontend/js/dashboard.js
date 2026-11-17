@@ -128,7 +128,7 @@ import Carousel from 'bootstrap/js/dist/carousel';
     ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg', '/assets/publisher-marks/cloudflare.svg']],
     ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg', '/assets/publisher-marks/unit42-icon.png']],
     ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-logo.png', '/assets/publisher-marks/ibm-logo.png']],
-    ['NVD', ['nvd', 'NVD', '', '']],
+    ['NVD', ['nvd', 'NVD', '/assets/publisher-marks/nist-mark.png', '/assets/publisher-marks/nist-mark.png', 'NIST']],
     ['The Hacker News', ['thn', 'The Hacker News', '/assets/publisher-marks/the-hacker-news.jpg', '/assets/publisher-marks/the-hacker-news-icon.jpg']],
     ['BleepingComputer', ['bc', 'BleepingComputer', '/assets/publisher-marks/bleepingcomputer-logo.png', '/assets/publisher-marks/bleepingcomputer-icon.png']],
   ]);
@@ -158,7 +158,7 @@ import Carousel from 'bootstrap/js/dist/carousel';
   let typingVersion = 0;
 
   function renderThumbnail(story) {
-    const [style, label, logo, badgeLogo] = publishers.get(story.source) || ['unknown', 'Security news', '', ''];
+    const [style, label, logo, badgeLogo, badgeLabel] = publishers.get(story.source) || ['unknown', 'Security news', '', ''];
     thumb.dataset.publisher = style;
     sourceMark.dataset.publisher = style;
     sourceMark.hidden = !badgeLogo;
@@ -170,7 +170,7 @@ import Carousel from 'bootstrap/js/dist/carousel';
       sourceLogo.hidden = !badgeLogo;
       if (badgeLogo) {
         sourceLogo.src = badgeLogo;
-        sourceLogo.alt = `${label} logo`;
+        sourceLogo.alt = `${badgeLabel || label} logo`;
       } else {
         sourceLogo.removeAttribute('src');
         sourceLogo.alt = '';
