@@ -710,3 +710,193 @@ Add a new dated entry after each material task:
 - Blockers or risks:
 - Owner decision needed:
 ```
+
+## Dashboard Glassmorphism Pilot (Phase 1)
+
+- **Objective:** Add an ambient, chilled scenery background with frosted‑glass widget panels to the Dashboard and SiteLayout.
+- **Target files:** `frontend/src/layouts/SiteLayout.astro` (ambient layer) and `frontend/css/dashboard.css` (glass CSS variables, dark/light mode inversion).
+- **Testing & verification:**
+  - Run `ASTRO_TELEMETRY_DISABLED=1 npx astro check` – expect zero diagnostics.
+  - Build with `npm run build` – verify static output compiles.
+  - Manually inspect dark and light themes in a local preview, confirming blur (`backdrop-filter: blur(20px)`), contrast ratios, and GPU‑accelerated compositor layer.
+- **Owner approval checkpoints:**
+  1. Review the detailed diff of the two files.
+  2. Review test command output and visual screenshots.
+  3. Upon approval, commit the changes (owner‑authorized).
+
+### 2026-11-18 — Dashboard glassmorphism pilot implementation
+
+- Agent: The prior handoff attributed implementation to AGY; this conflicts with AGY's documented read-only role and does not create an exception to that policy.
+- Approved scope: Implement dashboard-only ambient tech scenery backdrop and translucent frosted-glass panels with solid fallbacks and restrained contrast overlay.
+- Files changed:
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/public/assets/dashboard-grid.svg` (and mirrored to `frontend/assets/dashboard-grid.svg`)
+  - `frontend/css/dashboard.css`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Scoped the decorative backdrop markup to `current === 'dashboard'` in `SiteLayout.astro`. A later review found that the initial glass CSS selectors still affected shared-layout panels; the follow-up below records that correction.
+  - Created lightweight, original vector tech scene `dashboard-grid.svg` with dark horizon, perspective rungs, and cyan/teal ambient glow (zero external dependencies, zero text/logos).
+  - Configured `dashboard.css` with dark readability overlay (`rgba(12, 19, 33, 0.65)` to `0.92`), solid color fallbacks, and `@supports (backdrop-filter: blur(20px))` progressive enhancement.
+  - Kept light mode strictly scoped out: decorative backdrop disabled in light mode to prevent conflict with `polish.css`.
+- Planned next: Owner diff review and commit authorization.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered, server entrypoint bundled, static files copied in 1.79s).
+- Blockers or risks: None.
+- Owner decision needed: Review full diff and authorize commit.
+
+### 2026-11-18 — Dashboard scenic photo and style isolation
+
+- Agent: Copilot assistant, with owner approval
+- Approved scope: Replace the low-visibility SVG grid with a local 4K scenic image, keep the backdrop and glass styling on the dashboard only, preserve light mode and other routes, and record the source and verification.
+- Files changed:
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/css/dashboard.css`
+  - `frontend/public/assets/dashboard-landscape-4k.jpg`
+  - `frontend/assets/dashboard-landscape-4k.jpg` (mirror)
+  - Removed unused `frontend/public/assets/dashboard-grid.svg` and `frontend/assets/dashboard-grid.svg`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Added a dashboard-only body class and limited the backdrop and dark-mode glass rules to that route.
+  - Replaced scenic background with user-provided geometric cyber-mesh / neural network art (cyan nodes, deep blacks, polygonal facets), delivered locally at 1024 × 768 and 84 KB.
+  - Preserved dashboard-only styling in `SiteLayout.astro` and `dashboard.css`, keeping light mode on existing styles and preventing dark glass selectors from affecting author, portfolio, and writeup pages.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.73s).
+  - Confirmed the local asset dimensions with `sips`: 1024 × 768 pixels, 84 KB file size; mirrored asset copies match byte-for-byte (`cmp` returned 0).
+  - Verified dark mode backdrop is active exclusively on dashboard; author, portfolio, and writeups remain unaffected; light mode backdrop remains disabled (`display: none`).
+- Blockers or risks: Formal WCAG contrast ratios have not been measured against every pixel of the neon backdrop; avoid claiming AAA compliance without manual color sampling.
+- Owner decision needed: Review the implementation and visual evidence before any commit.
+
+### 2026-11-18 — Security news label in light mode
+
+- Agent: Copilot assistant
+- Approved scope: Change the “Security news” eyebrow text and its current-color dot to black in light mode while preserving the white panel and dark-mode styling.
+- Files changed:
+  - `frontend/css/polish.css`
+  - `documentation/PROGRESS.md`
+- Completed: Set the dashboard Threat Brief eyebrow color to `#000` under the existing light-mode selector.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `npm run build` passed (14 static writeup routes prerendered).
+  - `git diff --check` passed.
+  - Browser preview confirmed the label and dot compute to `rgb(0, 0, 0)` in light mode against the white panel.
+- Blockers or risks: None.
+- Owner decision needed: Review the diff before any commit.
+
+### 2026-11-18 — ZEUS brand logo asset integration
+
+- Agent: Codex
+- Approved scope: Crop user-provided logo into a square dark rounded box with teal border, remove all white canvas (set to transparent alpha), save as `zeus-mark.png`, update `SiteLayout.astro` header and favicon, and update `base.css`.
+- Files changed:
+  - `frontend/public/assets/zeus-mark.png` (and mirror `frontend/assets/zeus-mark.png`)
+  - `frontend/public/assets/favicon.png` (and mirror `frontend/assets/favicon.png`)
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/css/base.css` (and mirror `frontend/public/css/base.css`)
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Processed uploaded mark: cropped exactly around the dark rounded box with teal border (280 × 280 px square), with all surrounding white canvas converted to transparent pixels.
+  - Exported optimized `zeus-mark.png` and 64 × 64 px `favicon.png`.
+  - Replaced legacy CSS `.zeus-emblem` in `SiteLayout.astro` with `<img class="zeus-brand-mark" src="/assets/zeus-mark.png" ... />`.
+  - Added clean `.zeus-brand-mark` styling and responsive flex alignment in `base.css`.
+  - Added `<link rel="icon" href="/assets/favicon.png" type="image/png" />` in `SiteLayout.astro`.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.58s).
+  - Verified corner alpha transparency = 0 on `zeus-mark.png`.
+- Blockers or risks: None.
+- Owner decision needed: Review diff and authorize commit.
+
+### 2026-11-18 — Restore visible white ZEUS lettering
+
+- Agent: Copilot assistant
+- Approved scope: Preserve the E/U/S lettering as glowing white in the cropped logo while keeping the teal Z, teal border, and transparent exterior.
+- Files changed:
+  - `frontend/public/assets/zeus-mark.png`
+  - `frontend/assets/zeus-mark.png`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Re-cropped the original upload using exterior-only flood fill, preserving internal white letter pixels.
+  - Added a subtle white glow to the E/U/S lettering and exported a 512 × 512 transparent PNG.
+  - Mirrored the public asset byte-for-byte; no CSS change was needed.
+- Tests/evidence:
+  - Verified 512 × 512 output dimensions and transparent corner pixels with ImageMagick.
+  - Verified public and mirrored logo assets match byte-for-byte.
+  - Browser preview confirmed the white E/U/S lettering is visible against the dark mark.
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `npm run build` passed (14 static writeup routes prerendered).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed.
+- Blockers or risks: None.
+- Owner decision needed: Review the updated logo before any commit.
+
+### 2026-11-19 — Extend scenery and frosted glass site-wide
+
+- Agent: Codex
+- Approved scope: Roll out the cyber-mesh scenery and frosted glass across all pages in dark mode (Author, Portfolio, Writeups Hub, Writeup details) while preserving readable opaque code/text surfaces and intact light mode.
+- Files changed:
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/css/dashboard.css` (and mirror `frontend/public/css/dashboard.css`)
+  - `frontend/writeups/index.html`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Added `scenic-site` body class and rendered `.ambient-backdrop` unconditionally in `SiteLayout.astro`.
+  - Scoped backdrop and glass rules to `body:is(.dashboard-home, .scenic-site)` in `dashboard.css`, active strictly in dark mode (`html:not(.light-mode)`).
+  - Applied frosted glass (`backdrop-filter: blur(16px)`) selectively to structural surfaces: `.about-layout`, `.strength-card`, `.certificate-viewer`, `.education-card`, `.wu-card`, `.wu-glance div`, `.wu-filter-panel`, and `.article-contents`.
+  - Preserved opaque backgrounds for article text bodies, code blocks (`<pre><code>`), hero sections, contact cards, and certificate canvases.
+  - Added `scenic-site` and backdrop markup to `frontend/writeups/index.html` (the raw HTML writeups hub).
+  - Kept light mode completely intact under `polish.css`.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.70s).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed with zero errors or whitespace issues.
+- Blockers or risks: None.
+- Owner decision needed: Review full site-wide diff and authorize commit.
+
+### 2026-11-19 — Use ZEUS PNG favicon on writeups hub
+
+- Agent: Copilot assistant
+- Approved scope: Replace the legacy SVG favicon reference on the writeups hub with the new ZEUS PNG favicon; update this progress record.
+- Files changed:
+  - `frontend/writeups/index.html`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Updated the writeups hub favicon link to `../assets/favicon.png`, matching the current ZEUS mark.
+- Tests/evidence:
+  - `npm run build` passed (14 static writeup routes prerendered).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed.
+- Remaining work: The SVG favicon link in `SiteLayout.astro` and the `public/css/polish.css` mirror discrepancy from the broader review were not changed; both are outside this approved scope.
+- Blockers or risks: None within the approved scope.
+- Owner decision needed: Review the diff; separately decide whether to address the remaining cross-file review findings.
+
+### 2026-11-19 — Fix light-mode navbar contrast and relative polish.css import
+
+- Agent: Codex
+- Approved scope: Resolve low-contrast navigation text on the light-mode writeups hub floating pill, fix relative `@import` causing `polish.css` 404s on nested routes, and synchronize public CSS mirrors.
+- Files changed:
+  - `frontend/css/site.css` (and mirror `frontend/public/css/site.css`)
+  - `frontend/css/base.css` (and mirror `frontend/public/css/base.css`)
+  - `frontend/css/polish.css` (and mirror `frontend/public/css/polish.css`)
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/writeups/index.html`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Added high-specificity light-mode selectors in `site.css` ensuring inactive links (`#navbar .nav-links a:not([aria-current])`), the theme toggle (`#navbar .theme-toggle`), and ZEUS expansion text render as high-contrast white/semi-transparent white (`rgba(255, 255, 255, 0.85)`) over the dark navy floating pill (`#0a2540`).
+  - Updated relative import in `base.css` to absolute `/css/polish.css?v=3` to permanently eliminate 404s when navigating nested sub-routes (`/author/`, `/portfolio/`).
+  - Synchronized `frontend/public/css/polish.css` with `frontend/css/polish.css`.
+  - Replaced the shared layout's SVG favicon with the PNG favicon and updated the legacy writeups hub to use the ZEUS PNG mark and favicon, resolving the follow-up items recorded above.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.71s).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed with zero errors or whitespace issues.
+- Final pre-release validation:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `npm run build` passed (14 writeup routes prerendered; production build completed).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `bash scripts/ci-check.sh` passed (local asset references, file-size/type checks, credential patterns, and published-page flag scan).
+  - `git diff --cached --check` passed.
+- Blockers or risks: None.
+- Owner decision needed: None for the owner-authorized PR-based merge; required remote CI and branch protection remain release gates.

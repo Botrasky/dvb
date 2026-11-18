@@ -109,7 +109,7 @@ html.light-mode body.dashboard-page .page-dashboard .brief{
   color:#142238!important;
 }
 html.light-mode body.dashboard-page .page-dashboard .brief :is(h2,h3,p,.brief-source,.brief-date,.brief-trust,.brief-sources a){color:#142238!important;}
-html.light-mode body.dashboard-page .page-dashboard .brief .eyebrow{color:#142238!important;}
+html.light-mode body.dashboard-page .page-dashboard .brief .brief-header p.eyebrow{color:#000!important;}
 html.light-mode body.dashboard-page .page-dashboard .brief :is(.brief-state,.brief-source-mark){background:#f6f8fb!important;border-color:#d8e0ea!important;color:#146654!important;}
 html.light-mode body.dashboard-page .page-dashboard .brief .brief-source-mark[data-publisher="nvd"]{background:#1a4c80!important;border-color:#1a4c80!important;}
 html.light-mode body.dashboard-page .page-dashboard .brief :is(.brief-original,.brief-sources a:hover){color:#146654!important;}
