@@ -109,4 +109,7 @@ footer{margin-top:24px;border-top:1px solid var(--border);background:var(--bg2);
 .wu-card{border-radius:var(--radius);}
 .grid-bg,.scanlines{pointer-events:none;}
 .wu-sidebar-title{overflow-wrap:anywhere;}
-.light-mode #navbar .theme-toggle{color:var(--text2);}
+.light-mode #navbar .nav-links a:not([aria-current]){color:rgba(255,255,255,0.85);}
+.light-mode #navbar .nav-links a:not([aria-current]):hover{color:#fff;background:rgba(255,255,255,0.12);}
+.light-mode #navbar .theme-toggle{color:rgba(255,255,255,0.85);}
+.light-mode #navbar .zeus-expansion{color:rgba(255,255,255,0.72);}
