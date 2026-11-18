@@ -172,10 +172,18 @@ new release candidate rather than treated as permanent proof.
   and a stale-placeholder-reference check.
 - `npm ci` completed and reported 18 dependency audit vulnerabilities (2
   moderate, 16 high); no dependency manifests were changed.
-- Browser preview and interaction review remain outstanding. No commit, push,
-  pull request, merge, or deployment was made. The change is on
-  `fix/official-publisher-logos`; owner review and separate release approval
-  are required before publication.
+- The owner reviewed and approved the Vercel preview. PR #92 merged into
+  `main` as `638e4fb7bc19b2f85696daf4563305b6cfeffe1e`; GitHub CI and the
+  `dvb-og72` production deployment both succeeded.
+- Production smoke checks found a domain-verification blocker:
+  `curl -sS -o /dev/null -w '%{http_code}\n' https://vathanakbotra.vercel.app/`
+  returned 404 (`DEPLOYMENT_NOT_FOUND`); the owner-mentioned
+  `https://zeuswriteups.vercel.app/` returned 429 (Vercel challenge); and the
+  immutable deployment URL redirected to Vercel sign-in (302), including its
+  home, asset, script, and writeup routes.
+- No domain or deployment configuration was changed. Owner decision needed:
+  confirm the intended production domain and access settings so the public
+  production route can be verified.
 
 ### 2026-11-15 — Learning paths and practice pilot
 
