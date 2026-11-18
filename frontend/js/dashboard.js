@@ -123,14 +123,14 @@ import Carousel from 'bootstrap/js/dist/carousel';
     },
   ];
   const publishers = new Map([
-    ['NIST', ['nist', 'NIST', '/assets/publisher-marks/nist.svg']],
-    ['CISA', ['cisa', 'CISA', '/assets/publisher-marks/cisa.png']],
-    ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg']],
-    ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg']],
-    ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-security.svg']],
-    ['NVD', ['nvd', 'NVD', '/assets/publisher-marks/nvd.svg']],
-    ['The Hacker News', ['thn', 'The Hacker News', '/assets/publisher-marks/thn.svg']],
-    ['BleepingComputer', ['bc', 'BleepingComputer', '/assets/publisher-marks/bleepingcomputer.svg']],
+    ['NIST', ['nist', 'NIST', '/assets/publisher-marks/nist-mark.png', '/assets/publisher-marks/nist-mark.png']],
+    ['CISA', ['cisa', 'CISA', '/assets/publisher-marks/cisa.png', '/assets/publisher-marks/cisa.png']],
+    ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg', '/assets/publisher-marks/cloudflare.svg']],
+    ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg', '/assets/publisher-marks/unit42-icon.png']],
+    ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-logo.png', '/assets/publisher-marks/ibm-logo.png']],
+    ['NVD', ['nvd', 'NVD', '/assets/publisher-marks/nist-mark.png', '/assets/publisher-marks/nist-mark.png', 'NIST']],
+    ['The Hacker News', ['thn', 'The Hacker News', '/assets/publisher-marks/the-hacker-news.jpg', '/assets/publisher-marks/the-hacker-news-icon.jpg']],
+    ['BleepingComputer', ['bc', 'BleepingComputer', '/assets/publisher-marks/bleepingcomputer-logo.png', '/assets/publisher-marks/bleepingcomputer-icon.png']],
   ]);
   const thumb = document.getElementById('brief-thumb');
   const thumbLabel = document.getElementById('brief-thumb-label');
@@ -158,17 +158,23 @@ import Carousel from 'bootstrap/js/dist/carousel';
   let typingVersion = 0;
 
   function renderThumbnail(story) {
-    const [style, label, logo] = publishers.get(story.source) || ['unknown', 'Security news', ''];
+    const [style, label, logo, badgeLogo, badgeLabel] = publishers.get(story.source) || ['unknown', 'Security news', '', ''];
     thumb.dataset.publisher = style;
     sourceMark.dataset.publisher = style;
+    sourceMark.hidden = !badgeLogo;
     delete thumb.dataset.media;
     thumbLabel.textContent = label;
     thumbLabel.hidden = false;
     thumbImage.replaceChildren();
     if (sourceLogo) {
-      sourceLogo.src = logo;
-      sourceLogo.alt = `${label} logo`;
-      sourceLogo.hidden = !logo;
+      sourceLogo.hidden = !badgeLogo;
+      if (badgeLogo) {
+        sourceLogo.src = badgeLogo;
+        sourceLogo.alt = `${badgeLabel || label} logo`;
+      } else {
+        sourceLogo.removeAttribute('src');
+        sourceLogo.alt = '';
+      }
     }
 
     function addImage(url, type, fallback) {
