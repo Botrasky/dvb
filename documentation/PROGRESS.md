@@ -62,14 +62,17 @@ authorize commits, pushes, pull requests, merges, or deployments.
 | `npm run format:check` | Passed (exit 0; all matched files formatted). |
 | `prettier --check` on the task documentation files | Passed (exit 0). |
 | `git diff --check` | Passed (exit 0; no whitespace errors in tracked changes). |
+| `bash scripts/ci-check.sh` | Passed (exit 0; repository integrity checks passed). |
 
-`npm run check`, `npm run build`, `npm run check:routes`, and
-`bash scripts/ci-check.sh` were not run because this change is documentation
-only and does not modify application code.
+`npm run check`, `npm run build`, and `npm run check:routes` were not run
+because this change is documentation only and does not modify application
+code.
 
 ### Remaining work and decisions
 
-- Owner review of the complete diff.
-- Commit, push, pull request, merge, and deployment remain unperformed and
-  require their own explicit approvals.
+- Initial changes were committed as `40696b4` and pushed to
+  `origin/feat/agent-skill-system`.
+- Opening a pull request into `test` requires separate owner approval.
+- Promotion from `test` to `main`, merge, and deployment remain unperformed and
+  require their own approvals.
 - No other blocker is known.
