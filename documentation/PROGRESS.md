@@ -966,3 +966,48 @@ because this promotion changes documentation only.
 - Commit, push, open a PR, merge, and deploy only after their separate owner
   approvals.
 - No application code or dependencies are in scope.
+
+## 2026-11-20 — Security flag redaction, production domain alignment, and duplicate cleanup
+
+### Approved scope
+
+- Redact unredacted CTF flags in `frontend/writeups/amaterasu/amaterasu-walkthrough.md` to `[REDACTED]`.
+- Update production domain references from `vathanakbotra.vercel.app` to `zeuswriteups.vercel.app` in `AGENTS.md`, `documentation/PROJECT_CHARTER.md`, and `astro.config.mjs`.
+- Remove tracked macOS duplicate files (`* 2.*`).
+- Maintain existing progress history and record verification results.
+
+### Files changed
+
+- `frontend/writeups/amaterasu/amaterasu-walkthrough.md` (modified: redacted plaintext flags)
+- `AGENTS.md` (modified: production domain updated)
+- `documentation/PROJECT_CHARTER.md` (modified: production domain updated)
+- `astro.config.mjs` (modified: site domain updated)
+- `CLAUDE.md` (modified: domain updated, skills pointer added)
+- `.github/copilot-instructions.md` (added: Copilot/Codex startup directives)
+- `.cursorrules` (added: Cursor startup directives)
+- `frontend/writeups/DriftingBlues6_Report 2.md` (deleted)
+- `frontend/src/content.config 2.ts` (deleted)
+- `frontend/src/env.d 2.ts` (deleted)
+- `scripts/check-progress-record 2.mjs` (deleted)
+- `documentation/PROGRESS.md` (modified: execution entry added)
+
+### Completed
+
+- Plaintext user and root flag tokens in `amaterasu-walkthrough.md` were replaced with `[REDACTED]`.
+- Canonical domain configuration in `astro.config.mjs` and project documentation in `AGENTS.md` and `PROJECT_CHARTER.md` now point to `https://zeuswriteups.vercel.app`.
+- 4 tracked macOS duplicate files were removed from Git.
+- Verification checks executed.
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `npm run format:check` | Passed (exit 0) |
+| `npm run check` | Passed (exit 0) |
+| `git diff --check` | Passed (exit 0) |
+| `bash scripts/ci-check.sh` | Passed (exit 0) |
+
+### Remaining work and decisions
+
+- Review diff with owner.
+- Await owner approval before commit, push, PR creation, or merge.
