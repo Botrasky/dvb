@@ -1,6 +1,6 @@
 # ZEUS Project Progress
 
-Last updated: 2026-11-18
+Last updated: 2026-11-20
 
 This is the shared execution record for the ZEUS Cybersecurity Portfolio. It
 records verified state, planned work, agent activity, evidence, decisions, and
@@ -11,10 +11,10 @@ scope expansion.
 
 | Area | Status | Evidence / notes |
 | --- | --- | --- |
-| Active branch | In progress | `feat/astro-refactor-threat-feed` |
-| Working tree | Typed writeup slice under review | Schema, detail route, eight reports, and this progress record are modified |
-| Local vs upstream | Ahead by two commits before this slice | Local `HEAD` is `e12a08d`; upstream ref is `b01901a` |
-| Remote freshness | Must verify before push | A successful current `git fetch origin --prune` is required before release action |
+| Active branch | Main-based skill promotion in progress | Local `feat/agent-skill-system-main`, based on fetched `main` commit `8f10762` |
+| Working tree | Documentation changes under review | Branch-aware agent skills are being prepared; existing progress history is preserved |
+| Local vs upstream | Not pushed | This promotion branch has no remote branch yet |
+| Remote freshness | Verified before branch creation | Fetched `main` to `FETCH_HEAD` at `8f10762` |
 | Astro migration foundation | Complete from prior handoff | Astro routes, Vercel integration, typed collection foundation, motion, and CI work are present in history |
 | Documentation baseline | Complete locally | Charter, migration plan, contribution guide, agent roles, and project rules are organized |
 | Production release | Not authorized | Do not push, merge, or deploy without separate owner approval |
@@ -900,3 +900,69 @@ Add a new dated entry after each material task:
   - `git diff --cached --check` passed.
 - Blockers or risks: None.
 - Owner decision needed: None for the owner-authorized PR-based merge; required remote CI and branch protection remain release gates.
+
+## 2026-11-20 — Branch-aware agent skill system
+
+### Approved scope
+
+- Prepare a narrow promotion based on the latest fetched `main`, containing
+  only the shared agent skill system and AGY's explicitly owner-approved,
+  file-scoped implementation guidance.
+- Make repository paths branch-aware because current `main` and `test` have
+  different Astro layouts.
+- Preserve the existing progress history; do not promote the full `test`
+  branch difference to `main`.
+
+### Files changed
+
+- `AGENTS.md`
+- `documentation/ai-agent-role-manager.md`
+- `documentation/agent-skills.md`
+- `documentation/skills/shared/SKILL.md`
+- `documentation/skills/planning/SKILL.md`
+- `documentation/skills/implementation/SKILL.md`
+- `documentation/skills/debugging/SKILL.md`
+- `documentation/skills/review/SKILL.md`
+- `documentation/skills/testing/SKILL.md`
+- `documentation/skills/release/SKILL.md`
+- `documentation/skills/audit/SKILL.md`
+- `documentation/PROGRESS.md`
+
+### Files and state inspected
+
+- Current `main` versions of `AGENTS.md`, `documentation/ai-agent-role-manager.md`,
+  and `documentation/PROGRESS.md`
+- `documentation/MIGRATION_PLAN.md`, `package.json`, and
+  `scripts/ci-check.sh` on `main`
+- Source tree layouts on `main` and `test`
+- PR #95 and the `test` versus `main` comparison
+
+### Completed
+
+- Added the shared skill index and eight phase guides.
+- Clarified AGY's scoped implementation permission and unconditional
+  commit/release restrictions without inventing an implementation flag.
+- Documented the current `main` (`frontend/`) and `test` (repository-root)
+  source layouts and instructed agents to verify paths on the active branch.
+- Preserved the existing progress record and appended this entry.
+- PR #95, which introduced the skill system on `test`, was merged after its
+  checks passed. The full `test` versus `main` comparison covered 135 files,
+  so this branch isolates the documentation promotion.
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `npm run format:check` | Passed (exit 0). |
+| `git diff --check` | Passed (exit 0 after final documentation edits). |
+| `bash scripts/ci-check.sh` | Passed (exit 0; repository integrity checks passed). |
+
+`npm run check`, `npm run build`, and `npm run check:routes` were not run
+because this promotion changes documentation only.
+
+### Remaining work and decisions
+
+- Review the complete main-based diff.
+- Commit, push, open a PR, merge, and deploy only after their separate owner
+  approvals.
+- No application code or dependencies are in scope.
