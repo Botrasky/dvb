@@ -2,7 +2,8 @@ name: CI
 
 on:
   push:
-    branches: [main, test]
+    branches:
+      - "**"
   pull_request:
 
 permissions:
@@ -26,6 +27,8 @@ jobs:
         run: npm run format:check
       - name: Run Astro checks
         run: npm run check
+      - name: Test scanner core
+        run: npm run test:scanner
       - name: Build Astro site
         run: npm run build
       - name: Check built routes and links

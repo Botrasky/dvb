@@ -1,6 +1,6 @@
 # Phishing Scanner Beta Plan
 
-**Status:** VirusTotal-only beta implemented on `feat/phishing-scanner-beta-main`, branched from fresh `origin/main`.
+**Status:** VirusTotal-only beta implementation is complete in PR #104 and ready to merge to `main` after CI passes.
 **Owner:** Vathanak Botra Dos
 **Implementer/reviewer:** Codex
 

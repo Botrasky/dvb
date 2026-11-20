@@ -16,21 +16,56 @@ export const prerender = true;
     <div class="row"><button id="rescan" type="button">Rescan URL</button><button id="clear" type="button">New scan</button><button id="demo" type="button">Try example</button></div>
     <p id="scan-status" role="status" aria-live="polite">Beta scanner ready.</p>
     <section id="scan-results" hidden aria-label="Scan results">
-      <div class="coverage-card"><div><span class="card-kicker">ANALYSIS COVERAGE</span><strong id="coverage-count"></strong></div><div class="progress-track"><span id="coverage-progress"></span></div></div>
-      <section id="verdict-card" class="verdict-card" hidden aria-live="polite"><span class="card-kicker">FIRST-STAGE VERDICT</span><h2 id="verdict-title">Checking VirusTotal evidence…</h2><p id="verdict-summary"></p><span id="verdict-source" class="verdict-source"></span></section>
-      <div class="summary-grid"><section class="summary-card"><span class="card-kicker">RISK SCORE</span><strong id="score-value">N/A</strong><span id="score-state">Partial analysis</span></section><section class="summary-card privacy-card"><span class="card-kicker">COVERAGE</span><strong>Local + VT</strong><span>First-stage cross-check</span></section></div>
-      <div class="row scanner-tabs" role="tablist" aria-label="Result views">
-        <button type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
-        <button type="button" role="tab" data-tab="findings" aria-selected="false">Findings</button>
-        <button type="button" role="tab" data-tab="technical" aria-selected="false">Technical</button>
-        <button type="button" role="tab" data-tab="reports" aria-selected="false">Reports</button>
+      <header class="report-heading">
+        <h2>Scan report</h2>
+        <p id="domain"></p>
+        <p id="redacted"></p>
+      </header>
+      <nav class="report-nav" aria-label="Jump to report section">
+        <a href="#overview">Overview</a>
+        <a href="#findings">Findings</a>
+        <a href="#technical">Technical</a>
+        <a href="#reports">Export</a>
+      </nav>
+      <div id="overview" class="report-section">
+        <h2>Overview</h2>
+        <div id="verdict-card" class="verdict-card" hidden aria-live="polite">
+          <span class="card-kicker">VirusTotal verdict</span>
+          <h3 id="verdict-title">Checking VirusTotal evidence…</h3>
+          <p id="verdict-summary"></p>
+          <span id="verdict-source" class="verdict-source"></span>
+        </div>
+        <div id="reputation-results" class="provider-evidence" hidden>
+          <h3>VirusTotal cross-check</h3>
+          <p id="vt-summary"></p>
+          <ul id="vt-details"></ul>
+          <p>Missing or zero detections in the existing report do not prove a URL is safe.</p>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-card"><span>Local risk score</span><strong id="score-value">N/A</strong><span id="score-state">Partial analysis</span></div>
+          <div class="summary-card"><span>Local checks completed</span><strong id="coverage-count"></strong><div class="progress-track"><span id="coverage-progress"></span></div></div>
+        </div>
+        <p>A low or unavailable score does not establish that a website is safe.</p>
       </div>
-      <section id="overview" role="tabpanel"><h2>Overview</h2><p id="domain"></p><p id="redacted"></p><p>A low or unavailable score does not establish that a website is safe.</p></section>
-      <section id="findings" role="tabpanel" hidden><h2>Findings</h2><div id="finding-list"></div></section>
-      <section id="technical" role="tabpanel" hidden><h2>Technical details</h2><ul id="coverage-list"></ul><p id="versions"></p><ul id="limitations"></ul></section>
-      <section id="reputation-results" aria-label="VirusTotal evidence" hidden><h2>VirusTotal cross-check</h2><div class="evidence-grid"><article class="evidence-block"><h3>Existing URL report</h3><p id="vt-summary"></p><ul id="vt-details"></ul></article></div><p>This is a first-stage check of an existing report. Missing or zero detections do not prove a URL is safe.</p></section>
-      <section id="reports" role="tabpanel" hidden><h2>Reports</h2><p>Reports contain redacted results. Inspect before sharing.</p><button id="copy" type="button">Copy results</button><button id="json" type="button">Download JSON</button><p id="report-status" role="status"></p></section>
-      <section class="console-card" aria-label="Activity console"><h2>▣ Analysis console</h2><ol id="console"></ol></section>
+      <div id="findings" class="report-section">
+        <h2>Findings</h2>
+        <div id="finding-list"></div>
+      </div>
+      <div id="technical" class="report-section">
+        <h2>Technical details</h2>
+        <h3>Check coverage</h3>
+        <ul id="coverage-list"></ul>
+        <h3>Limitations</h3>
+        <ul id="limitations"></ul>
+        <p id="versions"></p>
+        <details class="console-card"><summary>Analysis console</summary><ol id="console"></ol></details>
+      </div>
+      <footer id="reports" class="report-section">
+        <h2>Export report</h2>
+        <p>Reports contain redacted results. Inspect before sharing.</p>
+        <div class="row"><button id="copy" type="button">Copy results</button><button id="json" type="button">Download JSON</button></div>
+        <p id="report-status" role="status"></p>
+      </footer>
     </section>
     <aside><h2>Privacy</h2><p>Local URL analysis runs in this browser. Submitting also shares the URL with VirusTotal, which may retain or share it under its terms. ZEUS does not fetch the destination or save scan history.</p></aside>
   </main>
@@ -44,6 +79,24 @@ export const prerender = true;
   const form = el('scan-form') as HTMLFormElement;
   const submitButton = form.querySelector('button') as HTMLButtonElement;
   let result: ScanResult | null = null;
+  function reveal(element: Element) {
+    if (document.documentElement.classList.contains('site-motion-off') || (matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('site-motion-on'))) return;
+    element.getAnimations().forEach((animation) => animation.cancel());
+    element.animate([{ opacity: .55, translate: '5px 0' }, { opacity: 1, translate: '0 0' }],
+      { duration: 250, easing: 'ease-out' });
+  }
+  function revealSection(section: HTMLElement) {
+    const motionOverride = document.documentElement.classList.contains('site-motion-on');
+    if ((matchMedia('(prefers-reduced-motion: reduce)').matches && !motionOverride) || document.documentElement.classList.contains('site-motion-off')) return;
+    const groups = Array.from(section.children).filter((child) => !(child as HTMLElement).hidden);
+    groups.forEach((group, index) => {
+      group.getAnimations().forEach((animation) => animation.cancel());
+      group.animate(
+        [{ opacity: 0, transform: `translateX(${index % 2 ? 64 : -64}px)` }, { opacity: 1, transform: 'translateX(0)' }],
+        { duration: 880, delay: Math.min(index, 5) * 85, easing: 'cubic-bezier(.2,.76,.26,1)', fill: 'backwards' },
+      );
+    });
+  }
   type ReputationResult = {
     provider: 'VirusTotal';
     status: 'found' | 'not_found' | 'unavailable';
@@ -59,6 +112,14 @@ export const prerender = true;
   let scanSequence = 0;
   const set = (id: string, value: string) => { el(id).textContent = value; };
   const items = (id: string, values: string[]) => el(id).replaceChildren(...values.map((value) => { const li = document.createElement('li'); li.textContent = value; return li; }));
+  const checkNames: Record<string, string> = {
+    'brand-impersonation': 'Brand impersonation',
+    'suspicious-characters': 'Suspicious characters',
+    'ip-and-port': 'IP address and port',
+    'shortener': 'URL shortener',
+    'https-and-credentials': 'HTTPS and credentials',
+    'phishing-keywords': 'Phishing keywords',
+  };
   function readProviderPayload(value: unknown): ProviderPayload | null {
     if (!value || typeof value !== 'object') return null;
     const data = value as Record<string, unknown>;
@@ -88,14 +149,18 @@ export const prerender = true;
       items('vt-details', []);
     }
     const labels = { known_threat: ['Known threat', 'VirusTotal reports multiple malicious detections. Treat this URL as risky.'], suspicious: ['Suspicious', 'VirusTotal reports some malicious or suspicious detections. Use caution.'], no_known_threat_found: ['No known threat found', 'The last VirusTotal report has no detections. This does not guarantee safety.'], inconclusive: ['Inconclusive', 'VirusTotal has no report or could not complete the check.'] } as const;
-    const [title, summary] = labels[payload.verdict?.level ?? 'inconclusive'];
+    const level = payload.verdict?.level ?? 'inconclusive';
+    const [title, summary] = labels[level];
+    el('verdict-card').dataset.level = level;
     set('verdict-title', title); set('verdict-summary', summary); set('verdict-source', `Decision: ${payload.verdict?.reason?.replaceAll('_', ' ') || 'provider coverage'}`); el('verdict-card').hidden = false;
+    reveal(el('verdict-card'));
   }
   async function checkReputation(rawUrl: string, sequence: number) {
     activeLookup?.abort();
     const controller = new AbortController();
     activeLookup = controller;
     submitButton.disabled = true;
+    form.setAttribute('aria-busy', 'true');
     set('vt-summary', 'Checking provider evidence…');
     items('vt-details', []);
     el('reputation-results').hidden = false;
@@ -118,22 +183,30 @@ export const prerender = true;
       renderProviders({ virusTotal: { provider: 'VirusTotal', status: 'unavailable', reason: 'network_error' }, verdict: { level: 'inconclusive', reason: 'network_error' } });
       set('scan-status', 'Local analysis complete; VirusTotal could not be reached.');
     } finally {
-      if (sequence === scanSequence) submitButton.disabled = false;
+      if (sequence === scanSequence) { submitButton.disabled = false; form.removeAttribute('aria-busy'); }
     }
   }
-  function tab(name: string) {
-    document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach((button) => {
-      const active = button.dataset.tab === name;
-      button.setAttribute('aria-selected', String(active));
-      button.tabIndex = active ? 0 : -1;
-      el(button.dataset.tab!).hidden = !active;
+  const reportSections = document.querySelectorAll<HTMLElement>('.report-section');
+  document.querySelectorAll<HTMLAnchorElement>('.report-nav a').forEach((link) => {
+    link.addEventListener('click', () => {
+      const section = document.querySelector<HTMLElement>(link.hash);
+      if (section) revealSection(section);
     });
-  }
+  });
+  const observer = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        revealSection(entry.target as HTMLElement);
+        observer?.unobserve(entry.target);
+      }
+    }
+  }) : null;
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const sequence = ++scanSequence;
     activeLookup?.abort();
     submitButton.disabled = false;
+    form.removeAttribute('aria-busy');
     renderProviders(null);
     try {
       result = scanUrl(input.value);
@@ -148,19 +221,27 @@ export const prerender = true;
       el('finding-list').replaceChildren(...result.findings.map((finding) => {
         const article = document.createElement('article');
         const heading = document.createElement('h3');
-        heading.textContent = `${finding.category} · ${finding.severity}`;
+        heading.textContent = `${checkNames[finding.category] ?? finding.category} · ${finding.severity}`;
         const body = document.createElement('p');
         body.textContent = `${finding.explanation} ${finding.recommendation}`;
         article.append(heading, body);
         return article;
       }));
       if (!result.findings.length) set('finding-list', 'No suspicious URL patterns identified in completed checks.');
-      items('coverage-list', result.coverage.map((c) => `${c.id}: ${c.status}`));
+      el('coverage-list').replaceChildren(...result.coverage.map((check) => {
+        const row = document.createElement('li');
+        const name = document.createElement('span');
+        const status = document.createElement('strong');
+        name.textContent = checkNames[check.id] ?? check.id;
+        status.textContent = check.status;
+        row.append(name, status);
+        return row;
+      }));
       set('versions', `Engine ${result.engineVersion} · scoring ${result.scoringVersion} · rules ${result.rulesVersion}`);
       items('limitations', result.limitations);
       items('console', ['✓ URL parsed locally', ...result.coverage.map((c) => `${c.status === 'completed' ? '✓' : '!'} ${c.id}: ${c.status}`), result.isPartial ? '! Partial analysis; score unavailable' : '✓ Analysis complete']);
       set('scan-status', 'Local analysis complete; checking provider evidence.');
-      tab('overview');
+      reportSections.forEach((section) => observer?.observe(section));
       void checkReputation(input.value, sequence);
     } catch {
       result = null;
@@ -170,29 +251,165 @@ export const prerender = true;
     }
   });
   el('rescan').addEventListener('click', () => form.requestSubmit());
-  el('clear').addEventListener('click', () => { scanSequence++; activeLookup?.abort(); submitButton.disabled = false; input.value = ''; result = null; renderProviders(null); el('scan-results').hidden = true; set('scan-status', 'Ready for a new scan.'); input.focus(); });
+  el('clear').addEventListener('click', () => { scanSequence++; activeLookup?.abort(); submitButton.disabled = false; form.removeAttribute('aria-busy'); input.value = ''; result = null; renderProviders(null); el('scan-results').hidden = true; set('scan-status', 'Ready for a new scan.'); input.focus(); });
   el('demo').addEventListener('click', () => { input.value = 'example.com.attacker.test'; form.requestSubmit(); });
-  document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach((button) => button.addEventListener('click', () => tab(button.dataset.tab!)));
-  document.querySelector('[role="tablist"]')!.addEventListener('keydown', (event: Event) => {
-    const key = (event as KeyboardEvent).key;
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) return;
-    event.preventDefault();
-    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-tab]'));
-    const index = tabs.findIndex((button) => button.getAttribute('aria-selected') === 'true');
-    const next = key === 'Home' ? 0 : key === 'End' ? tabs.length - 1 : (index + (key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-    tab(tabs[next].dataset.tab!);
-    tabs[next].focus();
-  });
   el('copy').addEventListener('click', async () => { if (!result) return; try { await navigator.clipboard.writeText(JSON.stringify({ localAnalysis: result, reputation }, null, 2)); set('report-status', 'Redacted result copied.'); } catch { set('report-status', 'Copy failed. Check clipboard permission.'); } });
   el('json').addEventListener('click', () => { if (!result) return; const url = URL.createObjectURL(new Blob([JSON.stringify({ localAnalysis: result, reputation }, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = 'zeus-redacted-scan.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); set('report-status', 'Redacted JSON downloaded.'); });
 </script>
 
 <style>
-  .scanner{max-width:1180px;margin:auto;padding:3rem 1.25rem 5rem;display:grid;gap:1rem;color:#f3f7ff}.scanner h1{font-size:clamp(2rem,5vw,4rem);margin:.2rem 0}.scanner-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}.scanner-head>div{max-width:760px}.scanner-head p{color:#b7c4d9}.eyebrow,.card-kicker{letter-spacing:.12em;text-transform:uppercase;font-size:.78rem;color:#43c7ff}.preview-badge{background:#4b2a24;color:#ff7b36;border-radius:999px;padding:.55rem .9rem;font-weight:700}.scanner form,.scanner section,.scanner aside{border:1px solid #2e4665;border-radius:1.2rem;padding:1.4rem;background:#0b1526;box-shadow:0 14px 40px #02071355}.analysis-card{background:#16243b!important;border:0!important;padding:1.7rem!important}.scanner .row{display:flex;flex-wrap:wrap;gap:.6rem}.scanner input{flex:1 1 18rem;min-width:0;background:transparent;color:inherit;font-size:1.25rem;padding:.9rem;border:0;border-bottom:1px solid #41536b}.scanner input,.scanner button{border-radius:.4rem}.scanner button{padding:.7rem 1rem;border:1px solid #46708e;background:#173f5d;color:#fff;cursor:pointer}.scanner button:focus-visible,.scanner input:focus-visible{outline:3px solid #40c8ff;outline-offset:2px}.scanner [aria-selected="true"]{background:#246b8d}.scanner #redacted{overflow-wrap:anywhere}.scanner [hidden]{display:none}.coverage-card{background:#16243b!important;border:0!important}.coverage-card>div:first-child{display:flex;justify-content:space-between;align-items:center}.coverage-card strong{font-size:1.2rem}.progress-track{height:1rem;margin-top:1.2rem;background:#31445f;border-radius:99px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#3dc3fb;border-radius:inherit;transition:width .7s ease}.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;border:0!important;padding:0!important;background:transparent!important;box-shadow:none!important}.summary-card{display:grid;gap:.4rem;min-height:140px}.summary-card strong{font-size:3.2rem}.summary-card>span:last-child{color:#ffc72c}.privacy-card strong{color:#43e37f}.console-card{border-color:#3f5875!important}.console-card h2{color:#f4f7ff}.console-card li{color:#42e985;list-style:none;margin:.45rem 0;font-size:1.05rem}.console-card ol{padding-left:0}.scanner aside{color:#bfcbda}.scanner aside h2{color:#fff}
-  .sharing-note{border-left:3px solid #43e37f;padding:.75rem 1rem;background:#102d2b;color:#d2e8e1}.verdict-card{border-color:#43e37f!important;background:linear-gradient(135deg,#102c2d,#102039)!important;padding:1.7rem!important}.verdict-card h2{font-size:clamp(1.8rem,4vw,3rem);margin:.35rem 0;color:#f6fffb}.verdict-card p{max-width:58ch;color:#c9e4dc}.verdict-source{display:inline-block;margin-top:.4rem;color:#7fe6c2;font:600 .82rem ui-monospace,SFMono-Regular,monospace;text-transform:capitalize}.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.evidence-block{border:1px solid #2e4665;border-radius:.8rem;padding:1rem;background:#0c1829}.evidence-block h3{margin:0 0 .5rem;color:#f3f7ff}.evidence-block ul{padding-left:1.1rem}.scanner button:disabled{cursor:wait;opacity:.65}
-  @media (max-width:700px){.scanner-head{display:block}.preview-badge{display:inline-block;margin-top:.8rem}.summary-grid,.evidence-grid{grid-template-columns:1fr}.scanner{padding-top:2rem}}
-  @media (prefers-reduced-motion:reduce){.progress-track span{transition:none}}
-  .scanner h1{line-height:1.08;letter-spacing:-.035em}.scanner h2{font-size:1.15rem;letter-spacing:-.01em;margin:0 0 1rem}.scanner p{line-height:1.6}.scanner #scan-results{display:grid;gap:1rem}.scanner .scanner-tabs{gap:.35rem;border-bottom:1px solid #2e4665;padding-bottom:.65rem}.scanner .scanner-tabs button{background:transparent;border:1px solid transparent;color:#b7c4d9}.scanner .scanner-tabs button[aria-selected="true"]{background:#173f5d;border-color:#46708e;color:#fff}.scanner .console-card{background:#080f1d}.scanner .console-card li{font-family:ui-monospace,SFMono-Regular,monospace;font-size:.9rem;line-height:1.55}.scanner .summary-card{border-color:#2e4665}.scanner #scan-results[hidden]{display:none}
-  :global(.light-mode) .scanner{color:#16344a}.light-mode .scanner-head p{color:#496176}.light-mode .scanner form,.light-mode .scanner section,.light-mode .scanner aside{background:#f7fbff;border-color:#b7cadb;box-shadow:0 12px 30px #7591a522}.light-mode .analysis-card,.light-mode .coverage-card{background:#e8f2fb!important}.light-mode .scanner input{border-color:#9ab1c5;color:#16344a}.light-mode .scanner button{background:#dceefb;color:#123c59;border-color:#8fb6d2}.light-mode .scanner button[aria-selected="true"]{background:#b9def4}.light-mode .progress-track{background:#c9d8e6}.light-mode .progress-track span{background:#169fda}.light-mode .scanner aside h2,.light-mode .console-card h2{color:#16344a}.light-mode .console-card li{color:#168b58}.light-mode .scanner aside{color:#496176}
-  .light-mode .sharing-note{background:#e3f5ee;color:#214c40;border-color:#168b58}.light-mode .verdict-card{background:#e8f7f1!important;border-color:#168b58!important}.light-mode .verdict-card h2,.light-mode .evidence-block h3{color:#16344a}.light-mode .verdict-card p{color:#315d52}.light-mode .evidence-block{background:#f7fbff;border-color:#b7cadb}
+  .scanner {
+    --surface: rgba(15, 25, 42, .68); --raised: rgba(20, 38, 55, .72); --line: rgba(139, 241, 208, .22);
+    --ink: #eef5fc; --muted: #b2c3d3; --accent: #78d4f0;
+    --accent-ink: #092637; --notice: rgba(29, 62, 74, .64);
+    max-width: 1080px; margin: auto; padding: 4rem 1.25rem 6rem;
+    display: grid; gap: 1rem; color: var(--ink);
+  }
+  :global(html.light-mode) .scanner {
+    --surface: rgba(255, 255, 255, .78); --raised: rgba(245, 250, 253, .80); --line: rgba(255, 255, 255, .55);
+    --ink: #172f40; --muted: #354b5a; --accent: #126b8c;
+    --accent-ink: #ffffff; --notice: #e4f0f5;
+  }
+  :global(html.light-mode) .scanner { position: relative; isolation: isolate; }
+  :global(html.light-mode) .scanner::before {
+    content: ''; position: absolute; z-index: -1; inset: 0 calc(50% - 50vw);
+    background: radial-gradient(ellipse 48% 42% at 0% 25%, rgba(41, 208, 235, .4), transparent 75%),
+      radial-gradient(ellipse 48% 42% at 100% 55%, rgba(143, 113, 244, .34), transparent 75%), #253447;
+    pointer-events: none;
+  }
+  :global(html.light-mode) .scanner-head h1 { color: #f4f9ff; }
+  :global(html.light-mode) .scanner-head p, :global(html.light-mode) .scanner #scan-status { color: #d8e9f3; }
+  :global(html.light-mode) .scanner .preview-badge { color: #edf7fc; border-color: rgba(255, 255, 255, .5); }
+  :global(html.light-mode) .scanner form,
+  :global(html.light-mode) .scanner section:not(#scan-results),
+  :global(html.light-mode) .scanner aside,
+  :global(html.light-mode) .coverage-card {
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 16px 40px rgba(8, 21, 36, .19), inset 0 1px rgba(255, 255, 255, .8);
+  }
+  .scanner-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 0 0 1.25rem; }
+  .scanner-head > div { max-width: 720px; }
+  .scanner h1 { font-size: clamp(2.3rem, 5vw, 4rem); line-height: 1.08; letter-spacing: -.04em; margin: .45rem 0 .8rem; color: var(--ink); }
+  .scanner h2 { font-size: 1.2rem; letter-spacing: -.015em; margin: 0 0 .8rem; color: var(--ink); }
+  .scanner p { line-height: 1.65; }
+  .scanner-head p, .scanner aside, .scanner form > p:not(.card-kicker) { color: var(--muted); }
+  .eyebrow, .card-kicker { font-size: .78rem; font-weight: 700; letter-spacing: .05em; color: var(--accent); }
+  .preview-badge { border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: .4rem .8rem; font-size: .8rem; font-weight: 700; }
+  .scanner form, .scanner section, .scanner aside, .coverage-card { border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; background: var(--surface); }
+  :global(html:not(.light-mode)) .scanner form,
+  :global(html:not(.light-mode)) .scanner section:not(#scan-results),
+  :global(html:not(.light-mode)) .scanner aside,
+  :global(html:not(.light-mode)) .coverage-card {
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, .32), inset 0 1px rgba(255, 255, 255, .06);
+  }
+  .scanner .analysis-card { padding: clamp(1.5rem, 3vw, 2.25rem); background: var(--raised); }
+  .analysis-card label { display: block; font-weight: 700; margin: 1.25rem 0 .6rem; }
+  .scanner .row { display: flex; flex-wrap: wrap; gap: .65rem; }
+  .scanner input { flex: 1 1 18rem; min-width: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: 1.1rem; padding: .95rem 1rem; border: 1px solid var(--line); border-radius: .55rem; }
+  .scanner input::placeholder { color: var(--muted); opacity: 1; }
+  .scanner button { padding: .75rem 1rem; border: 1px solid var(--line); border-radius: .55rem; background: var(--surface); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+  .scanner form button { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); padding-inline: 1.5rem; }
+  .scanner button:hover { border-color: var(--accent); }
+  .scanner button:disabled { cursor: wait; opacity: .65; }
+  .scanner button:focus-visible, .scanner input:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .scanner .sharing-note { border-left: 3px solid var(--accent); padding: .85rem 1rem; background: var(--notice); border-radius: 0 .4rem .4rem 0; color: var(--ink) !important; margin-bottom: 0; }
+  .scanner #scan-status { color: var(--muted); margin: .25rem 0; }
+  .scanner #scan-results { display: block; padding: 0; background: var(--surface); }
+  #scan-results > * { padding: clamp(1rem, 3vw, 2rem); }
+  #scan-results > * + * { border-top: 1px solid var(--line); }
+  .report-heading h2 { font-size: 1.75rem; }
+  .report-heading p { margin: .25rem 0; }
+  #scan-results .report-nav { display: flex; gap: .4rem 1.4rem; flex-wrap: wrap; padding-block: .7rem; }
+  .report-nav a { color: var(--accent); text-decoration: underline; text-underline-offset: .22em; padding-block: .35rem; }
+  .report-section { scroll-margin-top: 1rem; }
+  .report-section h3 { font-size: 1rem; margin: 1rem 0 .35rem; }
+  .report-section .verdict-card { padding: 1rem; border: 1px solid var(--verdict-color); border-radius: .6rem; }
+  .report-section .verdict-card h3 { font-size: 1.4rem; margin-top: .35rem; }
+  .report-section .summary-grid { margin-top: 1rem; }
+  .report-section .summary-card { padding: .7rem 0; }
+  .report-section .summary-card strong { font-size: 1.5rem; }
+  #reputation-results { margin-top: 1rem; padding-top: .5rem; border-top: 1px solid var(--line); }
+  .console-card summary { cursor: pointer; font-weight: 600; padding-block: .65rem; }
+  .scanner [hidden], .scanner #scan-results[hidden] { display: none; }
+  .coverage-card { background: var(--raised); }
+  .coverage-card > div:first-child { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+  .progress-track { height: .5rem; margin-top: 1rem; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .progress-track span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .7s ease; }
+  .scanner .verdict-card { --verdict-color: #78d4f0; --verdict-bg: rgba(19, 72, 102, .78); background: var(--verdict-bg); border-color: var(--verdict-color); border-left-width: 4px; }
+  .scanner .verdict-card[data-level="known_threat"], .scanner .verdict-card[data-level="suspicious"] { --verdict-color: #ff9a9a; --verdict-bg: rgba(113, 27, 40, .88); }
+  .scanner .verdict-card[data-level="no_known_threat_found"] { --verdict-color: #a0e5be; --verdict-bg: rgba(23, 83, 60, .88); }
+  .scanner .verdict-card .card-kicker { color: var(--verdict-color); }
+  :global(html.light-mode) .scanner .verdict-card { --verdict-color: #135d82; --verdict-bg: #e2f3fa; }
+  :global(html.light-mode) .scanner .verdict-card[data-level="known_threat"], :global(html.light-mode) .scanner .verdict-card[data-level="suspicious"] { --verdict-color: #a01f30; --verdict-bg: #ffebed; }
+  :global(html.light-mode) .scanner .verdict-card[data-level="no_known_threat_found"] { --verdict-color: #17683d; --verdict-bg: #e3f5e9; }
+  .verdict-card h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); margin: .5rem 0; }
+  .verdict-card p { max-width: 58ch; color: var(--muted); }
+  .verdict-source { color: var(--muted); font-size: .85rem; text-transform: capitalize; }
+  .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: stretch; }
+  .evidence-grid { display: grid; gap: .75rem; }
+  .summary-card { display: grid; gap: .4rem; align-content: start; }
+  .summary-card strong { font-size: clamp(1.7rem, 3vw, 2.5rem); line-height: 1.15; color: var(--ink); }
+  .summary-card > span:last-child { color: var(--muted); }
+  .scanner #redacted { overflow-wrap: anywhere; }
+  .evidence-block { border: 1px solid var(--line); border-radius: .65rem; padding: 1rem; background: var(--raised); }
+  .evidence-block h3 { margin: 0 0 .5rem; color: var(--ink); font-size: 1rem; }
+  .scanner section p, .scanner aside p { max-width: 72ch; }
+  .scanner section p:last-child, .scanner aside p:last-child { margin-bottom: 0; }
+  .scanner section ul { margin: .65rem 0; padding-left: 1.3rem; color: var(--muted); }
+  .scanner section ul li { padding-left: .2rem; margin: .4rem 0; line-height: 1.55; overflow-wrap: anywhere; }
+  #finding-list article + article { border-top: 1px solid var(--line); margin-top: 1rem; padding-top: 1rem; }
+  #finding-list h3 { margin: 0 0 .35rem; font-size: 1rem; color: var(--ink); }
+  #finding-list p { color: var(--muted); margin: 0; }
+
+  .scanner .console-card { border-top: 1px solid var(--line); }
+  .console-card ol { padding-left: 0; }
+  .console-card :global(li) { color: var(--muted); list-style: none; margin: .45rem 0; font-family: ui-monospace, SFMono-Regular, monospace; font-size: .9rem; line-height: 1.55; }
+  .scanner aside h2 { color: var(--ink); }
+  /* The report stays one surface, with distinct evidence groups inside it. */
+  :global(html.light-mode) .scanner { --surface: rgba(255, 255, 255, .93); --raised: rgba(248, 252, 255, .9); }
+  .scanner .analysis-card { padding: 1.25rem 1.5rem; }
+  .analysis-card label { margin: .65rem 0 .45rem; }
+  .analysis-card > p { margin-block: .5rem; }
+  .scanner #scan-results { overflow: hidden; }
+  .report-heading { padding-bottom: 1rem !important; }
+  .report-heading #redacted { color: var(--muted); }
+  #overview .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  #overview .summary-card { padding: 1rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--raised); }
+  .provider-evidence { padding: .8rem 1rem; margin-top: .6rem; border: 1px solid var(--line); border-radius: .65rem; }
+  .provider-evidence h3 { margin-top: 0; }
+  .provider-evidence p { margin-block: .4rem; }
+  #finding-list :global(article) { padding: .85rem 1rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--raised); }
+  #finding-list :global(article + article) { margin-top: .65rem; }
+  #finding-list :global(h3) { margin: 0 0 .35rem; font-size: 1rem; color: var(--ink); }
+  #finding-list :global(p) { margin: 0; color: var(--muted); }
+  .scanner #coverage-list { list-style: none; padding: 0; max-width: 46rem; }
+  #coverage-list :global(li) { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--line); }
+  #coverage-list :global(strong) { text-transform: capitalize; font-size: .85rem; color: var(--ink); }
+  @media (max-width: 600px) { #overview .summary-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .scanner { padding-top: 2rem; } .scanner-head { display: block; } .preview-badge { display: inline-block; margin-top: .5rem; } .summary-grid, .evidence-grid { grid-template-columns: 1fr; } .scanner form button { flex: 1 1 100%; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .scanner button { transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+    .scanner button:active { transform: scale(.97); }
+    :global(html:not(.site-motion-off)) .scanner-head,
+    :global(html:not(.site-motion-off)) .scanner > .analysis-card,
+    :global(html:not(.site-motion-off)) .scanner > aside {
+      animation: site-arrival 880ms cubic-bezier(.2,.76,.26,1) backwards;
+    }
+    :global(html:not(.site-motion-off)) .scanner-head { --entrance-x: -64px; }
+    :global(html:not(.site-motion-off)) .scanner > .analysis-card { --entrance-x: 64px; animation-delay: 85ms; }
+    :global(html:not(.site-motion-off)) .scanner > aside { --entrance-x: -64px; animation-delay: 170ms; }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .scanner button:not(:disabled):hover { transform: translateY(-3px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .progress-track span { transition: none; }
+    :global(html.site-motion-on) .scanner-head,
+    :global(html.site-motion-on) .scanner > .analysis-card,
+    :global(html.site-motion-on) .scanner > aside { animation: site-arrival 880ms cubic-bezier(.2,.76,.26,1) backwards; }
+    :global(html.site-motion-on) .scanner-head { --entrance-x: -64px; }
+    :global(html.site-motion-on) .scanner > .analysis-card { --entrance-x: 64px; animation-delay: 85ms; }
+    :global(html.site-motion-on) .scanner > aside { --entrance-x: -64px; animation-delay: 170ms; }
+  }
 </style>
