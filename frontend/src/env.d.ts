@@ -1,5 +1,13 @@
 /// <reference types="astro/client" />
 
+interface ImportMetaEnv {
+  readonly VIRUSTOTAL_API?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 declare module "punycode/punycode.js" {
   const punycode: { toUnicode(input: string): string };
   export default punycode;

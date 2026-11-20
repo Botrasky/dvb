@@ -1,0 +1,10 @@
+# Cursor Rules for ZEUS Portfolio
+
+- Repository: ZEUS Cybersecurity Portfolio (https://zeuswriteups.vercel.app)
+- Owner: Vathanak Botra Dos (@Botrasky)
+
+Before making any changes or proposing plans:
+1. Read and adhere strictly to `AGENTS.md` (Universal Owner-Control Protocol).
+2. Starting Baseline & Branch Protocol: Never edit directly on `main` or `test`. If starting on `main`, cut `fix/...` for docs/hotfixes or switch to `test` and cut `feat/...` for Astro features/writeups.
+3. Consult `documentation/agent-skills.md` and load the relevant skill under `documentation/skills/` for the current task phase.
+4. Never push directly to `main`, never commit secrets or unredacted CTF flags (redact to `[REDACTED]`).

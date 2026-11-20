@@ -9,9 +9,9 @@
       url: 'https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20',
     },
     {
-      source: 'Cloud Security Alliance', kind: 'Cloud security', title: 'AI governance as an architecture problem',
-      summary: 'A look at how teams can build governance into the systems they use for AI.',
-      url: 'https://cloudsecurityalliance.org/articles/ai-governance-isn-t-a-chore-problem-it-s-an-architecture-problem',
+      source: 'CISA', kind: 'Cybersecurity advisories', title: 'CISA cybersecurity alerts and advisories',
+      summary: 'Official alerts on current cyber threats and vulnerabilities, plus detailed security guidance and recommended actions.',
+      url: 'https://www.cisa.gov/news-events/cybersecurity-advisories',
     },
     {
       source: 'Cloudflare', kind: 'Security research', title: 'The post-quantum future of web privacy',
@@ -45,14 +45,14 @@
     },
   ];
   const publishers = new Map([
-    ['NIST', ['nist', 'NIST', '/assets/publisher-marks/nist.svg']],
-    ['Cloud Security Alliance', ['csa', 'Cloud Security Alliance', '/assets/publisher-marks/csa.svg']],
-    ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg']],
-    ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg']],
-    ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-security.svg']],
-    ['NVD', ['nvd', 'NVD', '/assets/publisher-marks/nvd.svg']],
-    ['The Hacker News', ['thn', 'The Hacker News', '/assets/publisher-marks/thn.svg']],
-    ['BleepingComputer', ['bc', 'BleepingComputer', '/assets/publisher-marks/bleepingcomputer.svg']],
+    ['NIST', ['nist', 'NIST', '/assets/publisher-marks/nist-mark.png', '/assets/publisher-marks/nist-mark.png']],
+    ['CISA', ['cisa', 'CISA', '/assets/publisher-marks/cisa.png', '/assets/publisher-marks/cisa.png']],
+    ['Cloudflare', ['cloudflare', 'Cloudflare', '/assets/publisher-marks/cloudflare.svg', '/assets/publisher-marks/cloudflare.svg']],
+    ['Palo Alto Unit 42', ['unit42', 'Palo Alto Unit 42', '/assets/publisher-marks/unit42.svg', '/assets/publisher-marks/unit42-icon.png']],
+    ['IBM Research', ['ibm', 'IBM Security Research', '/assets/publisher-marks/ibm-logo.png', '/assets/publisher-marks/ibm-logo.png']],
+    ['NVD', ['nvd', 'NVD', '/assets/publisher-marks/nist-mark.png', '/assets/publisher-marks/nist-mark.png', 'NIST']],
+    ['The Hacker News', ['thn', 'The Hacker News', '/assets/publisher-marks/the-hacker-news.jpg', '/assets/publisher-marks/the-hacker-news-icon.jpg']],
+    ['BleepingComputer', ['bc', 'BleepingComputer', '/assets/publisher-marks/bleepingcomputer-logo.png', '/assets/publisher-marks/bleepingcomputer-icon.png']],
   ]);
   const thumb = document.getElementById('brief-thumb');
   const thumbLabel = document.getElementById('brief-thumb-label');
@@ -78,16 +78,23 @@
   let typingVersion = 0;
 
   function renderThumbnail(story) {
-    const [style, label, logo] = publishers.get(story.source) || ['unknown', 'Security news', ''];
+    const [style, label, logo, badgeLogo, badgeLabel] = publishers.get(story.source) || ['unknown', 'Security news', '', ''];
     thumb.dataset.publisher = style;
+    sourceMark.dataset.publisher = style;
+    sourceMark.hidden = !badgeLogo;
     delete thumb.dataset.media;
     thumbLabel.textContent = label;
     thumbLabel.hidden = false;
     thumbImage.replaceChildren();
     if (sourceLogo) {
-      sourceLogo.src = logo;
-      sourceLogo.alt = `${label} logo`;
-      sourceLogo.hidden = !logo;
+      sourceLogo.hidden = !badgeLogo;
+      if (badgeLogo) {
+        sourceLogo.src = badgeLogo;
+        sourceLogo.alt = `${badgeLabel || label} logo`;
+      } else {
+        sourceLogo.removeAttribute('src');
+        sourceLogo.alt = '';
+      }
     }
 
     function addImage(url, type, fallback) {

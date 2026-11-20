@@ -1,4 +1,10 @@
-# ZEUS Portfolio Migration Handoff
+# Archived: ZEUS Portfolio Migration Handoff
+
+> Archived on 2026-11-20 after the owner accepted the current `main` branch as
+> the migration result. This document preserves the original plan and its
+> criteria as historical context; it is not an active implementation checklist.
+> Use the current code, `documentation/architecture.md`, and
+> `documentation/PROGRESS.md` for present-day project state.
 
 ## Current state
 

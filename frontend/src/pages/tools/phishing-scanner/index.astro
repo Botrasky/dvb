@@ -5,18 +5,20 @@ export const prerender = true;
 
 <SiteLayout title="ZEUS | Phishing Scanner" current="scanner">
   <main id="main" class="scanner">
-    <header class="scanner-head"><div><p class="eyebrow">◈ ZEUS Security Scanner</p><h1>Phishing URL scanner</h1><p>Analyze URL patterns locally. ZEUS does not visit the destination or check live reputation.</p></div><span class="preview-badge">Preview</span></header>
+    <header class="scanner-head"><div><p class="eyebrow">◈ ZEUS Security Scanner</p><h1>Phishing URL scanner</h1><p>Inspect the URL locally, then cross-check an existing VirusTotal report.</p></div><span class="preview-badge">Beta</span></header>
     <form id="scan-form" class="analysis-card">
       <p class="card-kicker">URL ANALYSIS</p>
       <label for="scan-input">URL or domain</label>
       <div class="row"><input id="scan-input" type="text" maxlength="8192" autocomplete="off" spellcheck="false" required placeholder="example.com" /><button>Scan URL</button></div>
       <p>When the scheme is missing, HTTPS is suggested for parsing; it is not verified.</p>
+      <p class="sharing-note"><strong>Before you scan:</strong> submitting sends this URL to VirusTotal for a first-stage reputation cross-check. VirusTotal may retain or share queried URLs. Do not submit private, sensitive, or personal URLs. ZEUS does not visit or save the destination.</p>
     </form>
     <div class="row"><button id="rescan" type="button">Rescan URL</button><button id="clear" type="button">New scan</button><button id="demo" type="button">Try example</button></div>
-    <p id="scan-status" role="status" aria-live="polite">Engine ready.</p>
+    <p id="scan-status" role="status" aria-live="polite">Beta scanner ready.</p>
     <section id="scan-results" hidden aria-label="Scan results">
       <div class="coverage-card"><div><span class="card-kicker">ANALYSIS COVERAGE</span><strong id="coverage-count"></strong></div><div class="progress-track"><span id="coverage-progress"></span></div></div>
-      <div class="summary-grid"><section class="summary-card"><span class="card-kicker">RISK SCORE</span><strong id="score-value">N/A</strong><span id="score-state">Partial analysis</span></section><section class="summary-card privacy-card"><span class="card-kicker">PRIVACY</span><strong>Local</strong><span>Browser-based</span></section></div>
+      <section id="verdict-card" class="verdict-card" hidden aria-live="polite"><span class="card-kicker">FIRST-STAGE VERDICT</span><h2 id="verdict-title">Checking VirusTotal evidence…</h2><p id="verdict-summary"></p><span id="verdict-source" class="verdict-source"></span></section>
+      <div class="summary-grid"><section class="summary-card"><span class="card-kicker">RISK SCORE</span><strong id="score-value">N/A</strong><span id="score-state">Partial analysis</span></section><section class="summary-card privacy-card"><span class="card-kicker">COVERAGE</span><strong>Local + VT</strong><span>First-stage cross-check</span></section></div>
       <div class="row scanner-tabs" role="tablist" aria-label="Result views">
         <button type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
         <button type="button" role="tab" data-tab="findings" aria-selected="false">Findings</button>
@@ -26,10 +28,11 @@ export const prerender = true;
       <section id="overview" role="tabpanel"><h2>Overview</h2><p id="domain"></p><p id="redacted"></p><p>A low or unavailable score does not establish that a website is safe.</p></section>
       <section id="findings" role="tabpanel" hidden><h2>Findings</h2><div id="finding-list"></div></section>
       <section id="technical" role="tabpanel" hidden><h2>Technical details</h2><ul id="coverage-list"></ul><p id="versions"></p><ul id="limitations"></ul></section>
+      <section id="reputation-results" aria-label="VirusTotal evidence" hidden><h2>VirusTotal cross-check</h2><div class="evidence-grid"><article class="evidence-block"><h3>Existing URL report</h3><p id="vt-summary"></p><ul id="vt-details"></ul></article></div><p>This is a first-stage check of an existing report. Missing or zero detections do not prove a URL is safe.</p></section>
       <section id="reports" role="tabpanel" hidden><h2>Reports</h2><p>Reports contain redacted results. Inspect before sharing.</p><button id="copy" type="button">Copy results</button><button id="json" type="button">Download JSON</button><p id="report-status" role="status"></p></section>
       <section class="console-card" aria-label="Activity console"><h2>▣ Analysis console</h2><ol id="console"></ol></section>
     </section>
-    <aside><h2>Privacy</h2><p>Scans run in this browser. Submitted URLs are not sent to ZEUS, fetched, saved as history, or made clickable. Bundled example rules are active while signed updates remain under development.</p></aside>
+    <aside><h2>Privacy</h2><p>Local URL analysis runs in this browser. Submitting also shares the URL with VirusTotal, which may retain or share it under its terms. ZEUS does not fetch the destination or save scan history.</p></aside>
   </main>
 </SiteLayout>
 
@@ -39,9 +42,85 @@ export const prerender = true;
   const el = (id: string) => document.getElementById(id)!;
   const input = el('scan-input') as HTMLInputElement;
   const form = el('scan-form') as HTMLFormElement;
+  const submitButton = form.querySelector('button') as HTMLButtonElement;
   let result: ScanResult | null = null;
+  type ReputationResult = {
+    provider: 'VirusTotal';
+    status: 'found' | 'not_found' | 'unavailable';
+    checkedAt?: string;
+    lastAnalysisDate?: string | null;
+    stats?: { malicious: number; suspicious: number; harmless: number; undetected: number; timeout: number; total: number };
+    reason?: 'not_configured' | 'network_error' | 'rate_limited' | 'provider_error' | 'invalid_response';
+    evidence?: { engines: { engine: string; category: string; result: string | null }[] };
+  };
+  type ProviderPayload = { virusTotal: ReputationResult; verdict?: { level: 'known_threat' | 'suspicious' | 'no_known_threat_found' | 'inconclusive'; reason: string } };
+  let reputation: ReputationResult | null = null;
+  let activeLookup: AbortController | null = null;
+  let scanSequence = 0;
   const set = (id: string, value: string) => { el(id).textContent = value; };
   const items = (id: string, values: string[]) => el(id).replaceChildren(...values.map((value) => { const li = document.createElement('li'); li.textContent = value; return li; }));
+  function readProviderPayload(value: unknown): ProviderPayload | null {
+    if (!value || typeof value !== 'object') return null;
+    const data = value as Record<string, unknown>;
+    if (data.provider !== 'VirusTotal' || !['found', 'not_found', 'unavailable'].includes(String(data.status))) return null;
+    const names = ['malicious', 'suspicious', 'harmless', 'undetected', 'timeout', 'total'] as const;
+    const stats = data.stats as Record<string, unknown> | undefined;
+    if (data.status === 'found' && (!stats || names.some((name) => !Number.isSafeInteger(stats[name]) || Number(stats[name]) < 0))) return null;
+    const virusTotal: ReputationResult = data.status === 'found' ? { provider: 'VirusTotal', status: 'found', lastAnalysisDate: typeof data.lastAnalysisDate === 'string' ? data.lastAnalysisDate : null, stats: Object.fromEntries(names.map((name) => [name, Number(stats![name])])) as ReputationResult['stats'], evidence: data.evidence as ReputationResult['evidence'] } : data.status === 'not_found' ? { provider: 'VirusTotal', status: 'not_found' } : { provider: 'VirusTotal', status: 'unavailable', reason: 'provider_error' };
+    return { virusTotal, verdict: data.verdict as ProviderPayload['verdict'] };
+  }
+  function renderProviders(payload: ProviderPayload | null) {
+    if (!payload) { el('reputation-results').hidden = true; el('verdict-card').hidden = true; return; }
+    const value = payload.virusTotal;
+    reputation = value;
+    el('reputation-results').hidden = false;
+    if (value.status === 'found' && value.stats) {
+      set('vt-summary', `${value.stats.malicious} malicious and ${value.stats.suspicious} suspicious detections across ${value.stats.total} engines.`);
+      const detail = [`Harmless: ${value.stats.harmless}`, `Undetected: ${value.stats.undetected}`, `Timeout: ${value.stats.timeout}`];
+      if (value.lastAnalysisDate) detail.push(`Report date: ${value.lastAnalysisDate}`);
+      items('vt-details', detail);
+    } else if (value.status === 'not_found') {
+      set('vt-summary', 'No existing VirusTotal report. ZEUS did not submit a new scan.');
+      items('vt-details', []);
+    } else {
+      const message = value.reason === 'not_configured' ? 'VirusTotal is not configured on the server.' : 'VirusTotal did not return a report.';
+      set('vt-summary', message);
+      items('vt-details', []);
+    }
+    const labels = { known_threat: ['Known threat', 'VirusTotal reports multiple malicious detections. Treat this URL as risky.'], suspicious: ['Suspicious', 'VirusTotal reports some malicious or suspicious detections. Use caution.'], no_known_threat_found: ['No known threat found', 'The last VirusTotal report has no detections. This does not guarantee safety.'], inconclusive: ['Inconclusive', 'VirusTotal has no report or could not complete the check.'] } as const;
+    const [title, summary] = labels[payload.verdict?.level ?? 'inconclusive'];
+    set('verdict-title', title); set('verdict-summary', summary); set('verdict-source', `Decision: ${payload.verdict?.reason?.replaceAll('_', ' ') || 'provider coverage'}`); el('verdict-card').hidden = false;
+  }
+  async function checkReputation(rawUrl: string, sequence: number) {
+    activeLookup?.abort();
+    const controller = new AbortController();
+    activeLookup = controller;
+    submitButton.disabled = true;
+    set('vt-summary', 'Checking provider evidence…');
+    items('vt-details', []);
+    el('reputation-results').hidden = false;
+    try {
+      const response = await fetch('/api/phishing-check/', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ url: rawUrl, consent: true }),
+        signal: controller.signal,
+      });
+      const payload: unknown = await response.json();
+      if (sequence !== scanSequence) return;
+      const parsed = readProviderPayload(payload);
+      if (!response.ok || !parsed) throw new Error('Provider response unavailable');
+      renderProviders(parsed);
+      set('scan-status', 'Local analysis and VirusTotal cross-check complete.');
+    } catch {
+      if (controller.signal.aborted || sequence !== scanSequence) return;
+      renderProviders({ virusTotal: { provider: 'VirusTotal', status: 'unavailable', reason: 'network_error' }, verdict: { level: 'inconclusive', reason: 'network_error' } });
+      set('scan-status', 'Local analysis complete; VirusTotal could not be reached.');
+    } finally {
+      if (sequence === scanSequence) submitButton.disabled = false;
+    }
+  }
   function tab(name: string) {
     document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach((button) => {
       const active = button.dataset.tab === name;
@@ -52,6 +131,10 @@ export const prerender = true;
   }
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    const sequence = ++scanSequence;
+    activeLookup?.abort();
+    submitButton.disabled = false;
+    renderProviders(null);
     try {
       result = scanUrl(input.value);
       el('scan-results').hidden = false;
@@ -76,16 +159,18 @@ export const prerender = true;
       set('versions', `Engine ${result.engineVersion} · scoring ${result.scoringVersion} · rules ${result.rulesVersion}`);
       items('limitations', result.limitations);
       items('console', ['✓ URL parsed locally', ...result.coverage.map((c) => `${c.status === 'completed' ? '✓' : '!'} ${c.id}: ${c.status}`), result.isPartial ? '! Partial analysis; score unavailable' : '✓ Analysis complete']);
-      set('scan-status', 'Analysis complete. Review coverage and limitations.');
+      set('scan-status', 'Local analysis complete; checking provider evidence.');
       tab('overview');
+      void checkReputation(input.value, sequence);
     } catch {
       result = null;
+      renderProviders(null);
       el('scan-results').hidden = true;
       set('scan-status', 'Enter a valid HTTP(S) URL or domain.');
     }
   });
   el('rescan').addEventListener('click', () => form.requestSubmit());
-  el('clear').addEventListener('click', () => { input.value = ''; result = null; el('scan-results').hidden = true; set('scan-status', 'Ready for a new scan.'); input.focus(); });
+  el('clear').addEventListener('click', () => { scanSequence++; activeLookup?.abort(); submitButton.disabled = false; input.value = ''; result = null; renderProviders(null); el('scan-results').hidden = true; set('scan-status', 'Ready for a new scan.'); input.focus(); });
   el('demo').addEventListener('click', () => { input.value = 'example.com.attacker.test'; form.requestSubmit(); });
   document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach((button) => button.addEventListener('click', () => tab(button.dataset.tab!)));
   document.querySelector('[role="tablist"]')!.addEventListener('keydown', (event: Event) => {
@@ -98,14 +183,16 @@ export const prerender = true;
     tab(tabs[next].dataset.tab!);
     tabs[next].focus();
   });
-  el('copy').addEventListener('click', async () => { if (!result) return; try { await navigator.clipboard.writeText(JSON.stringify(result, null, 2)); set('report-status', 'Redacted result copied.'); } catch { set('report-status', 'Copy failed. Check clipboard permission.'); } });
-  el('json').addEventListener('click', () => { if (!result) return; const url = URL.createObjectURL(new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = 'zeus-redacted-scan.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); set('report-status', 'Redacted JSON downloaded.'); });
+  el('copy').addEventListener('click', async () => { if (!result) return; try { await navigator.clipboard.writeText(JSON.stringify({ localAnalysis: result, reputation }, null, 2)); set('report-status', 'Redacted result copied.'); } catch { set('report-status', 'Copy failed. Check clipboard permission.'); } });
+  el('json').addEventListener('click', () => { if (!result) return; const url = URL.createObjectURL(new Blob([JSON.stringify({ localAnalysis: result, reputation }, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = 'zeus-redacted-scan.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); set('report-status', 'Redacted JSON downloaded.'); });
 </script>
 
 <style>
   .scanner{max-width:1180px;margin:auto;padding:3rem 1.25rem 5rem;display:grid;gap:1rem;color:#f3f7ff}.scanner h1{font-size:clamp(2rem,5vw,4rem);margin:.2rem 0}.scanner-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}.scanner-head>div{max-width:760px}.scanner-head p{color:#b7c4d9}.eyebrow,.card-kicker{letter-spacing:.12em;text-transform:uppercase;font-size:.78rem;color:#43c7ff}.preview-badge{background:#4b2a24;color:#ff7b36;border-radius:999px;padding:.55rem .9rem;font-weight:700}.scanner form,.scanner section,.scanner aside{border:1px solid #2e4665;border-radius:1.2rem;padding:1.4rem;background:#0b1526;box-shadow:0 14px 40px #02071355}.analysis-card{background:#16243b!important;border:0!important;padding:1.7rem!important}.scanner .row{display:flex;flex-wrap:wrap;gap:.6rem}.scanner input{flex:1 1 18rem;min-width:0;background:transparent;color:inherit;font-size:1.25rem;padding:.9rem;border:0;border-bottom:1px solid #41536b}.scanner input,.scanner button{border-radius:.4rem}.scanner button{padding:.7rem 1rem;border:1px solid #46708e;background:#173f5d;color:#fff;cursor:pointer}.scanner button:focus-visible,.scanner input:focus-visible{outline:3px solid #40c8ff;outline-offset:2px}.scanner [aria-selected="true"]{background:#246b8d}.scanner #redacted{overflow-wrap:anywhere}.scanner [hidden]{display:none}.coverage-card{background:#16243b!important;border:0!important}.coverage-card>div:first-child{display:flex;justify-content:space-between;align-items:center}.coverage-card strong{font-size:1.2rem}.progress-track{height:1rem;margin-top:1.2rem;background:#31445f;border-radius:99px;overflow:hidden}.progress-track span{display:block;height:100%;width:0;background:#3dc3fb;border-radius:inherit;transition:width .7s ease}.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;border:0!important;padding:0!important;background:transparent!important;box-shadow:none!important}.summary-card{display:grid;gap:.4rem;min-height:140px}.summary-card strong{font-size:3.2rem}.summary-card>span:last-child{color:#ffc72c}.privacy-card strong{color:#43e37f}.console-card{border-color:#3f5875!important}.console-card h2{color:#f4f7ff}.console-card li{color:#42e985;list-style:none;margin:.45rem 0;font-size:1.05rem}.console-card ol{padding-left:0}.scanner aside{color:#bfcbda}.scanner aside h2{color:#fff}
-  @media (max-width:700px){.scanner-head{display:block}.preview-badge{display:inline-block;margin-top:.8rem}.summary-grid{grid-template-columns:1fr}.scanner{padding-top:2rem}}
+  .sharing-note{border-left:3px solid #43e37f;padding:.75rem 1rem;background:#102d2b;color:#d2e8e1}.verdict-card{border-color:#43e37f!important;background:linear-gradient(135deg,#102c2d,#102039)!important;padding:1.7rem!important}.verdict-card h2{font-size:clamp(1.8rem,4vw,3rem);margin:.35rem 0;color:#f6fffb}.verdict-card p{max-width:58ch;color:#c9e4dc}.verdict-source{display:inline-block;margin-top:.4rem;color:#7fe6c2;font:600 .82rem ui-monospace,SFMono-Regular,monospace;text-transform:capitalize}.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.evidence-block{border:1px solid #2e4665;border-radius:.8rem;padding:1rem;background:#0c1829}.evidence-block h3{margin:0 0 .5rem;color:#f3f7ff}.evidence-block ul{padding-left:1.1rem}.scanner button:disabled{cursor:wait;opacity:.65}
+  @media (max-width:700px){.scanner-head{display:block}.preview-badge{display:inline-block;margin-top:.8rem}.summary-grid,.evidence-grid{grid-template-columns:1fr}.scanner{padding-top:2rem}}
   @media (prefers-reduced-motion:reduce){.progress-track span{transition:none}}
   .scanner h1{line-height:1.08;letter-spacing:-.035em}.scanner h2{font-size:1.15rem;letter-spacing:-.01em;margin:0 0 1rem}.scanner p{line-height:1.6}.scanner #scan-results{display:grid;gap:1rem}.scanner .scanner-tabs{gap:.35rem;border-bottom:1px solid #2e4665;padding-bottom:.65rem}.scanner .scanner-tabs button{background:transparent;border:1px solid transparent;color:#b7c4d9}.scanner .scanner-tabs button[aria-selected="true"]{background:#173f5d;border-color:#46708e;color:#fff}.scanner .console-card{background:#080f1d}.scanner .console-card li{font-family:ui-monospace,SFMono-Regular,monospace;font-size:.9rem;line-height:1.55}.scanner .summary-card{border-color:#2e4665}.scanner #scan-results[hidden]{display:none}
   :global(.light-mode) .scanner{color:#16344a}.light-mode .scanner-head p{color:#496176}.light-mode .scanner form,.light-mode .scanner section,.light-mode .scanner aside{background:#f7fbff;border-color:#b7cadb;box-shadow:0 12px 30px #7591a522}.light-mode .analysis-card,.light-mode .coverage-card{background:#e8f2fb!important}.light-mode .scanner input{border-color:#9ab1c5;color:#16344a}.light-mode .scanner button{background:#dceefb;color:#123c59;border-color:#8fb6d2}.light-mode .scanner button[aria-selected="true"]{background:#b9def4}.light-mode .progress-track{background:#c9d8e6}.light-mode .progress-track span{background:#169fda}.light-mode .scanner aside h2,.light-mode .console-card h2{color:#16344a}.light-mode .console-card li{color:#168b58}.light-mode .scanner aside{color:#496176}
+  .light-mode .sharing-note{background:#e3f5ee;color:#214c40;border-color:#168b58}.light-mode .verdict-card{background:#e8f7f1!important;border-color:#168b58!important}.light-mode .verdict-card h2,.light-mode .evidence-block h3{color:#16344a}.light-mode .verdict-card p{color:#315d52}.light-mode .evidence-block{background:#f7fbff;border-color:#b7cadb}
 </style>

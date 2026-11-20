@@ -34,14 +34,18 @@ const {
       } catch {}
     </script>
     <title>{title}</title>
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/favicon.png" type="image/png" />
     {headHtml && <Fragment set:html={headHtml} />}
   </head>
-  <body class="dashboard-page">
+  <body class:list={['dashboard-page', 'scenic-site', current === 'dashboard' && 'dashboard-home']}>
+    <div class="ambient-backdrop" aria-hidden="true">
+      <div class="scenery-layer"></div>
+      <div class="scenery-tint"></div>
+    </div>
     <a class="dash-skip" href="#main">Skip to content</a>
     <header class="dash-header">
       <a class="dash-brand" href="/" aria-label="ZEUS home">
-        <span class="zeus-emblem" aria-hidden="true"><span class="zeus-glyph">Z</span><span class="zeus-word">ZEUS</span></span>
+        <img class="zeus-brand-mark" src="/assets/zeus-mark.png" alt="" width="44" height="44" />
         <span class="zeus-expansion">Zone for Exploration and<br />Understanding of Security</span>
       </a>
       <nav class="dash-nav" aria-label="Main navigation">

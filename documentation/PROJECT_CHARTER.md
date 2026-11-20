@@ -38,7 +38,7 @@ permissions, activity logs, and a way to stop the workflow. At close, review
 the deliverable evidence, analytics, hours and spending, and record any target
 that was missed or deferred. Existing release gates apply.
 
-Companion documents: `documentation/MIGRATION_PLAN.md`, `documentation/architecture.md`,
+Companion documents: `documentation/architecture.md`,
 `documentation/ai-agent-role-manager.md`, `AGENTS.md`, and `CONTRIBUTING.md`.
 
 ## Document control
@@ -52,11 +52,12 @@ Companion documents: `documentation/MIGRATION_PLAN.md`, `documentation/architect
 | Status                           | Draft for owner review                                    |
 | Version                          | 0.1                                                       |
 | Last updated                     | 2026-11-11                                                |
-| Production URL                   | `https://vathanakbotra.vercel.app`                        |
+| Production URL                   | `https://zeuswriteups.vercel.app`                         |
 
 This charter defines purpose, scope, outcomes, architecture decisions,
-governance, quality standards, and release authority. `documentation/MIGRATION_PLAN.md`
-defines implementation phases. `AGENTS.md` and `CONTRIBUTING.md` define
+governance, quality standards, and release authority. Historical migration
+planning is archived under `documentation/archive/`; current work is tracked in
+`documentation/PROGRESS.md`. `AGENTS.md` and `CONTRIBUTING.md` define
 operating constraints. When documents conflict, the owner's current written
 decision and `AGENTS.md` take precedence until the documentation is corrected.
 
@@ -486,8 +487,9 @@ A production candidate is acceptable only when all applicable evidence exists:
 
 ## 14. Milestones
 
-The authoritative task detail remains in `documentation/MIGRATION_PLAN.md`. Charter-level
-milestones are:
+The migration plan is archived as historical context. Charter-level milestones
+remain project outcomes; current tasks and evidence are recorded in
+`documentation/PROGRESS.md`:
 
 1. **Foundation stabilization** — reproducible Astro/Vercel build and routing.
 2. **Architecture organization** — shared components, styles, assets, and typed

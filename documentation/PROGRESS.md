@@ -1,100 +1,1453 @@
-# ZEUS Project Ledger
 
-Last updated: 2026-11-16
+Last updated: 2026-11-20
 
-This file records the current work ledger, verified evidence, decisions, and timeline for the ZEUS phishing scanner.
+This is the shared execution record for the ZEUS Cybersecurity Portfolio. It
+records verified state, planned work, agent activity, evidence, decisions, and
+release gates. It does not authorize commits, pushes, merges, deployments, or
+scope expansion.
 
-## Current state
+## Current status
 
-| Area | Status | Evidence |
+| Area | Status | Evidence / notes |
 | --- | --- | --- |
-| Active branch | feat/phishing-scanner-v1-core | Scanner Phase 1 work is in the canonical checkout |
-| Phase | Phase 1 complete and pushed | PSL parser, raw hostname preservation, mixed-script analysis, Unicode skeleton matching, and tests are present |
-| Scanner score | Partial results only | score remains null while suspicious-character coverage and calibration are incomplete |
-| Verification | Local checks passed for current increment | 31 scanner tests, Astro check, formatting, build, and 19-page route check passed; browser acceptance remains pending |
-| Commit and push | Complete | Phase 1 and follow-up increments are pushed to feat/phishing-scanner-v1-core |
-| Phase 2 UI publication | Owner approved for feature branch | UI commit `2572f23`; clean snapshot passed dependency install, formatting, Astro check, 28 scanner tests, build, 19 routes, and repository checks. The 31-test result covers the local engine and test changes excluded from this push. |
-| Merge and deployment | Not authorized | Requires separate owner approval |
+| Active branch | Migration plan archival and documentation cleanup | `docs/reconcile-progress-status`, branched from clean `main` at `1888046` |
+| Production | Font and canonical-domain update merged | PR #101; `main` at `1888046` (`feat: use Inter and IBM Plex Mono typography (#101)`) |
+| Deployment | Production deployment reported ready | Vercel production deployment for the merged commit succeeded; browser visual review remains unverified |
+| Working tree | Documentation reconciliation in progress | Changes are limited to the migration plan archive, progress record, and active guidance references |
+| Test branch | Behind production | `test` was 26 commits behind `origin/main` at the latest branch inspection; refresh before acting |
+| Paused implementation | Status not confirmed | `feat/phishing-scanner-v1-core` exists; latest commit `ef914ef` dated 2026-11-16 records Phase 2 UI progress |
+| Astro migration foundation | Complete from prior handoff | Astro routes, Vercel integration, typed collection foundation, motion, and CI work are present in history |
+| Documentation baseline | Organized; migration plan archived | Charter, contribution guide, agent roles, project rules, and historical migration plan are in `documentation/archive/` |
+| Production release | Merged and deployed | PR #101 merged to `main`; deployment succeeded; visual browser review remains pending |
 
-## Public Beta readiness checklist
+## Confirmed completed work
 
-This is an evidence ledger, not a live dashboard. A criterion is checked only when its stated evidence is recorded.
+### Product and migration work
 
-| # | Criterion | Status | Evidence / remaining work |
+- Astro foundation and Vercel integration were implemented.
+- Native dashboard, author, portfolio, writeup hub, and writeup detail routes
+  were added or migrated.
+- Typed writeup collection-backed rendering was implemented for report-backed
+  writeups, with legacy fallback retained where required.
+- Security Brief API routing and JSON output were implemented.
+- Portfolio motion, typing, slideshow, theme, and interaction fixes were
+  implemented across the migration history.
+- AUPP branding was updated with the approved logo asset.
+- The production domain configuration was corrected to the Vercel production
+  domain.
+
+### Documentation and governance
+
+- `documentation/PROJECT_CHARTER.md` was created and approved by the owner.
+- Architecture decisions D1–D15 were confirmed by the owner.
+- `AGENTS.md` and `CLAUDE.md` define the cross-agent operating rules.
+- `documentation/codex-role.md` and `documentation/claude-role.md` define
+  model-role assignments.
+- `documentation/CONTRIBUTING.md` documents the Astro branch, CI, preview, and
+  release process.
+- Older guidance and research notes were moved under
+  `documentation/archive/`.
+- `documentation/PROGRESS.md` is now the shared status and execution record.
+
+## Evidence and commit history
+
+| Commit | Result |
+| --- | --- |
+| `92d29c4` | Documentation cleanup, project charter, agent rules, role guides, and archive organization |
+| `b01901a` | Approved AUPP vertical logo |
+| `a8cf381` | Site motion enabled by default |
+| `a091dd5` | Astro site set to the Vercel production domain |
+| `e850aed` | `test` merged into the Astro feature branch |
+| `9e09968` | Motion preview setting honored by portfolio animations |
+| `7c178d6` | Astro routing and portfolio interactions repaired |
+| `c35fc59` | Page motion initialized after Astro content |
+| `80337f6` | Writeup navigation and interactions repaired |
+| `457c0e1` | Security Brief routed through Astro |
+
+Previously reported checks include formatting, `astro check`, production build,
+repository checks, API checks, and route smoke tests. They must be rerun for a
+new release candidate rather than treated as permanent proof.
+
+## Current outstanding work
+
+- [ ] Owner visual review of the merged typography update in light/dark themes,
+      desktop/mobile, dashboard, and writeups.
+- [ ] Confirm whether `feat/phishing-scanner-v1-core` is paused, active, or
+      abandoned; its latest recorded commit is `ef914ef` (2026-11-16).
+- [ ] Refresh remote refs before making branch or release decisions. At the
+      latest inspection, local `test` was 26 commits behind `origin/main`.
+
+### Historical migration and release checklists
+
+The following checklists are retained from the earlier migration handoff. Their
+unchecked items are not confirmed current tasks; compare with current code and
+recent evidence before reopening any of them.
+
+- [x] Require typed metadata for the eight existing Markdown reports and remove
+      their hardcoded report-ID mapping.
+- [x] Convert the remaining six legacy detail pages to validated,
+      collection-backed Markdown content.
+- [ ] Remove the now-unused detail-page fallback branch after browser review,
+      while retaining legacy source files as rollback references.
+- [ ] Reconcile any remaining legacy architecture references in documentation.
+- [ ] Confirm canonical and approved legacy redirect routes in a real preview.
+
+### Browser and release evidence
+
+- [ ] Test canonical pages and representative writeups in a browser.
+- [ ] Test navigation, theme switching, filters, typing text, running text,
+      slideshow controls, motion, pause behavior, and reduced-motion behavior.
+- [ ] Review representative widths near 390, 768, 1280, and 1440 pixels.
+- [ ] Complete keyboard, focus, labels, contrast, and accessibility review.
+- [ ] Run the complete local quality suite on the release candidate.
+- [ ] Review the Vercel preview and record its URL and tested routes.
+- [ ] Request separate owner approval for push, PR, merge, and production
+      promotion.
+
+## Historical incremental execution plan
+
+| Step | Execution item | Owner / agent | Exit evidence | Status |
+| --- | --- | --- | --- | --- |
+| 1 | Refresh remote and compare branch history | Codex | Successful fetch and divergence report | Pending |
+| 2 | Decide treatment of `Icon\r` | Owner with Codex evidence | Explicit keep/remove decision | Pending |
+| 3 | Review documentation diff | Owner + Codex | Approved or requested corrections | Pending |
+| 4 | Re-run format, Astro, build, route, and repository checks | Codex | Command output recorded | Pending |
+| 5 | Perform browser and accessibility review | Terra for visual diagnosis; Sol/Codex for fixes | Route, viewport, and interaction checklist | Pending |
+| 6 | Resolve only approved findings | Assigned implementation agent | Focused diff and passing checks | Pending |
+| 7 | Review preview and release evidence | Codex prepares; owner decides | Preview evidence accepted | Pending |
+| 8 | Push and open the approved PR | Owner-authorized agent | Remote branch and PR URL | Pending |
+| 9 | Merge into `test` | Owner approval required | Green CI and staging confirmation | Pending |
+| 10 | Promote `test` to `main` | Owner approval required | Production merge and live smoke test | Pending |
+
+## Agent activity log
+
+### 2026-11-20 — Reconcile progress and archive migration plan
+
+- Agent: Codex, engineering co-lead and integrator.
+- Approved scope: Reconcile current status, archive the superseded migration
+  plan, and update active documentation references; no application-code changes.
+- Files inspected: `AGENTS.md`, `documentation/PROGRESS.md`,
+  `documentation/MIGRATION_PLAN.md`, repository skills, and Git branch/history
+  metadata.
+- Files changed: `documentation/PROGRESS.md`,
+  `documentation/archive/MIGRATION_PLAN.completed-2026-11.md` (moved from active path),
+  `CLAUDE.md`, `documentation/agent-skills.md`,
+  `documentation/ai-agent-role-manager.md`, `documentation/skills/audit/SKILL.md`,
+  `documentation/PROJECT_CHARTER.md`, and `documentation/CONTRIBUTING.md`.
+- Completed: Updated status rows for merged PR #101 and current branch facts;
+  archived the superseded plan and changed active guidance to use current
+  architecture and progress records; identified the unconfirmed state of
+  `feat/phishing-scanner-v1-core`.
+- Evidence: Local `main` was clean at `1888046`, matching `origin/main`;
+  `test` was 26 commits behind; `feat/phishing-scanner-v1-core` last changed
+  at `ef914ef` on 2026-11-16. The Vercel production deployment for #101 was
+  previously verified successful; live browser rendering was blocked by the
+  Vercel challenge.
+- Remaining: Owner visual review and confirmation of the scanner branch's
+  status. The archived plan is retained as historical context, not current
+  implementation authority.
+- The owner approved the local commit, branch push, and PR creation. PR
+  [#102](https://github.com/Botrasky/dvb/pull/102) is open against `main`;
+  merge and deployment are not included in this task.
+
+### 2026-11-18 — CISA threat-brief production hotfix
+
+- Replaced Cloud Security Alliance with CISA's official advisories feed, updated
+  the dashboard source links and fallback story, and added CISA's official logo
+  as the fallback image when a feed item has no thumbnail.
+- Changed `backend/security-brief-legacy.mjs`, `frontend/src/components/ThreatBrief.astro`,
+  `frontend/index.html`, both dashboard JS/CSS copies, both publisher-mark asset
+  copies, and this progress record.
+- Local verification passed: `bash scripts/ci-check.sh`, `npm run check`
+  (44 files, 0 diagnostics), `npm run build`, `npm run check:routes` (18 HTML
+  pages), live CISA RSS parser check (2 items, all links on `www.cisa.gov`), and
+  `git diff --check`.
+- PR #90 targets `main`; the Vercel preview is ready. The initial CI run failed
+  only because this required progress entry was missing. A fresh CI run is
+  required before merge. Production has not been merged or deployed.
+- Remaining: wait for green required checks, merge PR #90, and verify the live
+  site. The owner has authorized the merge after checks pass.
+
+### 2026-11-18 — Enlarge fallback publisher logos
+
+- Approved scope: enlarge logos only in the main story-thumbnail fallback;
+  leave the compact source badge unchanged.
+- Reduced the fallback logo padding from 18% to 6% in
+  `frontend/css/dashboard.css` and `frontend/public/css/dashboard.css`, keeping
+  `object-fit: contain` so the full logo remains visible.
+- Validation passed: `npm run check` (44 files, 0 diagnostics), `npm run build`,
+  `npm run check:routes` (18 HTML pages), `bash scripts/ci-check.sh`, and
+  `git diff --check`.
+- `npm ci` reported 18 dependency audit vulnerabilities (2 moderate, 16 high);
+  no dependency manifests were changed.
+- No commit, push, pull request, merge, or deployment was made. A visual
+  preview remains for owner review; the local development server is not
+  reachable from the built-in browser pane. Separate owner approval is needed
+  before any release action.
+
+### 2026-11-18 — Replace publisher placeholder marks
+
+- Approved scope: replace custom publisher artwork with verified publisher
+  marks; continue preferring story thumbnails, use the larger publisher mark
+  only when a thumbnail is unavailable. The owner confirmed that NVD should use
+  the NIST official mark as its fallback because no distinct official NVD mark
+  was verified; existing NVD story thumbnails remain preferred.
+- Updated the dashboard mappings and mirrored CSS/JS copies. Added publisher
+  assets to `frontend/assets/publisher-marks/` and
+  `frontend/public/assets/publisher-marks/`, and updated the static NIST mark
+  in `frontend/src/components/ThreatBrief.astro`. Asset pairs match; generated
+  deployment assets are present; no hotlinked logo assets were introduced.
+- Validation passed: `npm run format:check`; `npm run check` (44 files, 0
+  diagnostics); `npm run build`; `npm run check:routes` (18 HTML pages);
+  `bash scripts/ci-check.sh`; `git diff --check`; asset mirror/build checks;
+  and a stale-placeholder-reference check.
+- `npm ci` completed and reported 18 dependency audit vulnerabilities (2
+  moderate, 16 high); no dependency manifests were changed.
+- The owner reviewed and approved the Vercel preview. PR #92 merged into
+  `main` as `638e4fb7bc19b2f85696daf4563305b6cfeffe1e`; GitHub CI and the
+  `dvb-og72` production deployment both succeeded.
+- Production smoke checks found a domain-verification blocker:
+  `curl -sS -o /dev/null -w '%{http_code}\n' https://vathanakbotra.vercel.app/`
+  returned 404 (`DEPLOYMENT_NOT_FOUND`); the owner-mentioned
+  `https://zeuswriteups.vercel.app/` returned 429 (Vercel challenge); and the
+  immutable deployment URL redirected to Vercel sign-in (302), including its
+  home, asset, script, and writeup routes.
+- No domain or deployment configuration was changed. Owner decision needed:
+  confirm the intended production domain and access settings so the public
+  production route can be verified.
+
+### 2026-11-15 — Learning paths and practice pilot
+
+- [x] Add the Practice next card to the RSA and Hidden Cipher 2 writeups, with CyLab links and click labels for each writeup and topic.
+- [x] Add Dashboard learning paths for CyLab, web security, and cryptography.
+- [ ] Verify routes, mobile layout, and click events in preview.
+- [ ] Release through the repository's staging and production workflow.
+- [ ] Collect 30 days of page views and practice clicks by writeup and review click rates.
+- [ ] Review partner eligibility and commercial clearance before activating any commission link. Place the disclosure beside any activated link.
+
+2026-11-15 — Codex added the 90-day reform targets to the charter and renamed
+the featured dashboard card “EVEN RSA CAN BE BROKEN??”. The route remains
+`/writeups/ven-rsa/`. Prior title work is recorded below. The implementation
+plan is proposed for review and the audience experiment awaits preview testing.
+
+| Date | Agent | Activity | Result |
 | --- | --- | --- | --- |
-| 1 | All six detection categories validated | Not verified | No evidence in this ledger that all six categories have reviewed coverage and tests. |
-| 2 | Scoring and analysis coverage accurate | In progress | Partial coverage correctly withholds numeric scores; calibration and full UTS#39 coverage remain. |
-| 3 | Signed rules, fallback, and key rotation tested | Not verified | No implementation or verification evidence recorded. |
-| 4 | Privacy, XSS, and security header checks passed | Not verified | General repository security checks passed; these release-specific checks are not evidenced. |
-| 5 | Supported browsers and Vercel preview tested | Not verified | No browser matrix or accepted preview evidence recorded. |
-| 6 | Owner explicitly approves production deployment | Owner decision required | No deployment approval recorded; production release remains gated. |
+| 2026-11-13 | Codex | Audited Git state and documentation history | Confirmed clean tree and one local commit ahead of cached upstream |
+| 2026-11-13 | Codex | Checked branch and upstream comparison | Confirmed active feature branch; push intentionally held |
+| 2026-11-13 | Codex | Prepared this progress record | Documentation-only change; no source, commit, push, merge, or deployment action |
+| 2026-11-13 | Codex | Added mandatory progress-reporting rules to the charter and agent role guides | Updated `PROJECT_CHARTER.md`, `AGENTS.md`, `codex-role.md`, and `claude-role.md`; whitespace validation passed |
+| 2026-11-13 | Codex (separate agent) | Checked the current status table against Git state | Corrected branch, working tree, and upstream rows in `documentation/PROGRESS.md`; omitted its own activity entry, so the reporting test failed |
+| 2026-11-13 | Codex (integrator) | Reviewed the separate agent's task and recorded the test result | Verified `git status -sb`, `HEAD`, missing upstream, and `git diff --check`; no other files were changed by the test |
+| 2026-11-13 | Codex (integrator) | Added completion checklist and CI enforcement for progress records | Updated agent guides, added `scripts/check-progress-record.mjs`, wired the check into GitHub Actions, and recorded this task |
+| 2026-11-13 | Codex | Ran the progress-record enforcement test | Compliant change set passed; missing-record change set failed as expected; syntax, formatting, and diff checks passed |
+| 2026-11-13 | Codex | Published the progress-reporting test scoreboard | Recorded 6 passed checks, 1 failed agent-compliance check, and remaining coverage in `documentation/progress-reporting-test-scoreboard.md` |
+| 2026-11-13 | Codex | Hardened the progress-record CI guard before governance handoff | Added full Git history checkout and required a newly added dated activity entry; scoreboard increased to 8 passed, 1 failed |
+| 2026-11-13 | Codex | Completed the governance handoff verification | Formatted root `CLAUDE.md`; formatting, Astro diagnostics, production build, 18-page route validation, repository security checks, and whitespace validation passed |
+| 2026-11-13 | Codex | Implemented the first strict writeup migration slice | Added required metadata to eight reports, replaced hardcoded report IDs with typed slug lookup, preserved six legacy fallbacks, and passed all build and route checks |
+| 2026-11-13 | Codex | Converted the six remaining legacy writeups to validated content | Added sanitized native reports for Amaterasu, Bypass Me, ColddBox, DriftingBlues6, Electron1, and the network sandbox; all 14 detail routes now render through Astro content |
 
-**Readiness: 0/6 verified.** Phase 1 CI and local checks do not satisfy these six release criteria.
+### 2026-11-13 — Progress reporting test
 
-## Work ledger
+- Agent: Separate Codex agent, reviewed by Codex integrator.
+- Approved scope: Correct stale status rows in `documentation/PROGRESS.md` on
+  `chore/progress-reporting-test`; inspect Git state only.
+- Files changed or inspected: `documentation/PROGRESS.md`, `AGENTS.md`, and Git
+  branch/status metadata.
+- Completed: Updated active branch, working tree, and upstream status.
+- Tests/evidence: Integrator confirmed the active branch, `92d29c4` HEAD,
+  absence of an upstream, and a clean whitespace diff.
+- Remaining work: Validate this rule with Claude and other agents separately;
+  decide whether stronger task handoff or automated checks are needed.
+- Blocker or risk: The separate agent reported completion without recording its
+  own activity. The integrator added this entry after detecting the omission.
+- Owner decision needed: None for this test. Any policy or automation change
+  needs its own approved scope.
 
-| Item | State | Evidence or next action |
-| --- | --- | --- |
-| Replace injected fake domain parsing with the PSL parser | Complete | pslDomainParser is the default in scanUrl |
-| Preserve the original hostname before URL normalization | Complete | ParsedInput.rawHostname is covered by tests |
-| Add mixed-script analysis | Complete for Phase 1 | Analysis is non-scoring and does not complete Unicode coverage |
-| Keep partial scores as null | Complete | Covered by scanner tests and default-parser integration test |
-| Add parser and script-analysis regression tests | Complete | Scanner tests include a representative finding for each of six categories; release validation still requires a reviewed corpus |
-| Validate the final Phase 1 diff | Complete | Formatting, Astro checks, build, route, and repository checks pass |
-| Review and approve the Phase 1 diff | Complete | Owner authorized implementation, synchronization, commit and push |
-| Commit Phase 1 | Complete | e945979, 53ad7f1, and 9f26191 |
-| Push Phase 1 | Complete | Feature branch published |
-| Complete UTS#39/confusable coverage | In progress | Unicode 16.0.0 skeleton matching is integrated; coverage remains unavailable pending broader calibration |
-| Surface mixed-script observations for Unicode and Punycode labels | Complete for partial analysis | Zero-point finding on registrable label; coverage and score remain unavailable |
-| Integrate scanner website page | In progress | Local Astro route, nav/home links, tabs, findings, privacy disclosure, demo and JSON export build successfully; dark dashboard cards, coverage progress animation, console states, responsive layout, and reduced-motion handling added; browser and visual checks pending |
-| Calibrate scoring and reviewed brand data | Future | Requires labeled examples and owner approval |
-| Add scoring regression coverage | Complete | Partial-score and cap invariants are covered in scoring.test.mjs |
-| Enable feature-branch CI triggers | Complete | Commit 0708b01 runs checks on every branch push |
-| Document the scoring contract | Complete | frontend/src/lib/scanner/README.md records partial-score and calibration rules |
+## Current next actions
 
-## Verified evidence
+1. Owner visually reviews the merged typography update.
+2. Owner confirms whether `feat/phishing-scanner-v1-core` is paused, active, or
+   abandoned.
+3. Before new implementation, inspect current architecture, progress evidence,
+   branch state, and the target code; use archived plans as background only.
 
-| Check | Result | Notes |
-| --- | --- | --- |
-| npm run test:scanner | Passed | 31 scanner tests, including representative findings for all six categories and Japanese script combination regression |
-| npm run format:check | Passed | All files match Prettier style |
-| npm run check | Passed | 0 diagnostics |
-| npm run build | Passed | Vercel adapter build completed |
-| npm run check:routes | Passed | 19 HTML pages validated, including scanner route |
-| bash scripts/ci-check.sh | Passed | Repository security and link checks passed |
-| git diff HEAD --check | Passed | No whitespace errors |
+### 2026-11-15 — CTF affiliate audience test surface
 
-## Timeline
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Reform the dashboard around the existing CTF audience, add a
+  disclosure-safe affiliate test surface, and add click tracking for audience
+  validation. Do not invent or activate an affiliate commission link before
+  partner approval; do not push or deploy.
+- Files changed: `src/pages/index.astro`, `src/layouts/SiteLayout.astro`,
+  `public/js/analytics.js`, `css/dashboard.css`, and this progress record.
+- Completed: Added a CTF-focused practice pathway block pointing to the HTB
+  affiliate information page, explicit pre-approval disclosure, 30-day CTR test
+  language, Vercel custom-event hooks for the CTA and outbound links, and sitewide
+  analytics script loading in the Astro layout.
+- Tests/evidence: `node --check public/js/analytics.js`, `git diff --check`, and
+  `bash scripts/ci-check.sh` passed. `npm run check` and `npm run build` were
+  attempted but could not write Astro's generated `.astro` cache because that
+  directory is outside the writable workspace in this session.
+- Remaining work: Apply for the HTB affiliate program, replace the pathway URL
+  with the approved tracked link if accepted, enable Vercel Analytics in the
+  project dashboard, and review the 30-day click data.
+- Blocker or risk: No commission link is active yet; production deployment is
+  intentionally held pending the repository release process and owner approval.
+- Owner decision needed: Review the page change before any commit, push, or
+  production deployment.
 
-Browser evidence (2026-11-16): The in-app browser loaded the local scanner. Enter submitted a synthetic example.com URL, the overview redacted its query, five of six categories showed as completed, the console identified suspicious characters as unavailable, and the score showed N/A. Right Arrow moved focus and selection from Overview to Findings. Scanner tests rerun: 31/31 passed. Chrome, Safari, Firefox, Edge, mobile, network privacy and XSS acceptance remain open. Full UTS#39 validation and scoring calibration remain open.
+### 2026-11-13 — Strict metadata for report-backed writeups
 
-| Date | Event | Result |
-| --- | --- | --- |
-| 2026-11-15 | ZEUS scanner prototype prepared | Browser-only parser, redaction, rule validation, typed results, and 11 tests |
-| 2026-11-16 | PSL parser integrated | Registrable-domain parsing uses the maintained psl dependency |
-| 2026-11-16 | Hostname and script handling added | Raw hostname preservation and non-scoring mixed-script analysis |
-| 2026-11-16 | Phase 1 verification completed | 28 tests and the full local quality suite passed |
-| 2026-11-16 | Review state recorded | Owner-approved changes were committed and pushed to the feature branch |
-| 2026-11-16 | Feature-branch CI enabled | Commit 0708b01 runs the existing checks on every branch push |
-| 2026-11-16 | Scoring regression tests added | Partial-score and category-cap invariants are covered |
-| 2026-11-16 | Canonical checkout synchronization corrected | Copied the previously missed typed PSL shim, IPv4 octet validation and default-parser integration test; 25 tests, Astro check, build and routes passed |
-| 2026-11-16 | Unicode source acquired | Official version 16.0.0 confusables downloaded; SHA-256 95bd0aad6dced5ebc63436f459c06ab21a8d107cd842fb57f5c3a1e91bca8611 |
-| 2026-11-16 | Unicode brand matching integrated | 6,355 licensed Unicode 16 mappings, Punycode decoding and NFD skeleton comparison replace the small manual map; full script restrictions and scoring calibration remain pending |
-| 2026-11-16 | Public Beta readiness checklist corrected | Six criteria are listed with evidence-based states; none is marked complete without supporting evidence |
-| 2026-11-16 | Mixed-script detection integrated | Approved technical scope: engine, Unicode helper, scanner test, and ledger. Decodes registrable Punycode labels, reports a zero-point finding for mixed scripts, and preserves partial-score behavior; 29 scanner tests, formatting, and Astro check pass. Full UTS#39 coverage, scoring calibration, other release criteria, and owner release approval remain pending. |
-| 2026-11-16 | Six-category representative regression added | Existing core test file exercises one finding per category, category caps, and partial-score behavior; 30/30 scanner tests pass. Broader reviewed corpus and calibration remain pending |
-| 2026-11-16 | Japanese script false-positive guard added | Han, Hiragana, and Katakana combinations in the registrable label do not emit mixed-script findings; 31/31 scanner tests pass. Full UTS#39 validation remains pending |
-| 2026-11-16 | Scanner UI route implemented locally | Astro page with local scan form, tabbed results, console, privacy disclosure, demo, redacted JSON/copy; nav and homepage links added. Astro check: 0 diagnostics; build and 19-page route check pass. Browser, visual, and privacy acceptance remain pending; no production approval inferred |
-| 2026-11-16 | Scanner dark UI treatment added | Matched the provided dark reference with preview badge, analysis coverage bar, risk/privacy cards, green activity console, responsive layout, and reduced-motion support; live values still come from ScanResult. Formatting, Astro check, build, and route check pass |
-| 2026-11-16 | Dashboard owner review preparation | Updated typography, spacing, tab styling, console to display actual coverage statuses, and keyboard tab navigation; removed repeated coverage display. Scanner tests 31/31, formatting, Astro check, build and 19-route check pass. Browser, responsive, keyboard, XSS and network privacy acceptance remain unverified; no commit or deployment authorized by this entry. |
-| 2026-11-16 | Browser acceptance preparation | Local preview returned HTTP 200 after server startup. Browser automation is unavailable in this session; Chrome, Safari, Firefox, Edge, mobile, keyboard, network privacy and XSS acceptance are not yet verified. No commit, push, merge or deployment performed. |
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Add required collection metadata to the eight existing
+  Markdown reports and replace the detail route's hardcoded report-ID map.
+- Files changed: `src/content.config.ts`,
+  `src/pages/writeups/[slug]/index.astro`, eight `writeups/*_Report.md` files,
+  and `documentation/PROGRESS.md`.
+- Completed: Required title, slug, summary, topic, difficulty, platform, cover,
+  date, and status metadata; generated typed report paths; used metadata titles;
+  retained fallback rendering for six legacy writeups.
+- Tests/evidence: Prettier passed; Astro diagnostics reported zero errors,
+  warnings, or hints; production build passed; 18-page route validation passed;
+  repository checks passed; all eight typed and six legacy detail outputs were
+  inspected successfully.
+- Remaining work: Convert the six fallback writeups to validated content and
+  make the writeup hub derive cards and filters from collection metadata.
+- Blockers or risks: The hub remains a legacy HTML bridge in this slice.
+- Owner decision needed: Review this diff before any commit.
 
-## Decisions
+### 2026-11-13 — Convert remaining legacy writeups
 
-| Decision | Rationale | Status | Applies to |
-| --- | --- | --- | --- |
-| Keep suspicious-character coverage unavailable | Reviewed Unicode and UTS#39 handling is incomplete | Active | Phase 1 |
-| Withhold numeric scores when coverage is incomplete | Prevents partial analysis from presenting a definitive score | Active | Scanner results |
-| Retain parser injection in tests | Keeps isolated engine tests deterministic | Active | Scanner tests |
-| Do not fetch or follow submitted destinations | Preserves browser-only URL analysis | Active | Scanner behavior |
-| Require separate approval for merge and deployment | Keeps release actions owner-controlled | Active | Repository release |
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Create validated Markdown reports for the six remaining
+  legacy-backed slugs, preserve their public routes, redact sensitive values,
+  retain legacy HTML for rollback, and update this record.
+- Files changed: Six new `writeups/*_Report.md` files and
+  `documentation/PROGRESS.md`, in addition to the uncommitted first-slice files.
+- Completed: Migrated Amaterasu, Bypass Me, ColddBox Easy, DriftingBlues6,
+  Electron1, and Network Security Research Lab to the typed collection.
+- Tests/evidence: Formatting passed; Astro diagnostics reported zero errors,
+  warnings, or hints; production build passed; 18-page route validation and
+  repository checks passed; all 14 generated detail pages contain the native
+  Astro layout marker and none contain the legacy detail marker.
+- Remaining work: Generate the writeup hub from collection metadata, complete
+  browser review, then remove the unused detail fallback code.
+- Blockers or risks: The legacy HTML files remain intentionally for rollback,
+  and the writeup hub is still a legacy HTML bridge.
+- Owner decision needed: Review the generated content and route behavior before
+  any commit.
+
+### 2026-11-13 — Amaterasu visual story and AUPP seal placement
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Redesign only the Amaterasu detail route as a progressively
+  enhanced visual story; add lightweight carousel motion and accessibility;
+  correct the official AUPP vertical logo's seal placement on the portfolio;
+  do not change dependencies, routes, other writeup presentation, or content
+  facts.
+- Files changed: `src/pages/writeups/[slug]/index.astro`,
+  `css/writeup-story.css`, `public/js/writeup-story.js`,
+  `src/pages/portfolio/index.astro`, and this progress record.
+- Completed: Added an Amaterasu-only ZEUS hero and card-based section carousel
+  with previous/next controls, progress, section selectors, arrow/Home/End
+  keyboard handling, touch swipes, short staggered reveals, reduced-motion
+  handling, and a no-JavaScript content fallback. Contained the official AUPP
+  vertical asset in a circular seal crop with responsive sizing so its wordmark
+  cannot overflow the education card.
+- Planned next: Review the Amaterasu carousel and AUPP seal visually at desktop
+  and mobile widths, then adjust only owner-reported visual findings.
+- Tests/evidence: JavaScript syntax check passed; repository formatting passed;
+  Astro diagnostics reported zero errors, warnings, or hints; production build
+  passed; 18-page route validation passed; repository security checks passed;
+  generated Amaterasu HTML contains the hero, native content, and enhancement
+  script. The AUPP source was confirmed against the university's official logo
+  page.
+- Blockers or risks: The computer-use browser host was unavailable, and the
+  sandbox could not bind a second local preview port. Click, touch, animation,
+  and viewport behavior are therefore source-verified but not visually
+  certified. The AUPP image remains an external official URL, so its display
+  still depends on the university host.
+- Owner decision needed: Visually approve the carousel and seal placement before
+  any commit; commit, push, merge, and deployment remain unauthorized.
+
+### 2026-11-13 — Native writeup canvas and floating hero relayout
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Expand native writeup use of the desktop canvas, reduce outer
+  gutters, retain readable prose widths, and relayout the Amaterasu hero as a
+  rounded floating surface that responds smoothly to viewport and zoom changes.
+- Files changed: `css/dashboard.css`, `css/writeup-story.css`, and this
+  progress record.
+- Completed: Increased native writeup canvas width from 980px to 1440px with
+  fluid 16–42px outer gutters. Cards, tables, diagrams, and slides can use the
+  available width, while prose, lists, and callouts remain capped at a readable
+  measure. Removed fixed slide minimum heights that produced unused space.
+  Updated the Amaterasu hero with responsive grid sizing, rounded corners,
+  layered bubble surfaces, and fluid spacing.
+- Planned next: Inspect the 390, 768, 1280, and 1440px layouts in a browser,
+  then implement the approved shared motion pass after layout review.
+- Tests/evidence: Formatting passed; Astro diagnostics reported zero errors,
+  warnings, or hints; production build passed; 18-page route validation passed;
+  repository security checks passed; whitespace validation passed.
+- Blockers or risks: Browser-based viewport, zoom, touch, and animation review
+  remains outstanding because this session cannot reach the computer-use host
+  or bind a local preview port.
+- Owner decision needed: Review the wider layout and floating hero in a browser
+  before the shared motion pass or any commit.
+
+### 2026-11-13 — Shared Astro page and widget motion
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Add short motion between Astro pages and widgets after the
+  layout pass, cover native writeups, dashboard, author, and portfolio pages,
+  preserve the motion preference and reduced-motion behavior, and avoid adding
+  dependencies.
+- Files changed: `public/js/theme.js`, `css/polish.css`, and this progress
+  record.
+- Completed: Added internal same-site navigation exit motion followed by the
+  existing staged arrival behavior. Extended staged arrivals to native Astro
+  writeups, the portfolio hero, ticker, sections, contact panel, author cards,
+  and dashboard widgets. Shortened shared entrances to 460ms and added subtle
+  hover elevation for desktop widgets. Existing Amaterasu slide transitions,
+  keyboard controls, touch swipes, and reduced-motion rules remain in place.
+- Planned next: Review page navigation, hover feedback, slider controls,
+  `?motion=off`, and reduced-motion behavior in a browser across the approved
+  viewport widths.
+- Tests/evidence: `node --check` passed for `theme.js` and
+  `writeup-story.js`; formatting passed; Astro diagnostics reported zero
+  errors, warnings, or hints; production build passed; 18-page route validation
+  passed; repository security checks passed; whitespace validation passed.
+- Blockers or risks: Browser-based interaction and animation review remains
+  outstanding because this session cannot reach the computer-use host or bind a
+  local preview port. Cross-document view transitions are progressively
+  enhanced and will fall back to the JavaScript exit and normal navigation when
+  unsupported.
+- Owner decision needed: Review the motion in a browser before any commit.
+
+### 2026-11-13 — Convert Amaterasu from carousel to dashboard
+
+- Agent: Codex, Technical Implementation and UI Architecture role.
+- Approved scope: Replace the manual-looking Amaterasu report carousel with a persistent dashboard while preserving technical content, ZEUS identity, accessibility, and responsive behavior.
+- Files changed: `public/js/writeup-story.js`, `css/writeup-story.css`, and this progress record.
+- Completed: All five report sections now remain visible as dashboard cards; the attack chain spans the full content width; cards use a responsive 12/6/1-column layout; the JavaScript enhancement is progressively enhanced and leaves readable content available without the script. Carousel controls and slide hiding are no longer used for this page.
+- Planned next: Compare the dashboard against the owner’s preferred production reference and review mobile/touch spacing before any commit.
+- Tests/evidence: `node --check public/js/writeup-story.js`, `npm run format:check`, `npm run check`, `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` passed. Local browser preview showed the dashboard hero, all five section headings, and no previous/next carousel controls.
+- Blockers or risks: `https://vathanakbotra.vercel.app` could not be compared because DNS resolution failed in this session. No production or remote changes were made.
+- Owner decision needed: Review the local dashboard preview and decide whether to keep this direction before further polish.
+
+### 2026-11-13 — Refine Amaterasu to match the live report style
+
+- Agent: Codex, Technical Implementation and UI Architecture role.
+- Approved scope: Use the live Amaterasu deployment as a visual reference and decorate the local dashboard without changing its technical content or deployment state.
+- Files changed: `src/pages/writeups/[slug]/index.astro`, `css/writeup-story.css`, and this progress record.
+- Completed: Added a compact report-overview strip for surface, difficulty, platform, and status; added a subtle security-grid texture; strengthened cyan report headings, bordered evidence surfaces, code blocks, tables, and dashboard framing; retained the persistent dashboard rather than returning to manual slides.
+- Planned next: Owner review of the local preview against the live reference, especially the hero and first viewport at desktop and mobile widths.
+- Tests/evidence: `npm run format:check`, `npm run check`, `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` passed. Browser preview confirmed the overview strip, all five report sections, responsive dashboard structure, and no carousel controls.
+- Blockers or risks: Live-reference comparison was visual only; no production files were changed. No commit, push, merge, or deployment was performed.
+- Owner decision needed: Approve the refined dashboard direction before any commit or remote preview.
+
+### 2026-11-13 — Update shared footer identity
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Replace the Astro shared-footer identity and links with the owner-provided text and Adelaide, South Australia location.
+- Files changed: `src/layouts/SiteLayout.astro`, `css/dashboard.css`, and this progress record.
+- Completed: Added the DOS VATHANAK BOTRA ownership line, © 2025 notice, Adelaide location, and Explore writeups, About the author, and Contact links. Added a compact responsive layout for narrow screens.
+- Planned next: Add the verified Amaterasu reference content after owner approval of the parity-audit scope.
+- Tests/evidence: `npm run format:check`, `npm run check`, and `git diff --check` passed.
+- Blockers or risks: This updates the Astro shared layout only; legacy HTML fallback pages retain their separate footer until they are migrated.
+- Owner decision needed: None for the completed footer change; commit, push, merge, and deployment remain unauthorized.
+
+### 2026-11-13 — Restore complete hosted Amaterasu report
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Make the local Amaterasu route match the hosted report before additional visual redesign, with no missing report sections or redaction regressions.
+- Files changed: `src/pages/writeups/[slug]/index.astro` and this progress record.
+- Completed: The Astro route now renders the exact trusted report body from `writeups/amaterasu/index.html` inside the current Astro shell, including the at-a-glance facts, kill chain, MITRE table, CWE analysis, detailed recon/enumeration/foothold/privilege-escalation evidence, severity-aware findings, takeaways, references, and copy controls. Targets remain placeholders and flag values remain redacted.
+- Planned next: Owner visual review. Any future Astro content-collection conversion must preserve this section structure and content before replacing the legacy body.
+- Tests/evidence: `npm run format:check`, `npm run check`, `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` passed. Browser accessibility inspection confirmed all hosted report headings, tables, references, and redactions appear locally.
+- Blockers or risks: The shared Astro header/footer remains intentionally current; the footer uses the owner-requested Adelaide, South Australia location rather than the hosted page's previous Phnom Penh text. No commit, push, merge, or deployment was performed.
+- Owner decision needed: Review the restored local page before any further style changes or a commit.
+
+### 2026-11-13 — Refine semantic light-theme surfaces
+
+- Agent: Codex, Senior UI Systems Designer and Astro Technical Implementer role.
+- Approved scope: Incrementally replace the silver/blue-gray light theme with a restrained warm-neutral semantic surface system while preserving dark mode, content, routes, branding, and structure.
+- Files changed: `css/base.css`, `css/dashboard.css`, `css/polish.css`, `writeups/index.html`, and this progress record. Other pre-existing uncommitted files remain outside this specific slice.
+- Completed: Added semantic canvas, surface, text, border, and accent tokens; mapped existing aliases to those tokens; changed ordinary panels to quiet near-white surfaces with restrained borders and shadows; retained one dark-green mission surface as the visual focal point; limited navbar-specific light rules to the actual header; added stronger-border behavior for increased-contrast preferences; corrected the legacy writeup footer location; and removed the residual metallic treatment from writeup-card content panels.
+- Planned next: Owner review of the local dashboard, writeup library, portfolio, author, and Amaterasu pages in both themes before considering any commit.
+- Tests/evidence: Formatting, Astro diagnostics, production build, 18-page route validation, repository checks, and whitespace validation passed before the final writeup-card refinement. The complete suite is rerun after that refinement. Browser review confirmed the warmer dashboard canvas, white content surfaces, dark-green focal hero, and the correct Adelaide footer.
+- Blockers or risks: No dependency, route, copy, information architecture, commit, push, merge, or deployment change is included. Browser zoom and every responsive breakpoint still require final visual sign-off.
+- Owner decision needed: Approve or request another incremental visual adjustment after reviewing the demonstrated local preview.
+
+### 2026-11-13 — Restore production visual baseline
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Remove the recent visual experiment and restore production design files without removing the Astro architecture.
+- Files restored from `origin/main`: legacy and Astro portfolio presentation, shared legacy theme/section styles, slideshow scripts, portfolio certificate and education assets, and legacy portfolio/writeup presentation files. A backup branch named `backup/before-prod-revert` preserves the prior working state.
+- Preserved: Astro routes, content collections, Vercel configuration, CI, governance documents, writeup content, and the current migration branch history.
+- Completed: Production visual baseline restored; Flinders education and the six production certificate entries are present again. No commit, push, merge, or deployment was performed.
+- Planned next: Review the local production-baseline preview, then begin any new redesign as a separate approved incremental slice.
+- Tests/evidence: Full format, Astro diagnostics, build, route, repository, and whitespace checks are being run after this restoration.
+- Blockers or risks: The restored files are intentionally uncommitted; the working tree also contains earlier migration/content changes that were not part of this visual rollback.
+- Owner decision needed: Review the restored preview before approving any new design work.
+
+### 2026-11-13 — Restore Amaterasu production navigation helper
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Compare the local Amaterasu route with production and restore only verified missing behavior.
+- Files changed: `src/pages/writeups/[slug]/index.astro` and this progress record.
+- Completed: Restored the production `site.js` enhancement for the Amaterasu legacy report. The local route now generates the same “On this page” disclosure and section anchors as production. The report content, redactions, links, and Adelaide footer remain unchanged.
+- Planned next: Owner review of the demonstrated local preview; then decide whether to commit the production-baseline restoration.
+- Tests/evidence: Browser comparison confirmed production/local report content parity, and the local preview now exposes the same “On this page” disclosure and section anchors. `npm run format:check`, `npm run check`, `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` all passed.
+- Blockers or risks: Production still uses the Phnom Penh footer while local intentionally uses the owner-approved Adelaide footer; this is not treated as a parity defect.
+- Owner decision needed: Review the local preview before any commit or deployment.
+
+### 2026-11-13 — Correct VEN RSA title
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Rename the visible writeup title from “VEN RSA Can Be Broken???” to “Even RSA Can Be Broken??”.
+- Files changed: `writeups/VEN-RSA_Report.md`, `writeups/ven-rsa/index.html`, `writeups/index.html`, and this progress record.
+- Completed: Updated the report metadata, report heading, page title, and writeup-library card title. The short dashboard label remains “VEN RSA” as the lab identifier.
+- Tests/evidence: Format check, Astro diagnostics, production build, route check, and whitespace validation passed.
+- Owner decision needed: Review the title in the local writeup library/detail page before the baseline commit.
+
+### 2026-11-13 — Fix light-mode footer navigation styling
+
+- Agent: Codex, Technical Implementation role.
+- Approved scope: Correct the light-mode footer link presentation observed in the local preview without changing footer content or header behavior.
+- Files changed: `css/base.css` and this progress record.
+- Completed: Scoped the light-mode floating navigation rule from every `nav` element to `#navbar`, preventing footer links from rendering as a dark floating pill while preserving the main header navigation.
+- Tests/evidence: Browser preview confirmed plain, readable footer links in light mode. Format check, Astro diagnostics, production build, route check, repository checks, and whitespace validation passed.
+- Owner decision needed: Review the corrected footer before the baseline commit.
+
+### 2026-11-13 — Widen writeup card flow
+
+- Agent: Codex, UI/layout implementation.
+- Approved scope: Make the writeup library use more available horizontal space on desktop while preserving tablet and mobile behavior.
+- Files changed: `writeups/writeups.css`, `css/site.css`, `css/polish.css`, their served `public/` CSS mirrors, and this progress record.
+- Completed: Reduced the desktop card grid minimum from 280px to 240px and used `auto-fit`, allowing four cards across when the available results area supports it instead of forcing three columns.
+- Planned next: Browser review at desktop, tablet, and mobile widths.
+- Tests/evidence: Browser preview now shows four cards across at the available desktop width; the grid expands horizontally and remains CSS-responsive. Full verification suite passed.
+- Blockers or risks: Smaller desktop cards may wrap titles earlier; card content remains readable and the existing responsive breakpoints are unchanged.
+- Owner decision needed: Review the wider grid before committing.
+
+### 2026-11-13 — Add author hacker background scene
+
+- Agent: Codex, UI implementation.
+- Approved scope: Add a decorative cyberpunk hacker/laptop illustration behind the author intro panel.
+- Files changed: `src/pages/author/index.astro` and this progress record.
+- Completed: Added an inline, dependency-free SVG scene with a seated hacker silhouette, laptop, code-line animation, responsive positioning, light-mode restraint, and reduced-motion fallback.
+- Planned next: Review the author page at desktop, mobile, light mode, and reduced-motion settings.
+- Tests/evidence: Dark-mode browser preview confirmed the scene renders behind the author intro without changing content or controls. CSS includes responsive mobile positioning and `prefers-reduced-motion: reduce` fallback. Format check, Astro diagnostics, build, route checks, repository checks, and whitespace validation passed.
+- Boundaries: Decorative only; no copy, routes, content, external assets, or interaction behavior changed.
+- Owner decision needed: Review the visual result before committing.
+
+### 2026-11-13 — Increase hacker scene visibility
+
+- Agent: Codex, UI refinement.
+- Approved scope: Improve visibility and replace abstract laptop bars with readable looping terminal commands.
+- Files changed: `src/pages/author/index.astro` and this progress record.
+- Completed: Increased scene contrast and screen glow; added looping `$ nmap -sV target.local`, `$ git diff --check`, and `> scan complete_` terminal lines with staggered timing. Reduced-motion mode shows static commands.
+- Planned next: Review dark/light mode and mobile framing.
+- Tests/evidence: Browser preview confirmed brighter hacker figure and readable terminal commands on the author page. Format check, Astro diagnostics, build, route checks, repository checks, and whitespace validation passed.
+- Boundaries: Decorative background only; no functional command execution, copy, routes, or dependencies changed.
+- Owner decision needed: Review the updated visibility before committing.
+
+### 2026-11-13 — Rebuild author scene and automatic typing
+
+- Agent: Codex, UI implementation and browser review.
+- Approved scope: Replace the rejected figure, research animation behavior, then apply owner steering: shadowed hood with glowing Z, autoplay without a button, and 1.5× speed.
+- Files changed: `src/pages/author/index.astro`, `documentation/PROGRESS.md`.
+- Completed: Rebuilt shoulders, hood, sleeves, hands and laptop; replaced whole-line opacity changes with character-by-character simulated terminal typing (67ms per character, 1.5× speed). Commands and example output cycle automatically. Owner's final refinement enlarges the laptop to a 16:10 display with slim bezel, camera notch and larger terminal text. Head and hands animate with the site's motion preference. No commands execute.
+- Motion behavior: Browser confirmed reduced motion is enabled; existing `site-motion-on` explicit preference enables spatial motion. Otherwise reduced motion keeps head/hands static and lengthens text holds. `site-motion-off` stops the loop; hidden tabs pause it.
+- Evidence: Browser observed partial and completed commands changing automatically; earlier play/pause prototype tested and removed at owner's request. Mobile light-theme review showed the illustration below copy, within the viewport, with no page horizontal overflow. Desktop enlarged screen verified, with active hand duration 0.213s and automatic partial command text. Build, Astro, formatting, routes, CI and whitespace checks passed; laptop-size follow-up verification recorded below.
+- Research: [MDN SVG animation accessibility](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animate), [Adobe figure proportions](https://www.adobe.com/creativecloud/illustration/discover/how-to-draw-people.html). Artwork is original inline SVG; no third-party assets or dependencies.
+- Final verification: All six required checks passed after the screen enlargement. Browser confirmed automatic partial commands, 0.213s hand motion, light/dark rendering and settled mobile width equal to scroll width (433 CSS pixels at the current browser zoom). The follow-up changed the laptop from a flat rectangle to a tilted screen trapezoid with a deeper keyboard base and hands resting over it; browser confirmed no horizontal overflow and active hand motion.
+- Remaining: Owner visual acceptance. No commit, push or deployment.
+
+### 2026-11-13 — Correct legacy footer location
+
+- Agent: Codex, consistency correction.
+- Approved scope: Apply the owner-approved footer location across the legacy HTML pages while keeping the current footer design and links.
+- Files changed: `about.html`, the legacy writeup library/detail HTML pages, and this progress record.
+- Completed: Replaced footer-only `Phnom Penh, Cambodia` text with `Adelaide, South Australia`. Author, employment, education, and portfolio facts mentioning Phnom Penh remain unchanged.
+- Planned next: Review one dashboard, author, portfolio, library, and detail page footer in the browser.
+- Tests/evidence: Pending verification run for this correction.
+- Boundaries: No redesign, content rewrite, route change, commit, push, merge, or deployment.
+- Owner decision needed: Review the consistent footer text.
+
+### 2026-11-13 — Normalize shared footer layout
+
+- Agent: Codex, UI consistency correction.
+- Approved scope: Apply the centered legacy writeup footer layout to the shared Astro dashboard, author, and portfolio pages.
+- Files changed: `css/dashboard.css`, `public/css/dashboard.css`, and this progress record.
+- Completed: Shared `.dash-footer` now uses centered identity text, centered footer links, consistent spacing, cyan owner label, and the same responsive wrapping style as the writeup footer.
+- Planned next: Owner visual review of the unified footer.
+- Tests/evidence: Browser verified the same centered identity, Adelaide location, and three footer links on `/`, `/author/`, `/portfolio/`, `/writeups/`, and `/writeups/amaterasu/`. Format check, Astro diagnostics, production build, route checks, repository checks, and whitespace validation passed.
+- Boundaries: Footer content, links, route structure, page content, and deployment state unchanged.
+- Owner decision needed: Review the unified footer layout.
+
+### 2026-11-13 — Center author illustration and soften hands
+
+- Agent: Codex, UI refinement.
+- Approved scope: Make the author illustration front-facing and centered, simplify the geometry, preserve the hooded Z, and soften the typing hands.
+- Files changed: `src/pages/author/index.astro` and this progress record.
+- Completed: Centered hood, torso, rectangular screen, and laptop base on one axis; removed skew and excess outlines; moved hands to the keyboard edge with 46% opacity and lower placement; fixed light mode so the hood stays graphite, the inner shadow stays near-black, and the Z stays mint-green.
+- Tests/evidence: Browser light-mode preview confirmed the centered composition, faded hands behind the laptop edge, readable typing, and centered footer. All format, Astro, build, route, repository, and whitespace checks passed.
+- Remaining: Owner visual acceptance. No commit, push, merge, or deployment.
+
+### 2026-11-13 — Restore report styling and technical readability
+
+- Agent: Codex, corrective UI implementation.
+- Approved scope: Make legacy-backed writeup detail pages visually organized, restore their report styling, add collapsible report sections, and present terminal output as code blocks without changing technical content.
+- Files changed: `src/layouts/SiteLayout.astro`, `src/pages/writeups/[slug]/index.astro`, `public/writeups/writeups.js`, `css/writeup-story.css`, and this progress record.
+- Completed: Legacy report-specific style blocks are now carried into the Astro document head; all detail routes retain their original report presentation; report sections become accessible native disclosure panels when JavaScript is available; terminal and evidence blocks are wrapped in semantic `pre/code` markup; the original document remains readable if enhancement JavaScript fails.
+- Evidence: Browser preview of `/writeups/php2shell-exploit-sandbox/` showed the restored report layout, two expandable sections, readable terminal blocks, preserved references, footer, and no route error. The first section was opened and the command output displayed in a formatted terminal panel.
+- Tests: `npm run format:check`, `npm run check`, and `npm run build` passed. Route and repository checks are being run before handoff.
+- Boundaries: No dependency, content, route, commit, push, merge, or deployment change. The hosted production site was not modified.
+- Remaining: Owner review of the corrected detail-page presentation across the other writeup slugs and light/dark modes.
+
+### 2026-11-13 — Navy dashboard feature cards
+
+- Agent: Codex, light-mode visual refinement.
+- Approved scope: Restyle the dashboard security news box and every featured lab card under “Start with a lab” with navy surfaces and white text.
+- Files changed: `css/polish.css`, `public/css/polish.css`, and this progress record.
+- Completed: Light mode now uses navy `#102a43` for `.brief` and all three `.lab-card` containers, with white text, mint links, restrained borders, and readable navy badges. Dark mode and dashboard layout remain unchanged.
+- Evidence: Full-page browser preview confirmed the navy security brief and all three navy lab cards with readable white content and visible controls.
+- Tests: `npm run format:check`, `npm run check`, `npm run build`, and `git diff --check` passed.
+- Boundaries: No content, route, dependency, commit, push, merge, or deployment change.
+- Owner decision needed: Review the light-mode dashboard preview before any commit.
+
+### 2026-11-13 — Brighten dashboard navy surfaces
+
+- Agent: Codex, visual adjustment.
+- Completed: Changed the light-mode dashboard card navy from `#102a43` to the lighter bold navy `#1b4f72` for the security brief and featured lab cards.
+- Tests: `npm run format:check`, `npm run check`, and `git diff --check` passed.
+- Boundaries: No content, layout, route, commit, push, merge, or deployment change.
+
+### 2026-11-13 — Increase light-mode navy brightness
+
+- Agent: Codex, light-mode contrast refinement.
+- Completed: Increased the dashboard card color to brighter blue `#2f6f95`; the selector remains scoped to light mode, so dark mode is unchanged.
+- Tests: Stylesheet consistency verified; no route or content changes.
+
+### 2026-11-13 — Vary dashboard card gradients
+
+- Agent: Codex, light-mode visual refinement.
+- Completed: Added distinct navy-to-cyan gradients with varied angles for the security brief and each featured lab card; dark mode remains unchanged.
+- Tests: Stylesheet consistency and `git diff --check` verified.
+
+### 2026-11-13 — Link AUPP education entry
+
+- Agent: Codex, portfolio metadata correction.
+- Completed: Linked the AUPP seal and university name to the official American University of Phnom Penh website: `https://www.aupp.edu.kh/`.
+- Boundaries: No other education details or portfolio content changed; no commit, push, merge, or deployment.
+
+### 2026-11-13 — Resolve feature merge into main
+
+- Agent: Codex, technical integration and verification.
+- Approved scope: Repair the interrupted merge of `feat/astro-refactor-threat-feed` into local `main`; preserve the tested Astro feature implementation; do not deploy.
+- Files changed: 11 conflicted workflow, CSS, writeup JavaScript, content configuration, layout, author, portfolio, and writeup route files; this progress record.
+- Completed: Removed all Git conflict markers and retained the feature branch implementations for the conflicted files. Local `main` now contains commits `2f3f6da` and `ef86c20` after the merge-resolution work.
+- Planned next: Push local `main` to `origin/main` only after owner confirms the final merge is intended.
+- Tests/evidence: `npm run format:check`, `npm run check` (0 errors/warnings/hints), `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` all passed. Build generated 14 writeup routes; route check passed 18 HTML pages.
+- Blockers or risks: The local branch is 59 commits ahead of the cached `origin/main`; remote synchronization must be confirmed before pushing. The existing PR #83 targets `test`, not `main`.
+- Owner decision needed: Confirm whether to push local `main` to `origin/main`, or review the local merge first.
+
+### 2026-11-13 — Refine light-mode writeup card colors
+
+- Agent: Codex, visual accessibility refinement.
+- Approved scope: Replace the bright blue writeup-card body in light mode with a restrained navy treatment and improve the low-contrast “read →” action; leave dark mode, card content, routes, and layout unchanged.
+- Files changed: `css/base.css`, `css/polish.css`, their served `public/css/` mirrors, and this progress record.
+- Completed: Applied a navy gradient (`#102f4b` → `#173f63` → `#1d5270`), white and pale-blue text, and a high-contrast mint action pill (`#9df0d0` with `#0b2e42` text). Bumped the served polish stylesheet cache key.
+- Planned next: Commit, push, and merge the owner-approved color refinement into `main`.
+- Tests/evidence: `npm run format:check`, `npm run check`, `npm run build`, `npm run check:routes`, `bash scripts/ci-check.sh`, and `git diff --check` passed.
+- Blockers or risks: The Codex shell cannot keep the Astro development server running; the owner must start the local preview from the VS Code terminal.
+- Owner decision needed: Approved in the local preview on 2026-11-13; authorized for push and merge.
+
+## Operating rules
+
+## Scheduled implementation roadmap
+
+| Target date | Area | Planned scope | Status |
+| :--- | :--- | :--- | :--- |
+| 2026-11-19 | Author page | Redesign the VB icon, refine the hacker-animation container card, and update the page-wide container color system. Detailed visual direction remains TBD. | Scheduled |
+| 2026-11-20 | Portfolio page | Redesign the VB icon, add additional analytical graphs, and add a structured data-table container. | Scheduled |
+| 2026-12-02 | Writeup library | Add approximately 3–5 additional labs with validated content, routes, metadata, and verification. | Scheduled |
+
+These dates are planning targets, not authorization to edit, commit, push, merge, or deploy. Each milestone requires an approved scope and its own test evidence before implementation.
+
+1. Every material task begins with objective, exact file scope, intended
+   behavior, tests, assumptions, and out-of-scope boundaries.
+2. The owner approves the scope before an agent edits files.
+3. Agents may make routine implementation decisions autonomously inside the
+   approved scope.
+4. A new file, behavior, dependency, or affected area requires new approval.
+5. The implementing agent presents the complete diff and test evidence.
+6. Commit, push, pull request, merge, and deployment each require separate
+   owner approval.
+7. Codex remains the technical integrator and final verifier. AGY remains a
+   read-only adviser whose output must be independently checked.
+
+## Update template
+
+### 2026-11-15 — Dashboard balance and practice links
+
+- [x] Narrow The Lab and widen Threat Brief on desktop.
+- [x] Add Practice next to every writeup using its recorded platform and topic.
+- [x] Link CyLab writeups to CyLab and OffSec writeups to the OffSec portal.
+- [x] Keep the isolated VMware writeup's practice guidance local.
+- [ ] Verify build and route checks, then release through the PR.
+
+### 2026-11-15 — Threat brief visual redesign
+
+- [x] Replace the small side thumbnail with a full-width 3:2 image area.
+- [x] Overlay the current headline and publisher on the image with a readable gradient.
+- [x] Use the official NIST CSF 2.0 image where available and publisher logos as fallbacks.
+- [x] Keep the summary and original source link below the image.
+- [x] Verify Astro diagnostics, production build, and whitespace checks.
+
+### Repository organization cleanup
+
+- [x] Audit tracked paths and Astro import dependencies before moving files.
+- [x] Move the stale duplicate root migration plan to
+      `documentation/archive/MIGRATION_PLAN.legacy.md`.
+- [x] Keep `src/` as the canonical Astro application source.
+- [x] Keep root `css/`, `js/`, `assets/`, and `writeups/` in place for now;
+      native routes and the legacy-page bridge still import them directly.
+- [x] Move Astro source, legacy pages, writeups, and site assets into
+      `frontend/`. Move the Security Brief implementation into `backend/`
+      and keep its public route in Astro.
+- [x] Verify the split locally with Astro diagnostics, production build,
+      built-route validation (18 HTML pages), and repository checks.
+- [ ] Run the full check, build, route, and repository validation suite after
+      the current working-tree changes are reviewed.
+
+Add a new dated entry after each material task:
+
+```markdown
+### YYYY-MM-DD — Short task name
+
+- Agent:
+- Approved scope:
+- Files changed:
+- Completed:
+- Planned next:
+- Tests/evidence:
+- Blockers or risks:
+- Owner decision needed:
+```
+
+## Dashboard Glassmorphism Pilot (Phase 1)
+
+- **Objective:** Add an ambient, chilled scenery background with frosted‑glass widget panels to the Dashboard and SiteLayout.
+- **Target files:** `frontend/src/layouts/SiteLayout.astro` (ambient layer) and `frontend/css/dashboard.css` (glass CSS variables, dark/light mode inversion).
+- **Testing & verification:**
+  - Run `ASTRO_TELEMETRY_DISABLED=1 npx astro check` – expect zero diagnostics.
+  - Build with `npm run build` – verify static output compiles.
+  - Manually inspect dark and light themes in a local preview, confirming blur (`backdrop-filter: blur(20px)`), contrast ratios, and GPU‑accelerated compositor layer.
+- **Owner approval checkpoints:**
+  1. Review the detailed diff of the two files.
+  2. Review test command output and visual screenshots.
+  3. Upon approval, commit the changes (owner‑authorized).
+
+### 2026-11-18 — Dashboard glassmorphism pilot implementation
+
+- Agent: The prior handoff attributed implementation to AGY; this conflicts with AGY's documented read-only role and does not create an exception to that policy.
+- Approved scope: Implement dashboard-only ambient tech scenery backdrop and translucent frosted-glass panels with solid fallbacks and restrained contrast overlay.
+- Files changed:
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/public/assets/dashboard-grid.svg` (and mirrored to `frontend/assets/dashboard-grid.svg`)
+  - `frontend/css/dashboard.css`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Scoped the decorative backdrop markup to `current === 'dashboard'` in `SiteLayout.astro`. A later review found that the initial glass CSS selectors still affected shared-layout panels; the follow-up below records that correction.
+  - Created lightweight, original vector tech scene `dashboard-grid.svg` with dark horizon, perspective rungs, and cyan/teal ambient glow (zero external dependencies, zero text/logos).
+  - Configured `dashboard.css` with dark readability overlay (`rgba(12, 19, 33, 0.65)` to `0.92`), solid color fallbacks, and `@supports (backdrop-filter: blur(20px))` progressive enhancement.
+  - Kept light mode strictly scoped out: decorative backdrop disabled in light mode to prevent conflict with `polish.css`.
+- Planned next: Owner diff review and commit authorization.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered, server entrypoint bundled, static files copied in 1.79s).
+- Blockers or risks: None.
+- Owner decision needed: Review full diff and authorize commit.
+
+### 2026-11-18 — Dashboard scenic photo and style isolation
+
+- Agent: Copilot assistant, with owner approval
+- Approved scope: Replace the low-visibility SVG grid with a local 4K scenic image, keep the backdrop and glass styling on the dashboard only, preserve light mode and other routes, and record the source and verification.
+- Files changed:
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/css/dashboard.css`
+  - `frontend/public/assets/dashboard-landscape-4k.jpg`
+  - `frontend/assets/dashboard-landscape-4k.jpg` (mirror)
+  - Removed unused `frontend/public/assets/dashboard-grid.svg` and `frontend/assets/dashboard-grid.svg`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Added a dashboard-only body class and limited the backdrop and dark-mode glass rules to that route.
+  - Replaced scenic background with user-provided geometric cyber-mesh / neural network art (cyan nodes, deep blacks, polygonal facets), delivered locally at 1024 × 768 and 84 KB.
+  - Preserved dashboard-only styling in `SiteLayout.astro` and `dashboard.css`, keeping light mode on existing styles and preventing dark glass selectors from affecting author, portfolio, and writeup pages.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.73s).
+  - Confirmed the local asset dimensions with `sips`: 1024 × 768 pixels, 84 KB file size; mirrored asset copies match byte-for-byte (`cmp` returned 0).
+  - Verified dark mode backdrop is active exclusively on dashboard; author, portfolio, and writeups remain unaffected; light mode backdrop remains disabled (`display: none`).
+- Blockers or risks: Formal WCAG contrast ratios have not been measured against every pixel of the neon backdrop; avoid claiming AAA compliance without manual color sampling.
+- Owner decision needed: Review the implementation and visual evidence before any commit.
+
+### 2026-11-18 — Security news label in light mode
+
+- Agent: Copilot assistant
+- Approved scope: Change the “Security news” eyebrow text and its current-color dot to black in light mode while preserving the white panel and dark-mode styling.
+- Files changed:
+  - `frontend/css/polish.css`
+  - `documentation/PROGRESS.md`
+- Completed: Set the dashboard Threat Brief eyebrow color to `#000` under the existing light-mode selector.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `npm run build` passed (14 static writeup routes prerendered).
+  - `git diff --check` passed.
+  - Browser preview confirmed the label and dot compute to `rgb(0, 0, 0)` in light mode against the white panel.
+- Blockers or risks: None.
+- Owner decision needed: Review the diff before any commit.
+
+### 2026-11-18 — ZEUS brand logo asset integration
+
+- Agent: Codex
+- Approved scope: Crop user-provided logo into a square dark rounded box with teal border, remove all white canvas (set to transparent alpha), save as `zeus-mark.png`, update `SiteLayout.astro` header and favicon, and update `base.css`.
+- Files changed:
+  - `frontend/public/assets/zeus-mark.png` (and mirror `frontend/assets/zeus-mark.png`)
+  - `frontend/public/assets/favicon.png` (and mirror `frontend/assets/favicon.png`)
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/css/base.css` (and mirror `frontend/public/css/base.css`)
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Processed uploaded mark: cropped exactly around the dark rounded box with teal border (280 × 280 px square), with all surrounding white canvas converted to transparent pixels.
+  - Exported optimized `zeus-mark.png` and 64 × 64 px `favicon.png`.
+  - Replaced legacy CSS `.zeus-emblem` in `SiteLayout.astro` with `<img class="zeus-brand-mark" src="/assets/zeus-mark.png" ... />`.
+  - Added clean `.zeus-brand-mark` styling and responsive flex alignment in `base.css`.
+  - Added `<link rel="icon" href="/assets/favicon.png" type="image/png" />` in `SiteLayout.astro`.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.58s).
+  - Verified corner alpha transparency = 0 on `zeus-mark.png`.
+- Blockers or risks: None.
+- Owner decision needed: Review diff and authorize commit.
+
+### 2026-11-18 — Restore visible white ZEUS lettering
+
+- Agent: Copilot assistant
+- Approved scope: Preserve the E/U/S lettering as glowing white in the cropped logo while keeping the teal Z, teal border, and transparent exterior.
+- Files changed:
+  - `frontend/public/assets/zeus-mark.png`
+  - `frontend/assets/zeus-mark.png`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Re-cropped the original upload using exterior-only flood fill, preserving internal white letter pixels.
+  - Added a subtle white glow to the E/U/S lettering and exported a 512 × 512 transparent PNG.
+  - Mirrored the public asset byte-for-byte; no CSS change was needed.
+- Tests/evidence:
+  - Verified 512 × 512 output dimensions and transparent corner pixels with ImageMagick.
+  - Verified public and mirrored logo assets match byte-for-byte.
+  - Browser preview confirmed the white E/U/S lettering is visible against the dark mark.
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `npm run build` passed (14 static writeup routes prerendered).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed.
+- Blockers or risks: None.
+- Owner decision needed: Review the updated logo before any commit.
+
+### 2026-11-19 — Extend scenery and frosted glass site-wide
+
+- Agent: Codex
+- Approved scope: Roll out the cyber-mesh scenery and frosted glass across all pages in dark mode (Author, Portfolio, Writeups Hub, Writeup details) while preserving readable opaque code/text surfaces and intact light mode.
+- Files changed:
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/css/dashboard.css` (and mirror `frontend/public/css/dashboard.css`)
+  - `frontend/writeups/index.html`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Added `scenic-site` body class and rendered `.ambient-backdrop` unconditionally in `SiteLayout.astro`.
+  - Scoped backdrop and glass rules to `body:is(.dashboard-home, .scenic-site)` in `dashboard.css`, active strictly in dark mode (`html:not(.light-mode)`).
+  - Applied frosted glass (`backdrop-filter: blur(16px)`) selectively to structural surfaces: `.about-layout`, `.strength-card`, `.certificate-viewer`, `.education-card`, `.wu-card`, `.wu-glance div`, `.wu-filter-panel`, and `.article-contents`.
+  - Preserved opaque backgrounds for article text bodies, code blocks (`<pre><code>`), hero sections, contact cards, and certificate canvases.
+  - Added `scenic-site` and backdrop markup to `frontend/writeups/index.html` (the raw HTML writeups hub).
+  - Kept light mode completely intact under `polish.css`.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.70s).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed with zero errors or whitespace issues.
+- Blockers or risks: None.
+- Owner decision needed: Review full site-wide diff and authorize commit.
+
+### 2026-11-19 — Use ZEUS PNG favicon on writeups hub
+
+- Agent: Copilot assistant
+- Approved scope: Replace the legacy SVG favicon reference on the writeups hub with the new ZEUS PNG favicon; update this progress record.
+- Files changed:
+  - `frontend/writeups/index.html`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Updated the writeups hub favicon link to `../assets/favicon.png`, matching the current ZEUS mark.
+- Tests/evidence:
+  - `npm run build` passed (14 static writeup routes prerendered).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed.
+- Remaining work: The SVG favicon link in `SiteLayout.astro` and the `public/css/polish.css` mirror discrepancy from the broader review were not changed; both are outside this approved scope.
+- Blockers or risks: None within the approved scope.
+- Owner decision needed: Review the diff; separately decide whether to address the remaining cross-file review findings.
+
+### 2026-11-19 — Fix light-mode navbar contrast and relative polish.css import
+
+- Agent: Codex
+- Approved scope: Resolve low-contrast navigation text on the light-mode writeups hub floating pill, fix relative `@import` causing `polish.css` 404s on nested routes, and synchronize public CSS mirrors.
+- Files changed:
+  - `frontend/css/site.css` (and mirror `frontend/public/css/site.css`)
+  - `frontend/css/base.css` (and mirror `frontend/public/css/base.css`)
+  - `frontend/css/polish.css` (and mirror `frontend/public/css/polish.css`)
+  - `frontend/src/layouts/SiteLayout.astro`
+  - `frontend/writeups/index.html`
+  - `documentation/PROGRESS.md`
+- Completed:
+  - Added high-specificity light-mode selectors in `site.css` ensuring inactive links (`#navbar .nav-links a:not([aria-current])`), the theme toggle (`#navbar .theme-toggle`), and ZEUS expansion text render as high-contrast white/semi-transparent white (`rgba(255, 255, 255, 0.85)`) over the dark navy floating pill (`#0a2540`).
+  - Updated relative import in `base.css` to absolute `/css/polish.css?v=3` to permanently eliminate 404s when navigating nested sub-routes (`/author/`, `/portfolio/`).
+  - Synchronized `frontend/public/css/polish.css` with `frontend/css/polish.css`.
+  - Replaced the shared layout's SVG favicon with the PNG favicon and updated the legacy writeups hub to use the ZEUS PNG mark and favicon, resolving the follow-up items recorded above.
+- Tests/evidence:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro build` passed (14 static writeup routes prerendered; build completed in 1.71s).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `git diff --check` passed with zero errors or whitespace issues.
+- Final pre-release validation:
+  - `ASTRO_TELEMETRY_DISABLED=1 npx astro check` passed (56 files, 0 errors, 0 warnings, 0 hints).
+  - `npm run build` passed (14 writeup routes prerendered; production build completed).
+  - `npm run check:routes` passed (18 HTML pages, local links/assets, Vercel slash routes).
+  - `bash scripts/ci-check.sh` passed (local asset references, file-size/type checks, credential patterns, and published-page flag scan).
+  - `git diff --cached --check` passed.
+- Blockers or risks: None.
+- Owner decision needed: None for the owner-authorized PR-based merge; required remote CI and branch protection remain release gates.
+
+## 2026-11-20 — Branch-aware agent skill system
+
+### Approved scope
+
+- Prepare a narrow promotion based on the latest fetched `main`, containing
+  only the shared agent skill system and AGY's explicitly owner-approved,
+  file-scoped implementation guidance.
+- Make repository paths branch-aware because current `main` and `test` have
+  different Astro layouts.
+- Preserve the existing progress history; do not promote the full `test`
+  branch difference to `main`.
+
+### Files changed
+
+- `AGENTS.md`
+- `documentation/ai-agent-role-manager.md`
+- `documentation/agent-skills.md`
+- `documentation/skills/shared/SKILL.md`
+- `documentation/skills/planning/SKILL.md`
+- `documentation/skills/implementation/SKILL.md`
+- `documentation/skills/debugging/SKILL.md`
+- `documentation/skills/review/SKILL.md`
+- `documentation/skills/testing/SKILL.md`
+- `documentation/skills/release/SKILL.md`
+- `documentation/skills/audit/SKILL.md`
+- `documentation/PROGRESS.md`
+
+### Files and state inspected
+
+- Current `main` versions of `AGENTS.md`, `documentation/ai-agent-role-manager.md`,
+  and `documentation/PROGRESS.md`
+- `documentation/MIGRATION_PLAN.md`, `package.json`, and
+  `scripts/ci-check.sh` on `main`
+- Source tree layouts on `main` and `test`
+- PR #95 and the `test` versus `main` comparison
+
+### Completed
+
+- Added the shared skill index and eight phase guides.
+- Clarified AGY's scoped implementation permission and unconditional
+  commit/release restrictions without inventing an implementation flag.
+- Documented the current `main` (`frontend/`) and `test` (repository-root)
+  source layouts and instructed agents to verify paths on the active branch.
+- Preserved the existing progress record and appended this entry.
+- PR #95, which introduced the skill system on `test`, was merged after its
+  checks passed. The full `test` versus `main` comparison covered 135 files,
+  so this branch isolates the documentation promotion.
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `npm run format:check` | Passed (exit 0). |
+| `git diff --check` | Passed (exit 0 after final documentation edits). |
+| `bash scripts/ci-check.sh` | Passed (exit 0; repository integrity checks passed). |
+
+`npm run check`, `npm run build`, and `npm run check:routes` were not run
+because this promotion changes documentation only.
+
+### Remaining work and decisions
+
+- Review the complete main-based diff.
+- Commit, push, open a PR, merge, and deploy only after their separate owner
+  approvals.
+- No application code or dependencies are in scope.
+
+## 2026-11-20 — Typography update (Inter & IBM Plex Mono)
+
+### Approved scope
+
+- Update typography in base stylesheets to import Google Fonts (Inter and IBM Plex Mono) and bump polish CSS cache query.
+- Configure `--font-ui` to `"Inter", Arial, Helvetica, sans-serif` and `--font-code` to `"IBM Plex Mono", "SFMono-Regular", Consolas, monospace`.
+- Invalidate cache by updating `css/base.css?v=motion-2` to `css/base.css?v=font-inter-plex` in static HTML pages.
+- Local testing was initially waived for agent execution per owner instruction; follow-up checks were later run at the owner's request.
+
+### Files changed
+
+- `frontend/css/base.css`
+- `frontend/public/css/base.css`
+- `frontend/index.html`
+- `frontend/about.html`
+- `frontend/author.html`
+- `frontend/writeups/index.html`
+- `documentation/PROGRESS.md`
+
+### Files and state inspected
+
+- `frontend/src/layouts/SiteLayout.astro`
+- Downstream CSS files (`dashboard.css`, `hero.css`, `sections.css`, `writeup-story.css`) to verify variable consumption.
+
+### Completed
+
+- Added Google Fonts `@import` for Inter and IBM Plex Mono in `frontend/css/base.css` and `frontend/public/css/base.css`.
+- Updated `:root` CSS variables `--font-ui` and `--font-code` in both base stylesheets.
+- Invalidated static cache references in `frontend/index.html`, `frontend/about.html`, `frontend/author.html`, and `frontend/writeups/index.html`.
+- Progress record updated.
+
+### Verification
+
+- Follow-up checks passed: `npm run check` (56 files, 0 errors, warnings, or hints), `npm run build`, and `bash scripts/ci-check.sh`.
+- Owner visual inspection across themes and viewport sizes remains.
+
+### Remaining work and decisions
+
+- Owner visual inspection in browser (light/dark mode, desktop/mobile, dashboard, writeups).
+- Review diff and approve commit/release if satisfactory.
+
+### 2026-11-20
+
+#### 2026-11-20
+
++| 2026-11-20 | Font preview changes (Inter & IBM Plex Mono)
+
+- Added Inter and IBM Plex Mono fonts to the site.
+- Updated CSS to use new fonts and bumped `polish.css` cache query to `font-inter-plex`.
+- Modified HTML files to reference new fonts where appropriate.
+- All CI checks (`npm run check`, `npm run build`, `bash scripts/ci-check.sh`) passed.
+- Documentation updated with this progress entry.
+
+## 2026-11-20 — Correct canonical site domain
+
+### Approved scope
+
+- Replace active references to the old site domain with the owner-confirmed `https://zeuswriteups.vercel.app` in site configuration, project guidance, deployment instructions, and SEO files.
+- Preserve older dated progress entries as historical records.
+- Leave the owner's typography changes intact; do not commit, push, open a PR, or deploy.
+
+### Files changed
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `astro.config.mjs`
+- `documentation/CONTRIBUTING.md`
+- `documentation/PROJECT_CHARTER.md`
+- `documentation/PROGRESS.md`
+- `frontend/robots.txt`
+- `frontend/sitemap.xml`
+
+### Files and state inspected
+
+- `documentation/ai-agent-role-manager.md`
+- `documentation/MIGRATION_PLAN.md`
+- Current branch and working-tree status
+- Existing deployment and domain references in repository files
+
+### Completed
+
+- Updated the Astro canonical site URL, project/agent guidance, deployment documentation, robots sitemap URL, and sitemap page URLs.
+- Kept references in older dated progress entries to preserve historical evidence; current operational references now use `zeuswriteups.vercel.app`.
+- Preserved all pre-existing typography changes on `feat/font-change`.
+
+### Verification
+
+- `npm run check` — passed (56 files; 0 errors, warnings, or hints).
+- `npm run build` — passed.
+- `bash scripts/ci-check.sh` — passed.
+- `git diff --check` — passed.
+- Domain search confirmed there are no old-host references in active configuration, guidance, or SEO metadata; remaining matches are historical progress entries.
+
+### Remaining work and decisions
+
+- Owner review of the complete diff.
+- No remote preview or production deployment was requested or performed.
+
+## 2026-11-20 — Security flag redaction, production domain alignment, and duplicate cleanup
+
+### Approved scope
+
+- Redact unredacted CTF flags in `frontend/writeups/amaterasu/amaterasu-walkthrough.md` to `[REDACTED]`.
+- Update production domain references from `vathanakbotra.vercel.app` to `zeuswriteups.vercel.app` in `AGENTS.md`, `documentation/PROJECT_CHARTER.md`, and `astro.config.mjs`.
+- Remove tracked macOS duplicate files (`* 2.*`).
+- Maintain existing progress history and record verification results.
+
+### Files changed
+
+- `frontend/writeups/amaterasu/amaterasu-walkthrough.md` (modified: redacted plaintext flags)
+- `AGENTS.md` (modified: production domain updated)
+- `documentation/PROJECT_CHARTER.md` (modified: production domain updated)
+- `astro.config.mjs` (modified: site domain updated)
+- `CLAUDE.md` (modified: domain updated, skills pointer added)
+- `.github/copilot-instructions.md` (added: Copilot/Codex startup directives)
+- `.cursorrules` (added: Cursor startup directives)
+- `frontend/writeups/DriftingBlues6_Report 2.md` (deleted)
+- `frontend/src/content.config 2.ts` (deleted)
+- `frontend/src/env.d 2.ts` (deleted)
+- `scripts/check-progress-record 2.mjs` (deleted)
+- `documentation/PROGRESS.md` (modified: execution entry added)
+
+### Completed
+
+- Plaintext user and root flag tokens in `amaterasu-walkthrough.md` were replaced with `[REDACTED]`.
+- Canonical domain configuration in `astro.config.mjs` and project documentation in `AGENTS.md` and `PROJECT_CHARTER.md` now point to `https://zeuswriteups.vercel.app`.
+- 4 tracked macOS duplicate files were removed from Git.
+- Verification checks executed.
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `npm run format:check` | Passed (exit 0) |
+| `npm run check` | Passed (exit 0) |
+| `git diff --check` | Passed (exit 0) |
+| `bash scripts/ci-check.sh` | Passed (exit 0) |
+
+### Remaining work and decisions
+
+- Review diff with owner.
+- Await owner approval before commit, push, PR creation, or merge.
+
+## 2026-11-20 — Typography update (Inter & IBM Plex Mono)
+
+### Approved scope
+
+- Update typography in base stylesheets to import Google Fonts (Inter and IBM Plex Mono) and bump polish CSS cache query.
+- Configure `--font-ui` to `"Inter", Arial, Helvetica, sans-serif` and `--font-code` to `"IBM Plex Mono", "SFMono-Regular", Consolas, monospace`.
+- Invalidate cache by updating `css/base.css?v=motion-2` to `css/base.css?v=font-inter-plex` in static HTML pages.
+- Local testing was initially waived for agent execution per owner instruction; follow-up checks were later run at the owner's request.
+
+### Files changed
+
+- `frontend/css/base.css`
+- `frontend/public/css/base.css`
+- `frontend/index.html`
+- `frontend/about.html`
+- `frontend/author.html`
+- `frontend/writeups/index.html`
+- `documentation/PROGRESS.md`
+
+### Files and state inspected
+
+- `frontend/src/layouts/SiteLayout.astro`
+- Downstream CSS files (`dashboard.css`, `hero.css`, `sections.css`, `writeup-story.css`) to verify variable consumption.
+
+### Completed
+
+- Added Google Fonts `@import` for Inter and IBM Plex Mono in `frontend/css/base.css` and `frontend/public/css/base.css`.
+- Updated `:root` CSS variables `--font-ui` and `--font-code` in both base stylesheets.
+- Invalidated static cache references in `frontend/index.html`, `frontend/about.html`, `frontend/author.html`, and `frontend/writeups/index.html`.
+- Progress record updated.
+
+### Verification
+
+- Follow-up checks passed: `npm run check` (56 files, 0 errors, warnings, or hints), `npm run build`, and `bash scripts/ci-check.sh`.
+- Owner visual inspection across themes and viewport sizes remains.
+
+### Remaining work and decisions
+
+- Owner visual inspection in browser (light/dark mode, desktop/mobile, dashboard, writeups).
+- Review diff and approve commit/release if satisfactory.
+
+#### Font preview changes (Inter & IBM Plex Mono)
+
+- Added Inter and IBM Plex Mono fonts to the site.
+- Updated CSS to use new fonts and bumped `polish.css` cache query to `font-inter-plex`.
+- Modified HTML files to reference new fonts where appropriate.
+- All CI checks (`npm run check`, `npm run build`, `bash scripts/ci-check.sh`) passed.
+- Documentation updated with this progress entry.
+
+## 2026-11-20 — Correct canonical site domain
+
+### Approved scope
+
+- Replace active references to the old site domain with the owner-confirmed `https://zeuswriteups.vercel.app` in site configuration, project guidance, deployment instructions, and SEO files.
+- Preserve older dated progress entries as historical records.
+- Leave the owner's typography changes intact; do not commit, push, open a PR, or deploy.
+
+### Files changed
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `astro.config.mjs`
+- `documentation/CONTRIBUTING.md`
+- `documentation/PROJECT_CHARTER.md`
+- `documentation/PROGRESS.md`
+- `frontend/robots.txt`
+- `frontend/sitemap.xml`
+
+### Files and state inspected
+
+- `documentation/ai-agent-role-manager.md`
+- `documentation/MIGRATION_PLAN.md`
+- Current branch and working-tree status
+- Existing deployment and domain references in repository files
+
+### Completed
+
+- Updated the Astro canonical site URL, project/agent guidance, deployment documentation, robots sitemap URL, and sitemap page URLs.
+- Kept references in older dated progress entries to preserve historical evidence; current operational references now use `zeuswriteups.vercel.app`.
+- Preserved all pre-existing typography changes on `feat/font-change`.
+
+### Verification
+
+- `npm run check` — passed (56 files; 0 errors, warnings, or hints).
+- `npm run build` — passed.
+- `bash scripts/ci-check.sh` — passed.
+- `git diff --check` — passed.
+- Domain search confirmed there are no old-host references in active configuration, guidance, or SEO metadata; remaining matches are historical progress entries.
+
+### Remaining work and decisions
+
+- Owner review of the complete diff.
+- No remote preview or production deployment was requested or performed.
+
+## 2026-11-20 — Font feature review and local conflict recovery
+
+### Approved scope and files inspected
+
+- Review the existing Inter and IBM Plex Mono feature and resolve the progress-record conflict while preserving application code.
+- Inspected the staged CSS, static HTML cache references, domain documentation and SEO changes, and `frontend/src/layouts/SiteLayout.astro`.
+- Changed only `documentation/PROGRESS.md`: removed conflict markers while retaining both records, and added this verification entry.
+
+### Completed and verification
+
+- Marked the document resolved, exited the merge without a commit, and preserved the staged work on local branch `fix/progress-record-conflict`.
+- Confirmed the Astro layout imports the updated base stylesheet and dashboard styles consume the font variables.
+- `npm run check` passed: 53 files, zero errors, warnings, or hints.
+- `npm run build`, `npm run check:routes` (18 HTML pages), and `bash scripts/ci-check.sh` passed.
+- `git diff --cached --check` passed before this entry; `git diff --check` passed after it.
+
+### Remaining work and owner decisions
+
+- Browser inspection of font loading and desktop/mobile appearance remains pending.
+- Existing staged domain/SEO changes remain alongside the font feature; they were preserved, not newly implemented in this review.
+- Owner diff and commit approval remain required. No commit, push, PR, merge, or deployment was performed.
+
+## 2026-11-20 — Phishing scanner integration plan
+
+### Scope and files
+
+- Owner requested a written plan for integrating the scanner branch with a
+  VirusTotal reputation cross-check, then asked that the plan be recorded here.
+- Added `documentation/phishing-scanner-plan.md` with proposed behavior, exact
+  scanner file scope, privacy disclosure, verification steps, and release
+  boundaries.
+- Current branch: `feat/phishing-scanner-v1-core`; latest `origin/main` was
+  merged without committing. The `documentation/PROGRESS.md` conflict was
+  resolved using the current main ledger.
+
+### Current implementation state
+
+- Before the owner requested the written plan first, Codex added
+  `backend/virustotal.mjs`, `frontend/src/pages/api/phishing-check.ts`, and
+  `tests/scanner/virustotal.test.mjs`. The owner later approved the plan and
+  requested implementation. Codex has resumed the scoped work.
+- Created a local `.env` with a blank `VIRUSTOTAL_API` entry. Git ignores it; no
+  credential was written to the file or repository.
+- The owner-provided API key should be rotated before use. Production setup will
+  require a server-side Vercel environment variable; no Vercel settings were
+  changed.
+
+### Verification and remaining decisions
+
+- Scanner route, opt-in disclosure, fixed-host VirusTotal report lookup,
+  server-side request validation, response mapping, and mocked security tests
+  are implemented locally. No submitted destination is fetched or saved.
+- `npm run test:scanner` — passed (36 tests).
+- `npm run check` — passed (72 files, 0 diagnostics).
+- `npm run build` — passed with the Vercel adapter.
+- `npm run check:routes` — passed (19 HTML pages).
+- `bash scripts/ci-check.sh` — passed; no credential patterns or flag tokens.
+- `git diff --check` and `git diff --cached --check` — passed.
+- Scoped Prettier check for backend modules and scanner tests passed. Full
+  `npm run format:check` remains blocked only by the unrelated
+  `.claude/worktrees/agent-skill-system/MIGRATION_PLAN.md` file.
+- The Astro development server started at `http://127.0.0.1:4321`; the scanner
+  route returned HTTP 200. A live same-origin POST to `/api/phishing-check/`
+  returned a mapped VirusTotal report for `example.com` with 93 results, zero
+  malicious, and zero suspicious detections. The API key was not printed.
+- Fixed the client endpoint to include the required trailing slash and passed
+  the local Vite environment variable into the server-only VirusTotal helper.
+  Browser visual review remains pending.
+- Owner requested a clearer automatic verdict, richer VirusTotal evidence, and
+  another threat-intelligence source without a separate provider checkbox. The
+  plan now proposes Google Safe Browsing v5, an automatic disclosed lookup on
+  form submission, and one evidence-backed ZEUS verdict. Implementation of this
+  expanded scope is pending owner review of the revised plan.
+- VirusTotal's public API documentation warns that queried/submitted indicators
+  may be scanned and added to its community dataset. The plan requires explicit
+  visitor opt-in and disclosure before any URL is sent.
+- Remaining before production: rotate and configure the API key as a Vercel
+  server secret, set an edge rate limit, and review the page in a browser.
+- Owner review of `documentation/phishing-scanner-plan.md` and the complete diff
+  is pending. The current-main sync is uncommitted. No commit, push, PR, merge,
+  environment update, or deployment was performed.
+- The plan now includes SSRF, SQL injection applicability, XSS/output safety,
+  request validation, cross-origin handling, rate limiting, API-key protection,
+  privacy, and mocked security-test requirements.
+- Current implementation edits also include `backend/phishing-check.mjs`, the
+  opt-in UI in `frontend/src/pages/tools/phishing-scanner/index.astro`, and
+  VirusTotal integration notes in `frontend/src/lib/scanner/README.md`.
+
+## 2026-11-20 — Scanner reputation backend and Google v5 response fix
+
+### Approved scope and files
+
+- Owner asked Codex to finish the backend, explain the Google binary response
+  issue, report results in clusters/logs, and plan the frontend separately.
+- Changed `backend/google-safe-browsing.mjs`, `backend/reputation-verdict.mjs`,
+  `backend/virustotal.mjs`, `backend/phishing-check.mjs`,
+  `frontend/src/pages/api/phishing-check.ts`, `frontend/src/env.d.ts`, the three provider/verdict tests in
+  `tests/scanner/`, and `documentation/phishing-scanner-plan.md`.
+- Kept the scanner page frontend unchanged in this backend phase. The current
+  page still requires its optional VirusTotal checkbox and does not yet display
+  Google evidence or the combined verdict.
+
+### Completed and evidence
+
+- Google Safe Browsing v5 returned `application/x-protobuf` despite a JSON
+  accept header; `alt=json` was unsupported. Added a bounded protobuf reader
+  for the documented URL search fields. The handler returns only threat types
+  and cache seconds, never the provider's matching URL.
+- Wired Google and VirusTotal lookups through the Astro server route. The route
+  retains the current VirusTotal response fields for frontend compatibility and
+  adds `google` and `verdict`. Provider failures remain sanitized and independent.
+- Added allowlisted VirusTotal community votes/reputation, categories, targeted
+  brands, tags, and malicious/suspicious engine results, with limits on string
+  content and array counts.
+- Live local Google checks: `example.com` returned `no_match`; Google's
+  published phishing test URL returned `SOCIAL_ENGINEERING`. A live backend
+  request for `example.com` returned HTTP 200, an existing VirusTotal report
+  with zero malicious detections, Google `no_match`, and
+  `no_known_threat_found`. The response contained no submitted URL or API key.
+- Both keys are present only in ignored local `.env`; key values were not
+  printed. Chat-exposed keys require rotation before production use.
+- `npm run test:scanner` passed (40 tests), `npm run check` passed (76 files,
+  zero diagnostics), `npm run build` passed, `npm run check:routes` passed (19
+  pages), `bash scripts/ci-check.sh` passed, scoped Prettier passed, and
+  `git diff --check` passed.
+
+### Remaining work and owner decisions
+
+- Frontend phase: remove the checkbox, place the provider disclosure beside
+  submit, render one ZEUS verdict with grouped local/VT/Google evidence and
+  provider coverage, and verify keyboard, mobile, desktop, and theme behavior.
+- Production release still needs server-side keys, a global rate limit, provider
+  quota protection, and final privacy/attribution review. No production settings
+  were changed. No commit, push, PR, merge, or deployment was performed.
+
+## 2026-11-20 — Scanner frontend provider verdict UI
+
+### Approved scope and files
+
+- Owner asked Codex to implement the frontend phase with the `frontend-design`
+  skill: automatic provider checks, a clear ZEUS verdict, and grouped evidence.
+- Changed `frontend/src/pages/tools/phishing-scanner/index.astro` and recorded
+  the work here. No release action was taken.
+
+### Completed and verification
+
+- Removed the optional VirusTotal checkbox and added a sentence-case disclosure
+  beside the scan control explaining that both providers receive the submitted
+  URL.
+- Added a prominent verdict card with known threat, suspicious, no known threat
+  found, and inconclusive states. Provider details are grouped into VirusTotal
+  and Google Safe Browsing evidence blocks.
+- Preserved local findings, technical details, redacted reports, keyboard tab
+  navigation, reduced-motion behavior, light mode, and responsive layout.
+- `npm run check` passed with zero diagnostics, `npm run test:scanner` passed (40
+  tests), `npm run build` passed, `npm run check:routes` passed (19 pages), and
+  `git diff --check` passed. Prettier does not infer a parser for this Astro
+  file; the existing Astro checks and build are the formatting and syntax gates.
+
+### Remaining work and owner decisions
+
+- Browser visual review at desktop and mobile widths remains pending.
+- The feature remains local and uncommitted. Production keys, rate limiting,
+  final attribution review, commit, PR, merge, and deployment remain separate
+  release actions.
+
+## 2026-11-20 — VirusTotal-only scanner beta preparation
+
+### Owner scope and files
+
+- Owner requested a first-stage beta cross-check that relies on VirusTotal alone,
+  then a deployment for public use on the portfolio. The owner explicitly asked
+  Codex to plan and implement the change.
+- Updated `backend/phishing-check.mjs`, `backend/reputation-verdict.mjs`,
+  `frontend/src/pages/api/phishing-check.ts`, `frontend/src/env.d.ts`,
+  `frontend/src/pages/tools/phishing-scanner/index.astro`,
+  `frontend/src/lib/scanner/README.md`, `tests/scanner/virustotal.test.mjs`,
+  `tests/scanner/reputation-verdict.test.mjs`, and
+  `documentation/phishing-scanner-plan.md`. Removed the untracked Google helper
+  and its test from this beta work.
+- Did not alter the existing local URL analysis engine, other site content, or
+  unrelated files staged by the earlier main-branch merge.
+
+### Work and evidence
+
+- The API now performs one existing-report VirusTotal lookup and returns no
+  Google field. An existing report with analyzed engines and zero malicious or
+  suspicious detections yields `no_known_threat_found`; no report or an
+  unavailable provider yields `inconclusive`. Stronger detections retain known
+  threat and suspicious verdicts.
+- The page identifies the feature as Beta and the provider result as a
+  first-stage cross-check. Disclosure now names only VirusTotal and explains
+  that submitted URLs may be retained or shared. It does not label a URL safe.
+- `npm run test:scanner` passed (38 tests), `npm run check` passed (74 files,
+  zero diagnostics), `npm run build` passed, `npm run check:routes` passed (19
+  pages), scoped Prettier passed after formatting three files, and
+  `git diff --check` passed.
+- Local API tests returned HTTP 200: `google.com` and
+  `zeuswriteups.vercel.app` had 0 malicious / 0 suspicious of 93 results and
+  `no_known_threat_found`; `amaz0n.com` had 0 malicious / 2 suspicious of 93
+  and `suspicious`. All three responses omitted the Google field.
+
+### Release state and blockers
+
+- No commit, push, PR, merge, or deployment occurred. The feature branch still
+  has an unfinished no-commit merge from `origin/main` and many unrelated
+  staged changes. The scanner diff needs owner review before Git release steps.
+- The linked Vercel production project is `dvb-og72`, serving
+  `zeuswriteups.vercel.app`. It has no environment variables and no custom
+  firewall rules published. A draft rule, `Scanner beta per-IP limit`, is now
+  staged for exact path `/api/phishing-check/` at four requests per 60 seconds
+  per IP; it is not live and cannot enforce the provider's global quota across
+  multiple IPs. The earlier VirusTotal key was pasted in chat. The owner
+  replaced the ignored local `.env` value with a new key, and Codex added that
+  new value to the linked Vercel project's Production environment as a hidden
+  Secret named `VIRUSTOTAL_API`. `vercel env ls production` confirmed the name,
+  type, and environment without revealing the value. This variable applies to
+  the next production deployment.
+- Public API quota protection and browser visual review remain before beta
+  deployment. The scanner is not live on the production domain yet.
