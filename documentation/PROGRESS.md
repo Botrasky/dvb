@@ -1011,3 +1011,38 @@ because this promotion changes documentation only.
 
 - Review diff with owner.
 - Await owner approval before commit, push, PR creation, or merge.
+
+## 2026-11-20 — Font preview changes (Inter & IBM Plex Mono)
+
+### Approved scope
+
+- Branch: `feat/font-preview-main` (created from `origin/main`).
+- Load Google Fonts (Inter and IBM Plex Mono) and set `--font-ui` / `--font-code` CSS variables.
+- Bump `polish.css` query to `v=4`.
+- Update static stylesheet cache query to `font-inter-plex` in `index.html`, `about.html`, `author.html`, and `writeups/index.html`.
+- No changes to `AGENTS.md` or `CLAUDE.md`.
+
+### Files changed
+
+- `frontend/css/base.css`
+- `frontend/public/css/base.css`
+- `frontend/index.html`
+- `frontend/about.html`
+- `frontend/author.html`
+- `frontend/writeups/index.html`
+- `documentation/PROGRESS.md`
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `npm run check` | Passed (0 errors, 0 warnings, 0 hints) |
+| `npm run build` | Passed (server built, Vercel output) |
+| `npm run check:routes` | Passed (18 HTML pages, all links valid) |
+| `bash scripts/ci-check.sh` | Passed (no credential, flag, or size issues) |
+| `git diff --check` | Passed (no whitespace errors) |
+
+### Remaining work and decisions
+
+- Owner approval to merge `feat/font-preview-main` into `main`.
+- Review Vercel preview deployment before merging.
