@@ -146,8 +146,9 @@ recent evidence before reopening any of them.
 - Remaining: Owner visual review and confirmation of the scanner branch's
   status. The archived plan is retained as historical context, not current
   implementation authority.
-- The owner approved a local commit after review. No push, PR, merge, or
-  deployment is included in this task.
+- The owner approved the local commit, branch push, and PR creation. PR
+  [#102](https://github.com/Botrasky/dvb/pull/102) is open against `main`;
+  merge and deployment are not included in this task.
 
 ### 2026-11-18 — CISA threat-brief production hotfix
 
