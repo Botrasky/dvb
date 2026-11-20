@@ -1,5 +1,8 @@
-@import url("/css/polish.css?v=3");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap");
+@import url("/css/polish.css?v=4");
 :root {
+  --font-ui: "Inter", Arial, Helvetica, sans-serif;
+  --font-code: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
   --font-ui: Arial, Helvetica, sans-serif;
   --font-code: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
   --bg: #050810;
