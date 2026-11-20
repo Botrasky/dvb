@@ -966,6 +966,104 @@ because this promotion changes documentation only.
   approvals.
 - No application code or dependencies are in scope.
 
+## 2026-11-20 — Typography update (Inter & IBM Plex Mono)
+
+### Approved scope
+
+- Update typography in base stylesheets to import Google Fonts (Inter and IBM Plex Mono) and bump polish CSS cache query.
+- Configure `--font-ui` to `"Inter", Arial, Helvetica, sans-serif` and `--font-code` to `"IBM Plex Mono", "SFMono-Regular", Consolas, monospace`.
+- Invalidate cache by updating `css/base.css?v=motion-2` to `css/base.css?v=font-inter-plex` in static HTML pages.
+- Local testing was initially waived for agent execution per owner instruction; follow-up checks were later run at the owner's request.
+
+### Files changed
+
+- `frontend/css/base.css`
+- `frontend/public/css/base.css`
+- `frontend/index.html`
+- `frontend/about.html`
+- `frontend/author.html`
+- `frontend/writeups/index.html`
+- `documentation/PROGRESS.md`
+
+### Files and state inspected
+
+- `frontend/src/layouts/SiteLayout.astro`
+- Downstream CSS files (`dashboard.css`, `hero.css`, `sections.css`, `writeup-story.css`) to verify variable consumption.
+
+### Completed
+
+- Added Google Fonts `@import` for Inter and IBM Plex Mono in `frontend/css/base.css` and `frontend/public/css/base.css`.
+- Updated `:root` CSS variables `--font-ui` and `--font-code` in both base stylesheets.
+- Invalidated static cache references in `frontend/index.html`, `frontend/about.html`, `frontend/author.html`, and `frontend/writeups/index.html`.
+- Progress record updated.
+
+### Verification
+
+- Follow-up checks passed: `npm run check` (56 files, 0 errors, warnings, or hints), `npm run build`, and `bash scripts/ci-check.sh`.
+- Owner visual inspection across themes and viewport sizes remains.
+
+### Remaining work and decisions
+
+- Owner visual inspection in browser (light/dark mode, desktop/mobile, dashboard, writeups).
+- Review diff and approve commit/release if satisfactory.
+
+### 2026-11-20
+
+#### 2026-11-20
+
++| 2026-11-20 | Font preview changes (Inter & IBM Plex Mono)
+
+- Added Inter and IBM Plex Mono fonts to the site.
+- Updated CSS to use new fonts and bumped `polish.css` cache query to `font-inter-plex`.
+- Modified HTML files to reference new fonts where appropriate.
+- All CI checks (`npm run check`, `npm run build`, `bash scripts/ci-check.sh`) passed.
+- Documentation updated with this progress entry.
+
+## 2026-11-20 — Correct canonical site domain
+
+### Approved scope
+
+- Replace active references to the old site domain with the owner-confirmed `https://zeuswriteups.vercel.app` in site configuration, project guidance, deployment instructions, and SEO files.
+- Preserve older dated progress entries as historical records.
+- Leave the owner's typography changes intact; do not commit, push, open a PR, or deploy.
+
+### Files changed
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `astro.config.mjs`
+- `documentation/CONTRIBUTING.md`
+- `documentation/PROJECT_CHARTER.md`
+- `documentation/PROGRESS.md`
+- `frontend/robots.txt`
+- `frontend/sitemap.xml`
+
+### Files and state inspected
+
+- `documentation/ai-agent-role-manager.md`
+- `documentation/MIGRATION_PLAN.md`
+- Current branch and working-tree status
+- Existing deployment and domain references in repository files
+
+### Completed
+
+- Updated the Astro canonical site URL, project/agent guidance, deployment documentation, robots sitemap URL, and sitemap page URLs.
+- Kept references in older dated progress entries to preserve historical evidence; current operational references now use `zeuswriteups.vercel.app`.
+- Preserved all pre-existing typography changes on `feat/font-change`.
+
+### Verification
+
+- `npm run check` — passed (56 files; 0 errors, warnings, or hints).
+- `npm run build` — passed.
+- `bash scripts/ci-check.sh` — passed.
+- `git diff --check` — passed.
+- Domain search confirmed there are no old-host references in active configuration, guidance, or SEO metadata; remaining matches are historical progress entries.
+
+### Remaining work and decisions
+
+- Owner review of the complete diff.
+- No remote preview or production deployment was requested or performed.
+
 ## 2026-11-20 — Security flag redaction, production domain alignment, and duplicate cleanup
 
 ### Approved scope
