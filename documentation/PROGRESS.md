@@ -118,6 +118,8 @@ code.
 - Invalidated cache queries on static HTML pages (`font-inter-plex`).
 - Verified build and routes with no errors, warnings, or broken references.
 - Progress record updated.
+- Committed as `9dedcc7` and pushed `feat/font-domain-preview`.
+- Opened PR #98 into `test`: https://github.com/Botrasky/dvb/pull/98.
 
 ### Verification
 
@@ -131,5 +133,5 @@ code.
 
 ### Remaining work and decisions
 
-- Commit and push `feat/font-domain-preview`, then open a pull request into `test` using `.github/pull_request_template.md`.
-- Vercel preview deployment verification (inspect browser appearance across light/dark themes and mobile/desktop widths before checking the browser-review item).
+- Owner review of the PR's Vercel preview across light/dark themes and mobile/desktop widths; then check the browser-review item.
+- Owner review and approval before merging into `test`. Promotion from `test` to `main` remains a separate PR and approval.
