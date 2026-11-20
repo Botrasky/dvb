@@ -10,7 +10,7 @@ The project is an **Astro + TypeScript** application targeting static deployment
 | --- | --- |
 | `src/` | Astro routes, components (`ThreatBrief.astro`), layouts (`SiteLayout.astro`), and typed content configurations. |
 | `public/` | Static assets served directly (favicons, images, certificates). |
-| `documentation/` | Authoritative architecture, charter, migration plans, and agent guides. |
+| `documentation/` | Authoritative architecture, charter, progress records, and agent guides; archived plans are historical. |
 | `writeups/` | Writeup source content, lab walkthroughs, and challenge reports. |
 | `scripts/ci-check.sh` | Local security and integrity checks run before pushing. |
 

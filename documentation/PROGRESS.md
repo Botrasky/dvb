@@ -10,13 +10,15 @@ scope expansion.
 
 | Area | Status | Evidence / notes |
 | --- | --- | --- |
-| Active branch | Font and canonical-domain update proposed for `main` | Local `fix/progress-record-conflict`, based on `main` at `7abcc8d` |
-| Working tree | Checks passed; browser review pending | Inter and IBM Plex Mono configured; canonical SEO URLs updated |
-| Local vs upstream | Not pushed | Pull request and production merge pending |
-| Remote freshness | Verified before branch creation | Fetched `main` to `FETCH_HEAD` at `8f10762` |
+| Active branch | Migration plan archival and documentation cleanup | `docs/reconcile-progress-status`, branched from clean `main` at `1888046` |
+| Production | Font and canonical-domain update merged | PR #101; `main` at `1888046` (`feat: use Inter and IBM Plex Mono typography (#101)`) |
+| Deployment | Production deployment reported ready | Vercel production deployment for the merged commit succeeded; browser visual review remains unverified |
+| Working tree | Documentation reconciliation in progress | Changes are limited to the migration plan archive, progress record, and active guidance references |
+| Test branch | Behind production | `test` was 26 commits behind `origin/main` at the latest branch inspection; refresh before acting |
+| Paused implementation | Status not confirmed | `feat/phishing-scanner-v1-core` exists; latest commit `ef914ef` dated 2026-11-16 records Phase 2 UI progress |
 | Astro migration foundation | Complete from prior handoff | Astro routes, Vercel integration, typed collection foundation, motion, and CI work are present in history |
-| Documentation baseline | Complete locally | Charter, migration plan, contribution guide, agent roles, and project rules are organized |
-| Production release | Owner authorized PR and merge | Production deploy follows merge to `main` |
+| Documentation baseline | Organized; migration plan archived | Charter, contribution guide, agent roles, project rules, and historical migration plan are in `documentation/archive/` |
+| Production release | Merged and deployed | PR #101 merged to `main`; deployment succeeded; visual browser review remains pending |
 
 ## Confirmed completed work
 
@@ -66,19 +68,20 @@ Previously reported checks include formatting, `astro check`, production build,
 repository checks, API checks, and route smoke tests. They must be rerun for a
 new release candidate rather than treated as permanent proof.
 
-## Outstanding work
+## Current outstanding work
 
-### Immediate release hygiene
+- [ ] Owner visual review of the merged typography update in light/dark themes,
+      desktop/mobile, dashboard, and writeups.
+- [ ] Confirm whether `feat/phishing-scanner-v1-core` is paused, active, or
+      abandoned; its latest recorded commit is `ef914ef` (2026-11-16).
+- [ ] Refresh remote refs before making branch or release decisions. At the
+      latest inspection, local `test` was 26 commits behind `origin/main`.
 
-- [ ] Refresh the remote branch successfully with `git fetch origin --prune`.
-- [ ] Compare `@{upstream}...HEAD` after the refresh.
-- [ ] Review whether the zero-byte tracked file named `Icon` followed by a
-      carriage return (`Icon\r`) is intentional. It is currently part of
-      `92d29c4`.
-- [ ] Review the complete documentation diff.
-- [ ] Obtain explicit owner approval before committing or pushing any cleanup.
+### Historical migration and release checklists
 
-### Migration completion
+The following checklists are retained from the earlier migration handoff. Their
+unchecked items are not confirmed current tasks; compare with current code and
+recent evidence before reopening any of them.
 
 - [x] Require typed metadata for the eight existing Markdown reports and remove
       their hardcoded report-ID mapping.
@@ -101,7 +104,7 @@ new release candidate rather than treated as permanent proof.
 - [ ] Request separate owner approval for push, PR, merge, and production
       promotion.
 
-## Incremental execution plan
+## Historical incremental execution plan
 
 | Step | Execution item | Owner / agent | Exit evidence | Status |
 | --- | --- | --- | --- | --- |
@@ -117,6 +120,35 @@ new release candidate rather than treated as permanent proof.
 | 10 | Promote `test` to `main` | Owner approval required | Production merge and live smoke test | Pending |
 
 ## Agent activity log
+
+### 2026-11-20 — Reconcile progress and archive migration plan
+
+- Agent: Codex, engineering co-lead and integrator.
+- Approved scope: Reconcile current status, archive the superseded migration
+  plan, and update active documentation references; no application-code changes.
+- Files inspected: `AGENTS.md`, `documentation/PROGRESS.md`,
+  `documentation/MIGRATION_PLAN.md`, repository skills, and Git branch/history
+  metadata.
+- Files changed: `documentation/PROGRESS.md`,
+  `documentation/archive/MIGRATION_PLAN.completed-2026-11.md` (moved from active path),
+  `CLAUDE.md`, `documentation/agent-skills.md`,
+  `documentation/ai-agent-role-manager.md`, `documentation/skills/audit/SKILL.md`,
+  `documentation/PROJECT_CHARTER.md`, and `documentation/CONTRIBUTING.md`.
+- Completed: Updated status rows for merged PR #101 and current branch facts;
+  archived the superseded plan and changed active guidance to use current
+  architecture and progress records; identified the unconfirmed state of
+  `feat/phishing-scanner-v1-core`.
+- Evidence: Local `main` was clean at `1888046`, matching `origin/main`;
+  `test` was 26 commits behind; `feat/phishing-scanner-v1-core` last changed
+  at `ef914ef` on 2026-11-16. The Vercel production deployment for #101 was
+  previously verified successful; live browser rendering was blocked by the
+  Vercel challenge.
+- Remaining: Owner visual review and confirmation of the scanner branch's
+  status. The archived plan is retained as historical context, not current
+  implementation authority.
+- The owner approved the local commit, branch push, and PR creation. PR
+  [#102](https://github.com/Botrasky/dvb/pull/102) is open against `main`;
+  merge and deployment are not included in this task.
 
 ### 2026-11-18 — CISA threat-brief production hotfix
 
@@ -231,17 +263,13 @@ plan is proposed for review and the audience experiment awaits preview testing.
 - Owner decision needed: None for this test. Any policy or automation change
   needs its own approved scope.
 
-## Next implementation focus
+## Current next actions
 
-Return to the migration plan after the governance test is reviewed. Execute in
-small owner-approved slices:
-
-1. Review and decide the treatment of the tracked zero-byte `Icon\r` file.
-2. Refresh remote refs and compare the intended implementation branch.
-3. Reconcile the strict writeup schema and remaining legacy detail fallbacks.
-4. Verify canonical routes and legacy redirects in a real preview.
-5. Complete browser, responsive, motion, and accessibility evidence.
-6. Run the full release candidate checks before any push or pull request.
+1. Owner visually reviews the merged typography update.
+2. Owner confirms whether `feat/phishing-scanner-v1-core` is paused, active, or
+   abandoned.
+3. Before new implementation, inspect current architecture, progress evidence,
+   branch state, and the target code; use archived plans as background only.
 
 ### 2026-11-15 — CTF affiliate audience test surface
 

@@ -8,8 +8,8 @@ Skills are shared repository guidance, not platform configuration. They are not 
 
 Repository layout differs across active branches. Always inspect the current branch, `package.json`, `astro.config.mjs`, and the tree before using a path from a skill:
 
-- On the current `main` layout, Astro source, styles, assets, and writeups are under `frontend/` (for example `frontend/src/`, `frontend/css/`, `frontend/public/`, and `frontend/writeups/`). The migration plan is `documentation/MIGRATION_PLAN.md`.
-- On the current Astro `test` layout, the corresponding directories are at the repository root (`src/`, `css/`, `public/`, and `writeups/`), and the migration plan is `MIGRATION_PLAN.md`.
+- On current `main`, Astro source, styles, assets, and writeups are under `frontend/` (for example `frontend/src/`, `frontend/css/`, `frontend/public/`, and `frontend/writeups/`). Confirm the checked-out tree before using paths.
+- `documentation/archive/` contains historical migration plans; use the current code, `documentation/architecture.md`, and `documentation/PROGRESS.md` for active state.
 
 These are observed branch layouts, not guarantees for every future branch. Use the actual checked-out tree and active configuration as the source of truth; do not move files or infer paths from another branch.
 

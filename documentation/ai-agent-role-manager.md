@@ -60,7 +60,7 @@ Claude’s engineering responsibilities include:
 
 AGY is primarily an auditor and may also implement within an explicitly owner-approved scope. Suitable work includes:
 
-- Auditing the repository against the available migration plan
+- Auditing the repository against current code, architecture, and progress records
 - Summarizing many files
 - Finding route, asset, or test coverage gaps
 - Producing an independent checklist
@@ -89,7 +89,7 @@ The repository is the shared source of truth. Conversation context is not automa
 Agents must use these files as the project handoff layer:
 
 - `AGENTS.md` — operating rules and safety constraints
-- Active migration plan — `documentation/MIGRATION_PLAN.md` on current `main`; root `MIGRATION_PLAN.md` on the current flattened Astro `test` branch
+- `documentation/archive/` — historical plans and handoffs; not authoritative for current task status
 - `documentation/architecture.md` — current system and CI/CD architecture
 - `documentation/ai-agent-role-manager.md` — agent responsibilities and workflow
 - `documentation/agent-skills.md` — skill index and cross-references
@@ -111,7 +111,7 @@ Request
   ↓
 Codex clarifies scope and reads project instructions
   ↓
-Assigned agent locates and follows the migration plan present on the current branch
+Assigned agent reviews current architecture and progress records, then maps the approved scope to the checked-out code
   ↓
 Assigned agent implements within the approved scope on a feature branch
   ↓
@@ -155,7 +155,7 @@ When handing work to another agent, provide:
 Recommended handoff prompt:
 
 ```text
-Read AGENTS.md and documentation/ai-agent-role-manager.md. Locate and read the migration plan present on the current branch.
+Read AGENTS.md and documentation/ai-agent-role-manager.md. Review documentation/architecture.md and documentation/PROGRESS.md for current project state.
 Inspect the current branch and Git diff before acting.
 Continue only from the documented remaining steps.
 Do not modify main, delete legacy files, or overwrite another agent’s work.
