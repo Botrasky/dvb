@@ -12,6 +12,7 @@
     "check:routes": "node scripts/check-build-routes.mjs",
     "preview": "astro preview",
     "check": "astro check",
+    "test:scanner": "node --experimental-strip-types --test tests/scanner/*.test.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -24,6 +25,8 @@
     "typescript": "6.0.3"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8"
+    "bootstrap": "^5.3.8",
+    "psl": "^1.15.0",
+    "punycode": "2.3.1"
   }
 }

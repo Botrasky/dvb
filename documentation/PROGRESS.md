@@ -1252,3 +1252,217 @@ because this promotion changes documentation only.
 - Browser inspection of font loading and desktop/mobile appearance remains pending.
 - Existing staged domain/SEO changes remain alongside the font feature; they were preserved, not newly implemented in this review.
 - Owner diff and commit approval remain required. No commit, push, PR, merge, or deployment was performed.
+
+## 2026-11-20 — Phishing scanner integration plan
+
+### Scope and files
+
+- Owner requested a written plan for integrating the scanner branch with a
+  VirusTotal reputation cross-check, then asked that the plan be recorded here.
+- Added `documentation/phishing-scanner-plan.md` with proposed behavior, exact
+  scanner file scope, privacy disclosure, verification steps, and release
+  boundaries.
+- Current branch: `feat/phishing-scanner-v1-core`; latest `origin/main` was
+  merged without committing. The `documentation/PROGRESS.md` conflict was
+  resolved using the current main ledger.
+
+### Current implementation state
+
+- Before the owner requested the written plan first, Codex added
+  `backend/virustotal.mjs`, `frontend/src/pages/api/phishing-check.ts`, and
+  `tests/scanner/virustotal.test.mjs`. The owner later approved the plan and
+  requested implementation. Codex has resumed the scoped work.
+- Created a local `.env` with a blank `VIRUSTOTAL_API` entry. Git ignores it; no
+  credential was written to the file or repository.
+- The owner-provided API key should be rotated before use. Production setup will
+  require a server-side Vercel environment variable; no Vercel settings were
+  changed.
+
+### Verification and remaining decisions
+
+- Scanner route, opt-in disclosure, fixed-host VirusTotal report lookup,
+  server-side request validation, response mapping, and mocked security tests
+  are implemented locally. No submitted destination is fetched or saved.
+- `npm run test:scanner` — passed (36 tests).
+- `npm run check` — passed (72 files, 0 diagnostics).
+- `npm run build` — passed with the Vercel adapter.
+- `npm run check:routes` — passed (19 HTML pages).
+- `bash scripts/ci-check.sh` — passed; no credential patterns or flag tokens.
+- `git diff --check` and `git diff --cached --check` — passed.
+- Scoped Prettier check for backend modules and scanner tests passed. Full
+  `npm run format:check` remains blocked only by the unrelated
+  `.claude/worktrees/agent-skill-system/MIGRATION_PLAN.md` file.
+- The Astro development server started at `http://127.0.0.1:4321`; the scanner
+  route returned HTTP 200. A live same-origin POST to `/api/phishing-check/`
+  returned a mapped VirusTotal report for `example.com` with 93 results, zero
+  malicious, and zero suspicious detections. The API key was not printed.
+- Fixed the client endpoint to include the required trailing slash and passed
+  the local Vite environment variable into the server-only VirusTotal helper.
+  Browser visual review remains pending.
+- Owner requested a clearer automatic verdict, richer VirusTotal evidence, and
+  another threat-intelligence source without a separate provider checkbox. The
+  plan now proposes Google Safe Browsing v5, an automatic disclosed lookup on
+  form submission, and one evidence-backed ZEUS verdict. Implementation of this
+  expanded scope is pending owner review of the revised plan.
+- VirusTotal's public API documentation warns that queried/submitted indicators
+  may be scanned and added to its community dataset. The plan requires explicit
+  visitor opt-in and disclosure before any URL is sent.
+- Remaining before production: rotate and configure the API key as a Vercel
+  server secret, set an edge rate limit, and review the page in a browser.
+- Owner review of `documentation/phishing-scanner-plan.md` and the complete diff
+  is pending. The current-main sync is uncommitted. No commit, push, PR, merge,
+  environment update, or deployment was performed.
+- The plan now includes SSRF, SQL injection applicability, XSS/output safety,
+  request validation, cross-origin handling, rate limiting, API-key protection,
+  privacy, and mocked security-test requirements.
+- Current implementation edits also include `backend/phishing-check.mjs`, the
+  opt-in UI in `frontend/src/pages/tools/phishing-scanner/index.astro`, and
+  VirusTotal integration notes in `frontend/src/lib/scanner/README.md`.
+
+## 2026-11-20 — Scanner reputation backend and Google v5 response fix
+
+### Approved scope and files
+
+- Owner asked Codex to finish the backend, explain the Google binary response
+  issue, report results in clusters/logs, and plan the frontend separately.
+- Changed `backend/google-safe-browsing.mjs`, `backend/reputation-verdict.mjs`,
+  `backend/virustotal.mjs`, `backend/phishing-check.mjs`,
+  `frontend/src/pages/api/phishing-check.ts`, `frontend/src/env.d.ts`, the three provider/verdict tests in
+  `tests/scanner/`, and `documentation/phishing-scanner-plan.md`.
+- Kept the scanner page frontend unchanged in this backend phase. The current
+  page still requires its optional VirusTotal checkbox and does not yet display
+  Google evidence or the combined verdict.
+
+### Completed and evidence
+
+- Google Safe Browsing v5 returned `application/x-protobuf` despite a JSON
+  accept header; `alt=json` was unsupported. Added a bounded protobuf reader
+  for the documented URL search fields. The handler returns only threat types
+  and cache seconds, never the provider's matching URL.
+- Wired Google and VirusTotal lookups through the Astro server route. The route
+  retains the current VirusTotal response fields for frontend compatibility and
+  adds `google` and `verdict`. Provider failures remain sanitized and independent.
+- Added allowlisted VirusTotal community votes/reputation, categories, targeted
+  brands, tags, and malicious/suspicious engine results, with limits on string
+  content and array counts.
+- Live local Google checks: `example.com` returned `no_match`; Google's
+  published phishing test URL returned `SOCIAL_ENGINEERING`. A live backend
+  request for `example.com` returned HTTP 200, an existing VirusTotal report
+  with zero malicious detections, Google `no_match`, and
+  `no_known_threat_found`. The response contained no submitted URL or API key.
+- Both keys are present only in ignored local `.env`; key values were not
+  printed. Chat-exposed keys require rotation before production use.
+- `npm run test:scanner` passed (40 tests), `npm run check` passed (76 files,
+  zero diagnostics), `npm run build` passed, `npm run check:routes` passed (19
+  pages), `bash scripts/ci-check.sh` passed, scoped Prettier passed, and
+  `git diff --check` passed.
+
+### Remaining work and owner decisions
+
+- Frontend phase: remove the checkbox, place the provider disclosure beside
+  submit, render one ZEUS verdict with grouped local/VT/Google evidence and
+  provider coverage, and verify keyboard, mobile, desktop, and theme behavior.
+- Production release still needs server-side keys, a global rate limit, provider
+  quota protection, and final privacy/attribution review. No production settings
+  were changed. No commit, push, PR, merge, or deployment was performed.
+
+## 2026-11-20 — Scanner frontend provider verdict UI
+
+### Approved scope and files
+
+- Owner asked Codex to implement the frontend phase with the `frontend-design`
+  skill: automatic provider checks, a clear ZEUS verdict, and grouped evidence.
+- Changed `frontend/src/pages/tools/phishing-scanner/index.astro` and recorded
+  the work here. No release action was taken.
+
+### Completed and verification
+
+- Removed the optional VirusTotal checkbox and added a sentence-case disclosure
+  beside the scan control explaining that both providers receive the submitted
+  URL.
+- Added a prominent verdict card with known threat, suspicious, no known threat
+  found, and inconclusive states. Provider details are grouped into VirusTotal
+  and Google Safe Browsing evidence blocks.
+- Preserved local findings, technical details, redacted reports, keyboard tab
+  navigation, reduced-motion behavior, light mode, and responsive layout.
+- `npm run check` passed with zero diagnostics, `npm run test:scanner` passed (40
+  tests), `npm run build` passed, `npm run check:routes` passed (19 pages), and
+  `git diff --check` passed. Prettier does not infer a parser for this Astro
+  file; the existing Astro checks and build are the formatting and syntax gates.
+
+### Remaining work and owner decisions
+
+- Browser visual review at desktop and mobile widths remains pending.
+- The feature remains local and uncommitted. Production keys, rate limiting,
+  final attribution review, commit, PR, merge, and deployment remain separate
+  release actions.
+
+## 2026-11-20 — VirusTotal-only scanner beta preparation
+
+### Owner scope and files
+
+- Owner requested a first-stage beta cross-check that relies on VirusTotal alone,
+  then a deployment for public use on the portfolio. The owner explicitly asked
+  Codex to plan and implement the change.
+- Updated `backend/phishing-check.mjs`, `backend/reputation-verdict.mjs`,
+  `frontend/src/pages/api/phishing-check.ts`, `frontend/src/env.d.ts`,
+  `frontend/src/pages/tools/phishing-scanner/index.astro`,
+  `frontend/src/lib/scanner/README.md`, `tests/scanner/virustotal.test.mjs`,
+  `tests/scanner/reputation-verdict.test.mjs`, and
+  `documentation/phishing-scanner-plan.md`. Removed the untracked Google helper
+  and its test from this beta work.
+- Did not alter the existing local URL analysis engine, other site content, or
+  unrelated files staged by the earlier main-branch merge.
+
+### Work and evidence
+
+- The API now performs one existing-report VirusTotal lookup and returns no
+  Google field. An existing report with analyzed engines and zero malicious or
+  suspicious detections yields `no_known_threat_found`; no report or an
+  unavailable provider yields `inconclusive`. Stronger detections retain known
+  threat and suspicious verdicts.
+- The page identifies the feature as Beta and the provider result as a
+  first-stage cross-check. Disclosure now names only VirusTotal and explains
+  that submitted URLs may be retained or shared. It does not label a URL safe.
+- `npm run test:scanner` passed (38 tests), `npm run check` passed (74 files,
+  zero diagnostics), `npm run build` passed, `npm run check:routes` passed (19
+  pages), scoped Prettier passed after formatting three files, and
+  `git diff --check` passed.
+- Local API tests returned HTTP 200: `google.com` and
+  `zeuswriteups.vercel.app` had 0 malicious / 0 suspicious of 93 results and
+  `no_known_threat_found`; `amaz0n.com` had 0 malicious / 2 suspicious of 93
+  and `suspicious`. All three responses omitted the Google field.
+
+### Release state and blockers
+
+- No commit, push, PR, merge, or deployment occurred. The feature branch still
+  has an unfinished no-commit merge from `origin/main` and many unrelated
+  staged changes. The scanner diff needs owner review before Git release steps.
+- The linked Vercel production project is `dvb-og72`, serving
+  `zeuswriteups.vercel.app`. It has no environment variables and no custom
+  firewall rules published. A draft rule, `Scanner beta per-IP limit`, is now
+  staged for exact path `/api/phishing-check/` at four requests per 60 seconds
+  per IP; it is not live and cannot enforce the provider's global quota across
+  multiple IPs. The earlier VirusTotal key was pasted in chat. The owner
+  replaced the ignored local `.env` value with a new key, and Codex added that
+  new value to the linked Vercel project's Production environment as a hidden
+  Secret named `VIRUSTOTAL_API`. `vercel env ls production` confirmed the name,
+  type, and environment without revealing the value. This variable applies to
+  the next production deployment.
+- Public API quota protection and browser visual review remain before beta
+  deployment. The scanner is not live on the production domain yet.
+
+## 2026-11-20 — Scanner beta isolated for main PR
+
+- Owner directed Codex to bypass `test` and target `main` after verification.
+- Fetched `origin/main` at `fd51ca4` and created clean branch
+  `feat/phishing-scanner-beta-main` in a separate worktree. Copied only scanner
+  implementation files, required `package.json` and lockfile changes, the
+  scanner navigation change, and scanner progress history. The original
+  `feat/phishing-scanner-v1-core` worktree and its unfinished merge were left
+  intact; no existing user changes were discarded.
+- The new branch has no merge conflict because it starts from fresh `main`.
+  `npm run test:scanner` passed (38 tests), `npm run check` passed (62 files,
+  zero diagnostics), `npm run build` passed, `npm run check:routes` passed (19
+  pages), and scoped Prettier passed in this worktree. Diff review and release
+  gates remain before commit, PR, merge, or deployment.

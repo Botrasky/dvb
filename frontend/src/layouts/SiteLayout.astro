@@ -6,7 +6,7 @@ import '../../css/polish.css';
 interface Props {
   title: string;
   description?: string;
-  current?: 'dashboard' | 'writeups' | 'author' | 'portfolio';
+  current?: 'dashboard' | 'writeups' | 'author' | 'portfolio' | 'scanner';
   headHtml?: string;
 }
 
@@ -53,6 +53,7 @@ const {
         <a href="/writeups/" aria-current={current === 'writeups' ? 'page' : undefined}>Writeups</a>
         <a href="/author/" aria-current={current === 'author' ? 'page' : undefined}>Author</a>
         <a href="/portfolio/" aria-current={current === 'portfolio' ? 'page' : undefined}>Portfolio</a>
+        <a href="/tools/phishing-scanner/" aria-current={current === 'scanner' ? 'page' : undefined}>Security Tools</a>
       </nav>
       <button class="dash-theme" id="themeToggle" type="button" aria-label="Toggle light and dark theme"><span aria-hidden="true">◐</span> <span id="themeLabel">Dark</span></button>
     </header>
