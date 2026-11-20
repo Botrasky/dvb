@@ -18,7 +18,7 @@ The project is an **Astro + TypeScript** application targeting static deployment
 
 | Branch | Purpose | Who may push directly |
 | --- | --- | --- |
-| `main` | Production. What is on `main` is what is live at https://vathanakbotra.vercel.app | Nobody. Changes arrive by pull request only. |
+| `main` | Production. What is on `main` is what is live at https://zeuswriteups.vercel.app | Nobody. Changes arrive by pull request only. |
 | `test` | Staging. Work is combined and reviewed here before it goes live. | The owner, and AI agents the owner is working with in that session. |
 | `feat/<topic>`, `fix/<topic>` | Human work in progress. | The author. |
 | `ai/<agent>/<topic>` | Work by an AI agent acting without the owner present (for example `ai/claude/update-certs`). | The agent. |
@@ -58,7 +58,7 @@ The project is an **Astro + TypeScript** application targeting static deployment
 
 The Vercel project `portfolio` is connected to this repository under the same GitHub identity
 that owns it. Merging a pull request into `main` builds and publishes
-https://vathanakbotra.vercel.app on its own, usually within seconds. Pull requests get their own
+https://zeuswriteups.vercel.app on its own, usually within seconds. Pull requests get their own
 preview deployment, linked from the "Vercel" check on the PR.
 
 So the whole release flow is just the pipeline above: PR into `test`, PR into `main`, merge. There
@@ -70,7 +70,7 @@ is no separate deploy step for anyone to run.
 | --- | --- |
 | Repository | `Botrasky/dvb` |
 | Vercel project | **`dvb-og72`** |
-| Live URL | https://vathanakbotra.vercel.app |
+| Live URL | https://zeuswriteups.vercel.app |
 
 The production project is called **`dvb-og72`**. The name is historical and tells you nothing, but
 it is the real one: it is connected to this repository, it owns the live domain, and it is what
@@ -92,8 +92,8 @@ it is stale: ask the owner instead of acting on it.
 **After merging to `main`, verify the live site** rather than assuming:
 
 ```
-curl -s -o /dev/null -w '%{http_code}\n' https://vathanakbotra.vercel.app/
-curl -s -o /dev/null -w '%{http_code}\n' https://vathanakbotra.vercel.app/writeups/<slug>/
+curl -s -o /dev/null -w '%{http_code}\n' https://zeuswriteups.vercel.app/
+curl -s -o /dev/null -w '%{http_code}\n' https://zeuswriteups.vercel.app/writeups/<slug>/
 ```
 
 Both should return `200`. If a new page 404s, the deployment has not finished or has failed —

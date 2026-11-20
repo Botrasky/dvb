@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vathanakbotra.vercel.app/sitemap.xml
+Sitemap: https://zeuswriteups.vercel.app/sitemap.xml
