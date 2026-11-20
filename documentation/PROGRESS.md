@@ -1,6 +1,4 @@
 
-### 2026-11-20
-
 Last updated: 2026-11-20
 
 This is the shared execution record for the ZEUS Cybersecurity Portfolio. It
@@ -12,13 +10,13 @@ scope expansion.
 
 | Area | Status | Evidence / notes |
 | --- | --- | --- |
-| Active branch | Typography update for Inter & IBM Plex Mono | Local `feat/font-change`, based on `main` commit `a2035f8` |
-| Working tree | Font changes complete | Base stylesheets updated and static HTML cache query strings bumped |
-| Local vs upstream | Not pushed | Feature branch `feat/font-change` |
+| Active branch | Font and canonical-domain update proposed for `main` | Local `fix/progress-record-conflict`, based on `main` at `7abcc8d` |
+| Working tree | Checks passed; browser review pending | Inter and IBM Plex Mono configured; canonical SEO URLs updated |
+| Local vs upstream | Not pushed | Pull request and production merge pending |
 | Remote freshness | Verified before branch creation | Fetched `main` to `FETCH_HEAD` at `8f10762` |
 | Astro migration foundation | Complete from prior handoff | Astro routes, Vercel integration, typed collection foundation, motion, and CI work are present in history |
 | Documentation baseline | Complete locally | Charter, migration plan, contribution guide, agent roles, and project rules are organized |
-| Production release | Not authorized | Do not push, merge, or deploy without separate owner approval |
+| Production release | Owner authorized PR and merge | Production deploy follows merge to `main` |
 
 ## Confirmed completed work
 
@@ -1111,43 +1109,118 @@ because this promotion changes documentation only.
 - Review diff with owner.
 - Await owner approval before commit, push, PR creation, or merge.
 
-## 2026-11-20 — Resolve PR #100 progress conflict
+## 2026-11-20 — Typography update (Inter & IBM Plex Mono)
 
 ### Approved scope
 
-- Merge `origin/main` into local `feat/font-change` in an isolated worktree.
-- Resolve only the `documentation/PROGRESS.md` conflict, retaining both branch activity records.
-- Leave the existing `main` worktree untouched; do not commit, push, or update the PR.
+- Update typography in base stylesheets to import Google Fonts (Inter and IBM Plex Mono) and bump polish CSS cache query.
+- Configure `--font-ui` to `"Inter", Arial, Helvetica, sans-serif` and `--font-code` to `"IBM Plex Mono", "SFMono-Regular", Consolas, monospace`.
+- Invalidate cache by updating `css/base.css?v=motion-2` to `css/base.css?v=font-inter-plex` in static HTML pages.
+- Local testing was initially waived for agent execution per owner instruction; follow-up checks were later run at the owner's request.
 
 ### Files changed
 
-- `documentation/PROGRESS.md` (conflict resolved; both progress entries retained; this record added).
-- The merge also carries existing `origin/main` changes to `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`, `frontend/writeups/amaterasu/amaterasu-walkthrough.md`, and the four duplicate-file deletions recorded above.
+- `frontend/css/base.css`
+- `frontend/public/css/base.css`
+- `frontend/index.html`
+- `frontend/about.html`
+- `frontend/author.html`
+- `frontend/writeups/index.html`
+- `documentation/PROGRESS.md`
 
 ### Files and state inspected
 
-- Current `main` status, in-progress merge, and latest Git history.
-- PR #100 merge state and PR #99 merge state.
-- `AGENTS.md`, `documentation/ai-agent-role-manager.md`, `documentation/PROJECT_CHARTER.md`, `documentation/CONTRIBUTING.md`, `documentation/MIGRATION_PLAN.md`, `package.json`, and `scripts/check-progress-record.mjs`.
-- Both sides of the `documentation/PROGRESS.md` conflict.
+- `frontend/src/layouts/SiteLayout.astro`
+- Downstream CSS files (`dashboard.css`, `hero.css`, `sections.css`, `writeup-story.css`) to verify variable consumption.
 
 ### Completed
 
-- Reconciled the typography/domain record with the security/domain/duplicate-cleanup record and removed conflict markers.
-- Resolved the conflict in an isolated worktree on `feat/font-change`; the pre-existing `main` worktree was not changed by this task.
-- No commit, push, or PR update was performed.
+- Added Google Fonts `@import` for Inter and IBM Plex Mono in `frontend/css/base.css` and `frontend/public/css/base.css`.
+- Updated `:root` CSS variables `--font-ui` and `--font-code` in both base stylesheets.
+- Invalidated static cache references in `frontend/index.html`, `frontend/about.html`, `frontend/author.html`, and `frontend/writeups/index.html`.
+- Progress record updated.
 
 ### Verification
 
-| Command | Result |
-| --- | --- |
-| `git diff --cached --check` | Passed. |
-| `git diff --check` | Passed. |
-| `bash scripts/ci-check.sh` | Passed. |
-| Conflict-marker scan on the isolated `documentation/PROGRESS.md` | Passed; no markers remain. |
+- Follow-up checks passed: `npm run check` (56 files, 0 errors, warnings, or hints), `npm run build`, and `bash scripts/ci-check.sh`.
+- Owner visual inspection across themes and viewport sizes remains.
 
 ### Remaining work and decisions
 
-- Review the complete merge diff before approving a commit.
-- The local `feat/font-change` branch is two commits ahead of the PR's remote head; no remote update was made.
-- Commit and push require separate owner approval.
+- Owner visual inspection in browser (light/dark mode, desktop/mobile, dashboard, writeups).
+- Review diff and approve commit/release if satisfactory.
+
+#### Font preview changes (Inter & IBM Plex Mono)
+
+- Added Inter and IBM Plex Mono fonts to the site.
+- Updated CSS to use new fonts and bumped `polish.css` cache query to `font-inter-plex`.
+- Modified HTML files to reference new fonts where appropriate.
+- All CI checks (`npm run check`, `npm run build`, `bash scripts/ci-check.sh`) passed.
+- Documentation updated with this progress entry.
+
+## 2026-11-20 — Correct canonical site domain
+
+### Approved scope
+
+- Replace active references to the old site domain with the owner-confirmed `https://zeuswriteups.vercel.app` in site configuration, project guidance, deployment instructions, and SEO files.
+- Preserve older dated progress entries as historical records.
+- Leave the owner's typography changes intact; do not commit, push, open a PR, or deploy.
+
+### Files changed
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `astro.config.mjs`
+- `documentation/CONTRIBUTING.md`
+- `documentation/PROJECT_CHARTER.md`
+- `documentation/PROGRESS.md`
+- `frontend/robots.txt`
+- `frontend/sitemap.xml`
+
+### Files and state inspected
+
+- `documentation/ai-agent-role-manager.md`
+- `documentation/MIGRATION_PLAN.md`
+- Current branch and working-tree status
+- Existing deployment and domain references in repository files
+
+### Completed
+
+- Updated the Astro canonical site URL, project/agent guidance, deployment documentation, robots sitemap URL, and sitemap page URLs.
+- Kept references in older dated progress entries to preserve historical evidence; current operational references now use `zeuswriteups.vercel.app`.
+- Preserved all pre-existing typography changes on `feat/font-change`.
+
+### Verification
+
+- `npm run check` — passed (56 files; 0 errors, warnings, or hints).
+- `npm run build` — passed.
+- `bash scripts/ci-check.sh` — passed.
+- `git diff --check` — passed.
+- Domain search confirmed there are no old-host references in active configuration, guidance, or SEO metadata; remaining matches are historical progress entries.
+
+### Remaining work and decisions
+
+- Owner review of the complete diff.
+- No remote preview or production deployment was requested or performed.
+
+## 2026-11-20 — Font feature review and local conflict recovery
+
+### Approved scope and files inspected
+
+- Review the existing Inter and IBM Plex Mono feature and resolve the progress-record conflict while preserving application code.
+- Inspected the staged CSS, static HTML cache references, domain documentation and SEO changes, and `frontend/src/layouts/SiteLayout.astro`.
+- Changed only `documentation/PROGRESS.md`: removed conflict markers while retaining both records, and added this verification entry.
+
+### Completed and verification
+
+- Marked the document resolved, exited the merge without a commit, and preserved the staged work on local branch `fix/progress-record-conflict`.
+- Confirmed the Astro layout imports the updated base stylesheet and dashboard styles consume the font variables.
+- `npm run check` passed: 53 files, zero errors, warnings, or hints.
+- `npm run build`, `npm run check:routes` (18 HTML pages), and `bash scripts/ci-check.sh` passed.
+- `git diff --cached --check` passed before this entry; `git diff --check` passed after it.
+
+### Remaining work and owner decisions
+
+- Browser inspection of font loading and desktop/mobile appearance remains pending.
+- Existing staged domain/SEO changes remain alongside the font feature; they were preserved, not newly implemented in this review.
+- Owner diff and commit approval remain required. No commit, push, PR, merge, or deployment was performed.
