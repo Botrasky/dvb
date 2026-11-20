@@ -1,4 +1,5 @@
-# ZEUS Project Progress
+
+### 2026-11-20
 
 Last updated: 2026-11-20
 
@@ -1008,7 +1009,10 @@ because this promotion changes documentation only.
 - Owner visual inspection in browser (light/dark mode, desktop/mobile, dashboard, writeups).
 - Review diff and approve commit/release if satisfactory.
 
-## 2026-11-20 — Font preview changes (Inter & IBM Plex Mono)
+### 2026-11-20
+
+#### 2026-11-20
+
 +| 2026-11-20 | Font preview changes (Inter & IBM Plex Mono)
 
 - Added Inter and IBM Plex Mono fonts to the site.
