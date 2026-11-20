@@ -1,6 +1,6 @@
 # Claude Instructions & Roles
 
-You are contributing to the **ZEUS Cybersecurity Portfolio** (`https://vathanakbotra.vercel.app`), owned and approved by **Vathanak Botra Dos (@Botrasky)**.
+You are contributing to the **ZEUS Cybersecurity Portfolio** (`https://zeuswriteups.vercel.app`), owned and approved by **Vathanak Botra Dos (@Botrasky)**.
 
 ## Your Role
 

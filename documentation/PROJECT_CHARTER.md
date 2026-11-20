@@ -52,7 +52,7 @@ Companion documents: `documentation/MIGRATION_PLAN.md`, `documentation/architect
 | Status                           | Draft for owner review                                    |
 | Version                          | 0.1                                                       |
 | Last updated                     | 2026-11-11                                                |
-| Production URL                   | `https://vathanakbotra.vercel.app`                        |
+| Production URL                   | `https://zeuswriteups.vercel.app`                         |
 
 This charter defines purpose, scope, outcomes, architecture decisions,
 governance, quality standards, and release authority. `documentation/MIGRATION_PLAN.md`

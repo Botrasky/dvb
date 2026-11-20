@@ -1,6 +1,6 @@
 # Rules for AI Agents (Codex & Others)
 
-This repository is the **ZEUS Cybersecurity Portfolio** (`https://vathanakbotra.vercel.app`), owned and directed by **Vathanak Botra Dos (@Botrasky)**.
+This repository is the **ZEUS Cybersecurity Portfolio** (`https://zeuswriteups.vercel.app`), owned and directed by **Vathanak Botra Dos (@Botrasky)**.
 
 ## Role Overview
 
