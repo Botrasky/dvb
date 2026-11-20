@@ -5,7 +5,7 @@ export default defineConfig({
   output: "server",
   adapter: vercel(),
   trailingSlash: "always",
-  site: "https://vathanakbotra.vercel.app",
+  site: "https://zeuswriteups.vercel.app",
   vite: {
     server: {
       fs: { deny: ["api"] },

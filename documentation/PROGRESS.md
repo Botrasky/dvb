@@ -76,3 +76,60 @@ code.
 - Promotion from `test` to `main`, merge, and deployment remain unperformed and
   require their own approvals.
 - No other blocker is known.
+
+## 2026-11-20 — Font and canonical domain updates for test preview
+
+### Approved scope
+
+- Branch: `feat/font-domain-preview` (branched from `origin/test` in worktree `font-domain-preview/`).
+- Update the canonical site domain to `https://zeuswriteups.vercel.app` in `astro.config.mjs`, `CONTRIBUTING.md`, `robots.txt`, and `sitemap.xml`.
+- Load Google Fonts (Inter and IBM Plex Mono) and set `--font-ui` and `--font-code` variables in `css/base.css` and `public/css/base.css`, bumping `polish.css` query to `v=3`.
+- Update static base stylesheet cache query parameter to `font-inter-plex` in `index.html`, `about.html`, `author.html`, and `writeups/index.html`.
+- Run full verification suite and prepare progress entry.
+
+### Files changed
+
+- `CONTRIBUTING.md`
+- `about.html`
+- `astro.config.mjs`
+- `author.html`
+- `css/base.css`
+- `documentation/PROGRESS.md`
+- `index.html`
+- `public/css/base.css`
+- `robots.txt`
+- `sitemap.xml`
+- `writeups/index.html`
+
+### Files inspected
+
+- `astro.config.mjs`
+- `AGENTS.md`
+- `CLAUDE.md`
+- `.github/pull_request_template.md`
+- `scripts/check-build-routes.mjs`
+- `scripts/ci-check.sh`
+
+### Completed
+
+- Configured `site` to `https://zeuswriteups.vercel.app` in `astro.config.mjs`.
+- Updated domain references and verification commands in `CONTRIBUTING.md`, `robots.txt`, and `sitemap.xml`.
+- Added Google Fonts import and configured `--font-ui` and `--font-code` CSS custom properties in `css/base.css` and `public/css/base.css`.
+- Invalidated cache queries on static HTML pages (`font-inter-plex`).
+- Verified build and routes with no errors, warnings, or broken references.
+- Progress record updated.
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `npm run check` | Passed (exit 0; 39 files checked, 0 errors, 0 warnings, 0 hints). |
+| `npm run build` | Passed (exit 0; static and server entrypoints bundled in 1.82s). |
+| `npm run check:routes` | Passed (exit 0; 18 HTML pages, local links and assets, Vercel slash routes). |
+| `bash scripts/ci-check.sh` | Passed (exit 0; all integrity, token, file size, and credential checks passed). |
+| `git diff --check` | Passed (exit 0; no whitespace errors). |
+
+### Remaining work and decisions
+
+- Commit and push `feat/font-domain-preview`, then open a pull request into `test` using `.github/pull_request_template.md`.
+- Vercel preview deployment verification (inspect browser appearance across light/dark themes and mobile/desktop widths before checking the browser-review item).
