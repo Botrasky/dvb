@@ -16,7 +16,7 @@ Before taking action or modifying code, consult:
 3. `documentation/ai-agent-role-manager.md` — Complete agent governance & coordination rules
 4. `documentation/PROJECT_CHARTER.md` — Project architecture, decisions (D1–D15), and quality gates
 5. `documentation/CONTRIBUTING.md` — CI/CD checks, Vercel deployment caveats, and verification rules
-6. `documentation/MIGRATION_PLAN.md` — Current active Astro migration checklist
+6. `documentation/architecture.md` and `documentation/PROGRESS.md` — Current architecture and verified execution status; archived migration plans are historical reference only
 
 ## Universal Owner-Control Protocol
 

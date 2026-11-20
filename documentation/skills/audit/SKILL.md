@@ -9,7 +9,7 @@
 ## Triggers
 
 - The owner requests a repository audit or gap analysis.
-- A migration phase is approaching completion and needs verification against the active migration plan.
+- A project phase is approaching completion and needs verification against current code and recorded evidence.
 - A broad review is needed across files (route coverage, asset inventory, accessibility).
 - An independent checklist is needed before a release.
 
@@ -18,11 +18,11 @@
 ### 1. Define the audit scope
 
 - Clarify what is being audited: migration progress, route coverage, accessibility, security, documentation consistency, or content completeness.
-- Identify the available reference documents to audit against (for example, `documentation/MIGRATION_PLAN.md` on current `main` or root `MIGRATION_PLAN.md` on the current flattened Astro `test` branch). Report missing references instead of assuming their contents.
+- Identify current reference documents (`documentation/architecture.md`, `documentation/PROGRESS.md`, and applicable contribution guidance). Historical plans in `documentation/archive/` provide context only. Report missing references instead of assuming their contents.
 
 ### 2. Migration audit
 
-Compare the current repository state against the active migration plan:
+Compare the current repository state against its architecture and recorded progress:
 
 - Which phases are complete, in progress, or not started?
 - Are legacy files still in use or ready for archival?
