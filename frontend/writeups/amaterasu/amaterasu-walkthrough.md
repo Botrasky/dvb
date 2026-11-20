@@ -13,8 +13,8 @@
 
 | Flag | Value |
 |------|-------|
-| User (`/home/alfredo/local.txt`) | `ad1991147296f49ca95f564230f92558` |
-| Root (`/root/proof.txt`) | `fc390da92dd68aef32f02437de9af0d1` |
+| User (`/home/alfredo/local.txt`) | `[REDACTED]` |
+| Root (`/root/proof.txt`) | `[REDACTED]` |
 
 ---
 
@@ -324,10 +324,10 @@ ssh -i amaterasu alfredo@192.168.160.249 -p 25022
 
 ```
 [alfredo@fedora ~]$ cat local.txt
-ad1991147296f49ca95f564230f92558
+[REDACTED]
 ```
 
-**USER FLAG:** `ad1991147296f49ca95f564230f92558`
+**USER FLAG:** `[REDACTED]`
 
 > Note: the box resets on restart, so `authorized_keys` is wiped. Re-running `python3 amaterasu.py` re-plants it in one step.
 
@@ -404,10 +404,10 @@ id
 # uid=1000(alfredo) gid=1000(alfredo) euid=0(root) groups=1000(alfredo)
 
 cat /root/proof.txt
-# fc390da92dd68aef32f02437de9af0d1
+# [REDACTED]
 ```
 
-**ROOT FLAG:** `fc390da92dd68aef32f02437de9af0d1`
+**ROOT FLAG:** `[REDACTED]`
 
 ---
 

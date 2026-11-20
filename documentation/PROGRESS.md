@@ -1065,3 +1065,89 @@ because this promotion changes documentation only.
 
 - Owner review of the complete diff.
 - No remote preview or production deployment was requested or performed.
+
+## 2026-11-20 — Security flag redaction, production domain alignment, and duplicate cleanup
+
+### Approved scope
+
+- Redact unredacted CTF flags in `frontend/writeups/amaterasu/amaterasu-walkthrough.md` to `[REDACTED]`.
+- Update production domain references from `vathanakbotra.vercel.app` to `zeuswriteups.vercel.app` in `AGENTS.md`, `documentation/PROJECT_CHARTER.md`, and `astro.config.mjs`.
+- Remove tracked macOS duplicate files (`* 2.*`).
+- Maintain existing progress history and record verification results.
+
+### Files changed
+
+- `frontend/writeups/amaterasu/amaterasu-walkthrough.md` (modified: redacted plaintext flags)
+- `AGENTS.md` (modified: production domain updated)
+- `documentation/PROJECT_CHARTER.md` (modified: production domain updated)
+- `astro.config.mjs` (modified: site domain updated)
+- `CLAUDE.md` (modified: domain updated, skills pointer added)
+- `.github/copilot-instructions.md` (added: Copilot/Codex startup directives)
+- `.cursorrules` (added: Cursor startup directives)
+- `frontend/writeups/DriftingBlues6_Report 2.md` (deleted)
+- `frontend/src/content.config 2.ts` (deleted)
+- `frontend/src/env.d 2.ts` (deleted)
+- `scripts/check-progress-record 2.mjs` (deleted)
+- `documentation/PROGRESS.md` (modified: execution entry added)
+
+### Completed
+
+- Plaintext user and root flag tokens in `amaterasu-walkthrough.md` were replaced with `[REDACTED]`.
+- Canonical domain configuration in `astro.config.mjs` and project documentation in `AGENTS.md` and `PROJECT_CHARTER.md` now point to `https://zeuswriteups.vercel.app`.
+- 4 tracked macOS duplicate files were removed from Git.
+- Verification checks executed.
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `npm run format:check` | Passed (exit 0) |
+| `npm run check` | Passed (exit 0) |
+| `git diff --check` | Passed (exit 0) |
+| `bash scripts/ci-check.sh` | Passed (exit 0) |
+
+### Remaining work and decisions
+
+- Review diff with owner.
+- Await owner approval before commit, push, PR creation, or merge.
+
+## 2026-11-20 — Resolve PR #100 progress conflict
+
+### Approved scope
+
+- Merge `origin/main` into local `feat/font-change` in an isolated worktree.
+- Resolve only the `documentation/PROGRESS.md` conflict, retaining both branch activity records.
+- Leave the existing `main` worktree untouched; do not commit, push, or update the PR.
+
+### Files changed
+
+- `documentation/PROGRESS.md` (conflict resolved; both progress entries retained; this record added).
+- The merge also carries existing `origin/main` changes to `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`, `frontend/writeups/amaterasu/amaterasu-walkthrough.md`, and the four duplicate-file deletions recorded above.
+
+### Files and state inspected
+
+- Current `main` status, in-progress merge, and latest Git history.
+- PR #100 merge state and PR #99 merge state.
+- `AGENTS.md`, `documentation/ai-agent-role-manager.md`, `documentation/PROJECT_CHARTER.md`, `documentation/CONTRIBUTING.md`, `documentation/MIGRATION_PLAN.md`, `package.json`, and `scripts/check-progress-record.mjs`.
+- Both sides of the `documentation/PROGRESS.md` conflict.
+
+### Completed
+
+- Reconciled the typography/domain record with the security/domain/duplicate-cleanup record and removed conflict markers.
+- Resolved the conflict in an isolated worktree on `feat/font-change`; the pre-existing `main` worktree was not changed by this task.
+- No commit, push, or PR update was performed.
+
+### Verification
+
+| Command | Result |
+| --- | --- |
+| `git diff --cached --check` | Passed. |
+| `git diff --check` | Passed. |
+| `bash scripts/ci-check.sh` | Passed. |
+| Conflict-marker scan on the isolated `documentation/PROGRESS.md` | Passed; no markers remain. |
+
+### Remaining work and decisions
+
+- Review the complete merge diff before approving a commit.
+- The local `feat/font-change` branch is two commits ahead of the PR's remote head; no remote update was made.
+- Commit and push require separate owner approval.
